@@ -8,46 +8,49 @@ const MainForm = () => {
 
   const { isFullYear } = details;
 
+  const primaryInputList = [
+    {
+      text: "Ετήσιος Μικτός μισθός",
+      field: "grossIncome",
+    },
+    {
+      text: "Αμοιβή Λογιστή ανά μήνα",
+      field: "accountantFees",
+    },
+    {
+      text: "Κοινωνική Ασφάλιση(ΕΦΚΑ) ανά μήνα",
+      field: "businessObligations",
+    },
+    {
+      text: "Ετήσιο Επιπρόσθετος Ποσό(π.χ. Ειδική Εισφορά Αλληλεγγύης,\
+        Ετήσιο τέλος επιτηδεύματος, κλτ)",
+      field: "additionalBusinessObligations",
+    },
+  ];
+
+  const secondaryInputList = [
+    {
+      text: "Αποταμίευση ανά μήνα",
+      field: "savings",
+    },
+  ];
+
   return (
     <Box>
       <Stack spacing={4} direction="column">
-        <Input.NumberField
-          text="Ετήσιος Μικτός μισθός"
-          onChange={(value) =>
-            addDetail({
-              value: parseInt(value) || 0,
-              field: "grossIncome",
-            })
-          }
-        />
-        <Input.NumberField
-          text="Αμοιβή Λογιστή ανά μήνα"
-          onChange={(value) =>
-            addDetail({
-              value: parseInt(value) || 0,
-              field: "accountantFees",
-            })
-          }
-        />
-        <Input.NumberField
-          text="Κοινωνική Ασφάλιση(ΕΦΚΑ) ανά μήνα"
-          onChange={(value) =>
-            addDetail({
-              value: parseInt(value) || 0,
-              field: "businessObligations",
-            })
-          }
-        />
-        <Input.NumberField
-          text="Ετήσιο Επιπρόσθετος Ποσό(π.χ. Ειδική Εισφορά Αλληλεγγύης,
-            Ετήσιο τέλος επιτηδεύματος, κλτ)"
-          onChange={(value) =>
-            addDetail({
-              value: parseInt(value) || 0,
-              field: "additionalBusinessObligations",
-            })
-          }
-        />
+        {primaryInputList.map(({ text, field }) => (
+          <Input.NumberField
+            key={field}
+            text={text}
+            onChange={(value) =>
+              addDetail({
+                value: parseInt(value) || 0,
+                field,
+              })
+            }
+          />
+        ))}
+
       </Stack>
 
       <Box py={6}>
@@ -78,15 +81,18 @@ const MainForm = () => {
       </Stack>
 
       <Stack spacing={4} direction="column" pt={6}>
-        <Input.NumberField
-          text="Αποταμίευση ανά μήνα"
-          onChange={(value) =>
-            addDetail({
-              value: parseInt(value) || 0,
-              field: "savings",
-            })
-          }
-        />
+        {secondaryInputList.map(({ text, field }) => (
+          <Input.NumberField
+            key={field}
+            text={text}
+            onChange={(value) =>
+              addDetail({
+                value: parseInt(value) || 0,
+                field,
+              })
+            }
+          />
+        ))}
       </Stack>
     </Box>
   );
