@@ -12,9 +12,10 @@ const initialState = {
     taxYearDuration: 12,
     discountOptions: {
         firstScaleDiscount: false,
-        prePaidTax: false,
+        prePaidNextYearTax: false,
         prePaidTaxDiscount: false,
-    }
+    },
+    prePaidTax: false,
 }
 
 export const useStore = create(set => ({

@@ -6,7 +6,7 @@ const Vertical = () => {
   const [radioValue, setRadioValue] = useState("full");
 
   const addDetail = useStore((state) => state.addDetail);
-  
+
   const handleRadioChange = (val) => {
     setRadioValue(val);
 
@@ -24,12 +24,12 @@ const Vertical = () => {
   return (
     <RadioGroup onChange={handleRadioChange} value={radioValue}>
       <Stack>
-        <Radio size="md" name="full" colorScheme="green" value="full">
+        <Radio size="md" name="full" colorScheme="purple" value="full">
           <Text fontSize="sm" color="gray.500">
             Ολόκληρο Φορολογικό Έτος
           </Text>
         </Radio>
-        <Radio size="md" name="part" colorScheme="green" value="part">
+        <Radio size="md" name="part" colorScheme="purple" value="part">
           <Text fontSize="sm" color="gray.500">
             Μη Ολόκληρο Φορολογικό Έτος
           </Text>

@@ -4,7 +4,7 @@
 _This is the **alpha version** of Taxemu. A tracker tool for one-person business operations._
 
 
-![Screenshot](./assets/home-v0.png)
+![Screenshot](./assets/home-v1.png)
 
 
 The live project can be found [here](https://taxemu.vercel.app/).

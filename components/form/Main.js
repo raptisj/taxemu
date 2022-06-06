@@ -43,11 +43,16 @@ const MainForm = () => {
   return (
     <Box>
       <Button
-        colorScheme="teal"
-        variant="link"
+        colorScheme="purple"
+        variant="outline"
         onClick={removeUserDetails}
         mt={2}
         isDisabled={!grossIncome}
+        position="sticky"
+        top="0"
+        borderRadius={0}
+        zIndex={1}
+        background="#f3f3f3"
       >
         Clear fields
       </Button>

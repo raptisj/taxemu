@@ -23,31 +23,56 @@ const IncomeTable = () => {
     savings,
     taxYearDuration,
     grossIncomeAfterBusinessExpenses,
-    discountOptions,
+    discountOptions: { prePaidNextYearTax, prePaidTaxDiscount },
   } = details;
-  const { firstScaleDiscount, prePaidTax, prePaidTaxDiscount } =
-    discountOptions;
 
   const taxInAdvance =
     grossIncomeAfterTax * 0.55 * (prePaidTaxDiscount ? 0.5 : 1);
 
-  const finalMonthlyIncome =
-    grossIncome / 12 -
-    grossIncomeAfterTax / 12 -
-    accountantFees -
-    businessObligations -
-    additionalBusinessObligations / 12 -
-    savings -
-    (prePaidTax ? taxInAdvance : 0) / 12;
+  const amount = {
+    grossIncome: {
+      month: grossIncome / 12,
+      year: (grossIncome / 12) * taxYearDuration,
+    },
+    grossIncomeAfterTax: {
+      month: grossIncomeAfterTax / 12,
+      year: grossIncomeAfterTax,
+    },
+    accountantFees: {
+      month: accountantFees,
+      year: accountantFees * 12,
+    },
+    businessObligations: {
+      month: businessObligations,
+      year: businessObligations * 12,
+    },
+    additionalBusinessObligations: {
+      month: additionalBusinessObligations / 12,
+      year: additionalBusinessObligations,
+    },
+    savings: {
+      month: savings,
+      year: savings * 12,
+    },
+    prePaidNextYearTax: {
+      month: (prePaidNextYearTax ? taxInAdvance : 0) / 12,
+      year: prePaidNextYearTax ? taxInAdvance : 0,
+    },
+  };
 
-  const finalYearlyIncome =
-    grossIncome -
-    grossIncomeAfterTax -
-    accountantFees * 12 -
-    businessObligations * 12 -
-    additionalBusinessObligations -
-    savings * 12 -
-    (prePaidTax ? taxInAdvance : 0);
+  const calcFinal = (obj, type) => {
+    return Object.keys(obj)
+      .map((p) => obj[p][type])
+      .reduce((pre, cur) => (cur = pre - cur));
+  };
+
+  const formatCellValue = (val) =>
+    val ? `€${val.toLocaleString("en-US").split(".")[0]}` : "xxxxxx";
+
+  const finalIncome = (type) =>
+    calcFinal(amount, type) > 0
+      ? formatCellValue(calcFinal(amount, type))
+      : "xxxxxx";
 
   return (
     <TableContainer position="sticky" top={8}>
@@ -63,99 +88,78 @@ const IncomeTable = () => {
         <Tbody>
           <Tr>
             <Td>Μικτός μισθός</Td>
+            <Td isNumeric>{formatCellValue(grossIncome / 12)}</Td>
             <Td isNumeric>
-              {grossIncome
-                ? "€" + (grossIncome / 12).toFixed(2).toLocaleString("en-US")
-                : "xxxxxx"}
-            </Td>
-            <Td isNumeric>
-              {grossIncome
-                ? "€" +
-                  ((grossIncome / 12) * taxYearDuration).toLocaleString("en-US")
-                : "xxxxxx"}
+              {formatCellValue((grossIncome / 12) * taxYearDuration)}
             </Td>
           </Tr>
+
           {!!grossIncomeAfterBusinessExpenses && (
             <Tr>
               <Td>Έξοδα Επιχείρησης</Td>
               <Td isNumeric> -- </Td>
               <Td isNumeric>
-                {"€" + grossIncomeAfterBusinessExpenses || "xxxxxx"}
+                {formatCellValue(grossIncomeAfterBusinessExpenses)}
               </Td>
             </Tr>
           )}
+
           <Tr>
             <Td>
-              Μικτός μισθός με κρατήσεις
+              Φόρος
               <br />
               (9%, 22%, 28%, 36% και 44%)
             </Td>
-            <Td isNumeric>
-              {grossIncome && grossIncomeAfterTax
-                ? "€" +
-                  (grossIncomeAfterTax / 12).toFixed(2).toLocaleString("en-US")
-                : "xxxxxx"}
-            </Td>
-            <Td isNumeric>
-              {grossIncome && grossIncomeAfterTax
-                ? "€" + grossIncomeAfterTax.toLocaleString("en-US")
-                : "xxxxxx"}
-            </Td>
+            <Td isNumeric>{formatCellValue(grossIncomeAfterTax / 12)}</Td>
+            <Td isNumeric>{formatCellValue(grossIncomeAfterTax)}</Td>
           </Tr>
 
-          {prePaidTax && (
+          {prePaidNextYearTax && (
             <Tr>
               <Td>
                 Προκαταβολή φόρου
                 {prePaidTaxDiscount ? "(με έκπτωση)" : ""}
               </Td>
               <Td isNumeric>
-                {grossIncome && grossIncomeAfterTax
-                  ? "€" +
-                    (
-                      (grossIncomeAfterTax *
-                        0.55 *
-                        (prePaidTaxDiscount ? 0.5 : 1)) /
-                      12
-                    )
-                      .toFixed(2)
-                      .toLocaleString("en-US")
-                  : "xxxxxx"}
+                {formatCellValue(
+                  (grossIncomeAfterTax *
+                    0.55 *
+                    (prePaidTaxDiscount ? 0.5 : 1)) /
+                    12
+                )}
               </Td>
-              <Td isNumeric>
-                {grossIncome && grossIncomeAfterTax
-                  ? "€" + taxInAdvance.toLocaleString("en-US")
-                  : "xxxxxx"}
-              </Td>
+              <Td isNumeric>{formatCellValue(taxInAdvance)}</Td>
             </Tr>
           )}
 
           {!!accountantFees && (
             <Tr>
               <Td>Αμοιβή Λογιστή</Td>
-              <Td isNumeric>{"€" + accountantFees || "xxxxxx"}</Td>
-              <Td isNumeric>{"€" + accountantFees * 12 || "xxxxxx"}</Td>
+              <Td isNumeric>{formatCellValue(accountantFees)}</Td>
+              <Td isNumeric>{formatCellValue(accountantFees * 12)}</Td>
             </Tr>
           )}
+
           {!!businessObligations && (
             <Tr>
               <Td>Κοινωνική Ασφάλιση(ΕΦΚΑ)</Td>
-              <Td isNumeric>{"€" + businessObligations || "xxxxxx"}</Td>
-              <Td isNumeric>{"€" + businessObligations * 12 || "xxxxxx"}</Td>
+              <Td isNumeric>{formatCellValue(businessObligations)}</Td>
+              <Td isNumeric>{formatCellValue(businessObligations * 12)}</Td>
             </Tr>
           )}
+
           {!!additionalBusinessObligations && (
             <Tr>
               <Td>Επιπρόσθετος Ποσό</Td>
               <Td isNumeric>
-                {"€" + (additionalBusinessObligations / 12).toFixed(2) ||
-                  "xxxxxx"}
+                {formatCellValue(additionalBusinessObligations / 12)}
               </Td>
               <Td isNumeric>
-                {"€" + additionalBusinessObligations || "xxxxxx"}
+                {formatCellValue(additionalBusinessObligations)}
               </Td>
             </Tr>
           )}
+
           {!!savings && (
             <Tr>
               <Td>
@@ -163,39 +167,29 @@ const IncomeTable = () => {
               </Td>
               <Td isNumeric>
                 <Text color="green.500">
-                  {savings < grossIncome
-                    ? "€" + savings.toFixed(2).toLocaleString("en-US")
-                    : "xxxxxx"}
+                  {savings < grossIncome ? formatCellValue(savings) : "xxxxxx"}
                 </Text>
               </Td>
               <Td isNumeric>
                 <Text color="green.500">
                   {savings < grossIncome
-                    ? "€" + (savings * 12).toLocaleString("en-US")
+                    ? formatCellValue(savings * 12)
                     : "xxxxxx"}
                 </Text>
               </Td>
             </Tr>
           )}
+
           {!!grossIncome && (
             <Tr>
               <Td>
                 <strong>Καθαρό εισόδημα</strong>
               </Td>
               <Td isNumeric>
-                <Text color="red.500">
-                  {finalMonthlyIncome > 0
-                    ? "€" +
-                      finalMonthlyIncome.toFixed(2).toLocaleString("en-US")
-                    : "xxxxxx"}
-                </Text>
+                <Text color="purple.500">{finalIncome('month')}</Text>
               </Td>
               <Td isNumeric>
-                <Text color="red.500">
-                  {finalYearlyIncome > 0
-                    ? "€" + finalYearlyIncome.toLocaleString("en-US")
-                    : "xxxxxx"}
-                </Text>
+                <Text color="purple.500">{finalIncome('year')}</Text>
               </Td>
             </Tr>
           )}

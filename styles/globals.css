@@ -35,7 +35,6 @@ a {
   opacity: 0.1;
   transform: rotate(45deg);
   transform-origin: center;
-  /* left: -100px; */
   left: 10vw;
   z-index: -1;
 }
