@@ -76,11 +76,11 @@ export default function Home() {
     : grossIncome;
 
   useEffect(() => {
-    handleGross(calcTaxFrom / 12 * taxYearDuration);
+    handleGross((calcTaxFrom / 12) * taxYearDuration);
   }, [handleGross, taxYearDuration, grossIncome, calcTaxFrom]);
 
   return (
-    <Box minH="100vh" py={0} px="2rem">
+    <Box minH="100vh" pt={0} pb={12} px="2rem" className="container">
       <Head>
         <title>Taxemu</title>
         <meta
@@ -99,7 +99,9 @@ export default function Home() {
           maxW="1000px"
           m="auto"
           mt={12}
-          pb={24}
+          backgroundColor="#f3f3f3"
+          p={4}
+          borderRadius="4px"
         >
           <GridItem>
             <Form.MainForm />

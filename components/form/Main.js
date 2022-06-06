@@ -15,16 +15,16 @@ const MainForm = () => {
       field: "grossIncome",
     },
     {
-      text: "Έξοδα Επιχείρησης ανά έτος",
-      field: "grossIncomeAfterBusinessExpenses",
-    },
-    {
       text: "Αμοιβή Λογιστή ανά μήνα",
       field: "accountantFees",
     },
     {
       text: "Κοινωνική Ασφάλιση(ΕΦΚΑ) ανά μήνα",
       field: "businessObligations",
+    },
+    {
+      text: "Έξοδα Επιχείρησης ανά έτος",
+      field: "grossIncomeAfterBusinessExpenses",
     },
   ];
 

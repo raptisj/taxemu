@@ -18,3 +18,24 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.container {
+  position: relative;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.container::after {
+  position: fixed;
+  width: 400px;
+  height: calc(1000px + 50vh);
+  top: -130px;
+  content: '';
+  background: rgba(102 51 153);
+  opacity: 0.1;
+  transform: rotate(45deg);
+  transform-origin: center;
+  /* left: -100px; */
+  left: 10vw;
+  z-index: -1;
+}

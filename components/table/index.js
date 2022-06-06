@@ -50,7 +50,7 @@ const IncomeTable = () => {
     (prePaidTax ? taxInAdvance : 0);
 
   return (
-    <TableContainer>
+    <TableContainer position="sticky" top={8}>
       <Table variant="simple">
         <TableCaption>*τα ποσά είναι κατα προσέγγιση</TableCaption>
         <Thead>
