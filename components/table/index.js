@@ -22,7 +22,14 @@ const IncomeTable = () => {
     additionalBusinessObligations,
     savings,
     taxYearDuration,
+    grossIncomeAfterBusinessExpenses,
+    discountOptions,
   } = details;
+  const { firstScaleDiscount, prePaidTax, prePaidTaxDiscount } =
+    discountOptions;
+
+  const taxInAdvance =
+    grossIncomeAfterTax * 0.55 * (prePaidTaxDiscount ? 0.5 : 1);
 
   const finalMonthlyIncome =
     grossIncome / 12 -
@@ -30,7 +37,8 @@ const IncomeTable = () => {
     accountantFees -
     businessObligations -
     additionalBusinessObligations / 12 -
-    savings;
+    savings -
+    (prePaidTax ? taxInAdvance : 0) / 12;
 
   const finalYearlyIncome =
     grossIncome -
@@ -38,7 +46,8 @@ const IncomeTable = () => {
     accountantFees * 12 -
     businessObligations * 12 -
     additionalBusinessObligations -
-    savings * 12;
+    savings * 12 -
+    (prePaidTax ? taxInAdvance : 0);
 
   return (
     <TableContainer>
@@ -66,6 +75,15 @@ const IncomeTable = () => {
                 : "xxxxxx"}
             </Td>
           </Tr>
+          {!!grossIncomeAfterBusinessExpenses && (
+            <Tr>
+              <Td>Έξοδα Επιχείρησης</Td>
+              <Td isNumeric> -- </Td>
+              <Td isNumeric>
+                {"€" + grossIncomeAfterBusinessExpenses || "xxxxxx"}
+              </Td>
+            </Tr>
+          )}
           <Tr>
             <Td>
               Μικτός μισθός με κρατήσεις
@@ -74,7 +92,8 @@ const IncomeTable = () => {
             </Td>
             <Td isNumeric>
               {grossIncome && grossIncomeAfterTax
-                ? "€" + (grossIncomeAfterTax / 12).toFixed(2).toLocaleString("en-US")
+                ? "€" +
+                  (grossIncomeAfterTax / 12).toFixed(2).toLocaleString("en-US")
                 : "xxxxxx"}
             </Td>
             <Td isNumeric>
@@ -84,6 +103,33 @@ const IncomeTable = () => {
             </Td>
           </Tr>
 
+          {prePaidTax && (
+            <Tr>
+              <Td>
+                Προκαταβολή φόρου
+                {prePaidTaxDiscount ? "(με έκπτωση)" : ""}
+              </Td>
+              <Td isNumeric>
+                {grossIncome && grossIncomeAfterTax
+                  ? "€" +
+                    (
+                      (grossIncomeAfterTax *
+                        0.55 *
+                        (prePaidTaxDiscount ? 0.5 : 1)) /
+                      12
+                    )
+                      .toFixed(2)
+                      .toLocaleString("en-US")
+                  : "xxxxxx"}
+              </Td>
+              <Td isNumeric>
+                {grossIncome && grossIncomeAfterTax
+                  ? "€" + taxInAdvance.toLocaleString("en-US")
+                  : "xxxxxx"}
+              </Td>
+            </Tr>
+          )}
+
           {!!accountantFees && (
             <Tr>
               <Td>Αμοιβή Λογιστή</Td>
@@ -91,7 +137,6 @@ const IncomeTable = () => {
               <Td isNumeric>{"€" + accountantFees * 12 || "xxxxxx"}</Td>
             </Tr>
           )}
-
           {!!businessObligations && (
             <Tr>
               <Td>Κοινωνική Ασφάλιση(ΕΦΚΑ)</Td>
@@ -99,17 +144,18 @@ const IncomeTable = () => {
               <Td isNumeric>{"€" + businessObligations * 12 || "xxxxxx"}</Td>
             </Tr>
           )}
-
           {!!additionalBusinessObligations && (
             <Tr>
               <Td>Επιπρόσθετος Ποσό</Td>
               <Td isNumeric>
-                {"€" + (additionalBusinessObligations / 12).toFixed(2) || "xxxxxx"}
+                {"€" + (additionalBusinessObligations / 12).toFixed(2) ||
+                  "xxxxxx"}
               </Td>
-              <Td isNumeric>{"€" + additionalBusinessObligations || "xxxxxx"}</Td>
+              <Td isNumeric>
+                {"€" + additionalBusinessObligations || "xxxxxx"}
+              </Td>
             </Tr>
           )}
-
           {!!savings && (
             <Tr>
               <Td>
@@ -117,17 +163,20 @@ const IncomeTable = () => {
               </Td>
               <Td isNumeric>
                 <Text color="green.500">
-                  {savings < grossIncome ? "€" + savings.toFixed(2).toLocaleString("en-US") : "xxxxxx"}
+                  {savings < grossIncome
+                    ? "€" + savings.toFixed(2).toLocaleString("en-US")
+                    : "xxxxxx"}
                 </Text>
               </Td>
               <Td isNumeric>
                 <Text color="green.500">
-                  {savings < grossIncome ? "€" + (savings * 12).toLocaleString("en-US") : "xxxxxx"}
+                  {savings < grossIncome
+                    ? "€" + (savings * 12).toLocaleString("en-US")
+                    : "xxxxxx"}
                 </Text>
               </Td>
             </Tr>
           )}
-
           {!!grossIncome && (
             <Tr>
               <Td>
@@ -136,7 +185,8 @@ const IncomeTable = () => {
               <Td isNumeric>
                 <Text color="red.500">
                   {finalMonthlyIncome > 0
-                    ? "€" + finalMonthlyIncome.toFixed(2).toLocaleString("en-US")
+                    ? "€" +
+                      finalMonthlyIncome.toFixed(2).toLocaleString("en-US")
                     : "xxxxxx"}
                 </Text>
               </Td>

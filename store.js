@@ -3,6 +3,7 @@ import create from 'zustand'
 const initialState = {
     grossIncome: 0,
     grossIncomeAfterTax: 0,
+    grossIncomeAfterBusinessExpenses: 0,
     accountantFees: 0,
     savings: 0,
     businessObligations: 0,

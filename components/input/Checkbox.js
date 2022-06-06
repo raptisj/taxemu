@@ -39,7 +39,7 @@ const CheckboxGroup = () => {
         }
       >
         <Text fontSize="sm" color="gray.500">
-          Προκαταβολή φόρου(55% του συνολικού φόρου)(<strong>SOON</strong>)
+          Προκαταβολή φόρου(55% του συνολικού φόρου)
         </Text>
       </Checkbox>
       <Checkbox
@@ -55,7 +55,7 @@ const CheckboxGroup = () => {
         }
       >
         <Text fontSize="sm" color="gray.500">
-          Έκτπωση 50% στο 55% της προκαταβολής φόρου(<strong>SOON</strong>)
+          Έκτπωση 50% στο 55% της προκαταβολής φόρου
         </Text>
       </Checkbox>
     </Stack>

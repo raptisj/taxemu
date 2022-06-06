@@ -8,10 +8,10 @@ import {
     NumberDecrementStepper,
   } from "@chakra-ui/react";
   
-  const NumberField = ({ text, onChange }) => (
+  const NumberField = ({ text, onChange, value }) => (
     <Box>
       <Text fontSize="sm">{text}</Text>
-      <NumberInput borderColor="gray.400" onChange={onChange}>
+      <NumberInput borderColor="gray.400" onChange={onChange} value={value || ''}>
         <NumberInputField />
       </NumberInput>
     </Box>

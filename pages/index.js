@@ -10,7 +10,12 @@ export default function Home() {
   const details = useStore((state) => state.userDetails);
   const addDetail = useStore((state) => state.addDetail);
 
-  const { grossIncome, taxYearDuration } = details;
+  const {
+    grossIncome,
+    taxYearDuration,
+    discountOptions,
+    grossIncomeAfterBusinessExpenses,
+  } = details;
 
   const SCALE_THRESHOLD = 10000;
 
@@ -28,6 +33,7 @@ export default function Home() {
     (customGrossIncome) => {
       let amount = customGrossIncome;
       let scaleResult = 0;
+      // const scales = [0.09, 0.22, 0.28, 0.36, 0.44];
 
       if (amount > SCALE_THRESHOLD) {
         amount -= SCALE_THRESHOLD;
@@ -35,7 +41,7 @@ export default function Home() {
       } else {
         return addDetailWrapper(
           (amount * 0.09 + scaleResult) *
-            (details.discountOptions.firstScaleDiscount ? 0.5 : 1)
+            (discountOptions.firstScaleDiscount ? 0.5 : 1)
         );
       }
 
@@ -62,12 +68,16 @@ export default function Home() {
 
       return addDetailWrapper(amount * 0.44 + scaleResult);
     },
-    [details.discountOptions.firstScaleDiscount, addDetailWrapper]
+    [discountOptions.firstScaleDiscount, addDetailWrapper]
   );
 
+  const calcTaxFrom = grossIncomeAfterBusinessExpenses
+    ? grossIncome - grossIncomeAfterBusinessExpenses
+    : grossIncome;
+
   useEffect(() => {
-    handleGross((grossIncome / 12) * taxYearDuration);
-  }, [handleGross, taxYearDuration, grossIncome]);
+    handleGross(calcTaxFrom / 12 * taxYearDuration);
+  }, [handleGross, taxYearDuration, grossIncome, calcTaxFrom]);
 
   return (
     <Box minH="100vh" py={0} px="2rem">

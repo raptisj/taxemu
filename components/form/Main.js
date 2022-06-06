@@ -1,17 +1,22 @@
-import { Box, Stack, Divider } from "@chakra-ui/react";
+import { Box, Stack, Divider, Button } from "@chakra-ui/react";
 import { Input, Radio } from "../input";
 import { useStore } from "../../store";
 
 const MainForm = () => {
   const details = useStore((state) => state.userDetails);
   const addDetail = useStore((state) => state.addDetail);
+  const removeUserDetails = useStore((state) => state.removeUserDetails);
 
-  const { isFullYear } = details;
+  const { isFullYear, grossIncome } = details;
 
   const primaryInputList = [
     {
       text: "Ετήσιος Μικτός μισθός",
       field: "grossIncome",
+    },
+    {
+      text: "Έξοδα Επιχείρησης ανά έτος",
+      field: "grossIncomeAfterBusinessExpenses",
     },
     {
       text: "Αμοιβή Λογιστή ανά μήνα",
@@ -21,11 +26,6 @@ const MainForm = () => {
       text: "Κοινωνική Ασφάλιση(ΕΦΚΑ) ανά μήνα",
       field: "businessObligations",
     },
-    {
-      text: "Ετήσιο Επιπρόσθετος Ποσό(π.χ. Ειδική Εισφορά Αλληλεγγύης,\
-        Ετήσιο τέλος επιτηδεύματος, κλτ)",
-      field: "additionalBusinessObligations",
-    },
   ];
 
   const secondaryInputList = [
@@ -33,13 +33,29 @@ const MainForm = () => {
       text: "Αποταμίευση ανά μήνα",
       field: "savings",
     },
+    {
+      text: "Ετήσιο Επιπρόσθετος Ποσό(π.χ. Ειδική Εισφορά Αλληλεγγύης,\
+        Ετήσιο τέλος επιτηδεύματος, κλτ)",
+      field: "additionalBusinessObligations",
+    },
   ];
 
   return (
     <Box>
-      <Stack spacing={4} direction="column">
+      <Button
+        colorScheme="teal"
+        variant="link"
+        onClick={removeUserDetails}
+        mt={2}
+        isDisabled={!grossIncome}
+      >
+        Clear fields
+      </Button>
+
+      <Stack spacing={4} direction="column" mt={6}>
         {primaryInputList.map(({ text, field }) => (
           <Input.NumberField
+            value={details[field]}
             key={field}
             text={text}
             onChange={(value) =>
@@ -50,7 +66,6 @@ const MainForm = () => {
             }
           />
         ))}
-
       </Stack>
 
       <Box py={6}>
@@ -83,6 +98,7 @@ const MainForm = () => {
       <Stack spacing={4} direction="column" pt={6}>
         {secondaryInputList.map(({ text, field }) => (
           <Input.NumberField
+            value={details[field]}
             key={field}
             text={text}
             onChange={(value) =>
