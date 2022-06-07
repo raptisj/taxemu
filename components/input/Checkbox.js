@@ -1,5 +1,5 @@
 import { Text, Stack, Checkbox, Box, Divider } from "@chakra-ui/react";
-import { useStore } from "../../store";
+import { useStore } from "store";
 
 const CheckboxGroup = () => {
   const details = useStore((state) => state.userDetails);

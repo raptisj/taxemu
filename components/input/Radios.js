@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Text, Radio, RadioGroup, Stack } from "@chakra-ui/react";
-import { useStore } from "../../store";
+import { useStore } from "store";
 
 const Vertical = () => {
   const [radioValue, setRadioValue] = useState("full");

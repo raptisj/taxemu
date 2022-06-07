@@ -1,6 +1,6 @@
 import { Box, Stack, Divider, Button } from "@chakra-ui/react";
 import { Input, Radio } from "../input";
-import { useStore } from "../../store";
+import { useStore } from "store";
 
 const MainForm = () => {
   const details = useStore((state) => state.userDetails);

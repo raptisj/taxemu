@@ -1,10 +1,10 @@
 import React, { useEffect, useCallback } from "react";
 import Head from "next/head";
-import { useStore } from "../store";
+import { useStore } from "store";
 import { Box, Grid, GridItem } from "@chakra-ui/react";
-import IncomeTable from "../components/table";
-import { OpeningHeader } from "../components/header";
-import Form from "../components/form";
+import Table from "components/table";
+import { OpeningHeader } from "components/header";
+import Form from "components/form";
 
 export default function Home() {
   const details = useStore((state) => state.userDetails);
@@ -108,7 +108,7 @@ export default function Home() {
           </GridItem>
 
           <GridItem>
-            <IncomeTable />
+            <Table.IncomeTable />
           </GridItem>
         </Grid>
       </main>
