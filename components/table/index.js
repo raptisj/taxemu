@@ -36,7 +36,7 @@ const IncomeTable = () => {
     },
     grossIncomeAfterTax: {
       month: grossIncomeAfterTax / 12,
-      year: grossIncomeAfterTax,
+      year: (grossIncomeAfterTax / 12) * taxYearDuration,
     },
     accountantFees: {
       month: accountantFees,
