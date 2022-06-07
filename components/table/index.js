@@ -24,6 +24,7 @@ const IncomeTable = () => {
     taxYearDuration,
     grossIncomeAfterBusinessExpenses,
     discountOptions: { prePaidNextYearTax, prePaidTaxDiscount },
+    prePaidTax,
   } = details;
 
   const taxInAdvance =
@@ -60,6 +61,8 @@ const IncomeTable = () => {
     },
   };
 
+  const prePaidTaxAmount = prePaidTax ? (grossIncome / 12) * 0.2 : 0;
+
   const calcFinal = (obj, type) => {
     return Object.keys(obj)
       .map((p) => obj[p][type])
@@ -69,7 +72,7 @@ const IncomeTable = () => {
   const formatCellValue = (val) =>
     val ? `€${val.toLocaleString("en-US").split(".")[0]}` : "xxxxxx";
 
-  const finalIncome = (type) =>
+  const finalIncome = (amount, type) =>
     calcFinal(amount, type) > 0
       ? formatCellValue(calcFinal(amount, type))
       : "xxxxxx";
@@ -110,9 +113,31 @@ const IncomeTable = () => {
               <br />
               (9%, 22%, 28%, 36% και 44%)
             </Td>
-            <Td isNumeric>{formatCellValue(grossIncomeAfterTax / 12)}</Td>
-            <Td isNumeric>{formatCellValue(grossIncomeAfterTax)}</Td>
+            <Td isNumeric>
+              {formatCellValue(
+                prePaidTax
+                  ? grossIncomeAfterTax / 12 - (grossIncome / 12) * 0.2
+                  : grossIncomeAfterTax / 12
+              )}
+            </Td>
+            <Td isNumeric>
+              {formatCellValue(
+                prePaidTax
+                  ? grossIncomeAfterTax - grossIncome * 0.2
+                  : grossIncomeAfterTax
+              )}
+            </Td>
           </Tr>
+
+          {!!prePaidTaxAmount && (
+            <Tr>
+              <Td>Παρακράτηση Φόρου(-20%)</Td>
+              <Td isNumeric> {formatCellValue(prePaidTaxAmount)} </Td>
+              <Td isNumeric>
+                {formatCellValue(prePaidTaxAmount * taxYearDuration)}
+              </Td>
+            </Tr>
+          )}
 
           {prePaidNextYearTax && (
             <Tr>
@@ -186,10 +211,10 @@ const IncomeTable = () => {
                 <strong>Καθαρό εισόδημα</strong>
               </Td>
               <Td isNumeric>
-                <Text color="purple.500">{finalIncome('month')}</Text>
+                <Text color="purple.500">{finalIncome(amount, "month")}</Text>
               </Td>
               <Td isNumeric>
-                <Text color="purple.500">{finalIncome('year')}</Text>
+                <Text color="purple.500">{finalIncome(amount, "year")}</Text>
               </Td>
             </Tr>
           )}
