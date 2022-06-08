@@ -15,16 +15,16 @@ const MainForm = () => {
       field: "grossIncome",
     },
     {
+      text: "Έξοδα Επιχείρησης ανά έτος",
+      field: "grossIncomeAfterBusinessExpenses",
+    },
+    {
       text: "Αμοιβή Λογιστή ανά μήνα",
       field: "accountantFees",
     },
     {
       text: "Κοινωνική Ασφάλιση(ΕΦΚΑ) ανά μήνα",
       field: "businessObligations",
-    },
-    {
-      text: "Έξοδα Επιχείρησης ανά έτος",
-      field: "grossIncomeAfterBusinessExpenses",
     },
   ];
 
@@ -34,8 +34,7 @@ const MainForm = () => {
       field: "savings",
     },
     {
-      text: "Ετήσιο Επιπρόσθετο Ποσό(π.χ. Ειδική Εισφορά Αλληλεγγύης,\
-        Ετήσιο τέλος επιτηδεύματος, κλτ)",
+      text: "Ετήσιο Επιπρόσθετο Ποσό(π.χ. Ετήσιο τέλος επιτηδεύματος κλτ)",
       field: "additionalBusinessObligations",
     },
   ];

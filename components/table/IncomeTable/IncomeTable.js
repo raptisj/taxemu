@@ -39,7 +39,7 @@ const IncomeTable = () => {
     : grossIncomeAfterTaxPerMonth;
 
   const grossIncomeAfterTaxPerYearResult = prePaidTax
-    ? grossIncomeAfterTax - grossIncome * PRE_PAID_TAX
+    ? grossIncomeAfterTax - grossIncomePerYear * PRE_PAID_TAX
     : grossIncomeAfterTax;
 
   const taxInAdvance =
@@ -74,6 +74,10 @@ const IncomeTable = () => {
       month: (prePaidNextYearTax ? taxInAdvance : 0) / 12,
       year: prePaidNextYearTax ? taxInAdvance : 0,
     },
+    grossIncomeAfterBusinessExpenses: {
+      month: 0,
+      year: grossIncomeAfterBusinessExpenses
+    }
   };
 
   const prePaidTaxAmount = prePaidTax ? grossIncomePerMonth * PRE_PAID_TAX : 0;
