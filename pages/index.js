@@ -3,7 +3,7 @@ import Head from "next/head";
 import { useStore } from "store";
 import { Box, Grid, GridItem } from "@chakra-ui/react";
 import Table from "components/table";
-import { OpeningHeader } from "components/header";
+import Header from "components/header";
 import Form from "components/form";
 
 export default function Home() {
@@ -33,7 +33,6 @@ export default function Home() {
     (customGrossIncome) => {
       let amount = customGrossIncome;
       let scaleResult = 0;
-      // const scales = [0.09, 0.22, 0.28, 0.36, 0.44];
 
       if (amount > SCALE_THRESHOLD) {
         amount -= SCALE_THRESHOLD;
@@ -91,7 +90,7 @@ export default function Home() {
       </Head>
 
       <main>
-        <OpeningHeader />
+        <Header.Hero />
 
         <Grid
           templateColumns=".7fr 1.3fr"

@@ -1,11 +1,9 @@
 import {
-  Text,
   Table,
   Thead,
   Tbody,
   Tr,
   Th,
-  Td,
   TableCaption,
   TableContainer,
 } from "@chakra-ui/react";

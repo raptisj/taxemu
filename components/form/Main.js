@@ -40,6 +40,13 @@ const MainForm = () => {
     },
   ];
 
+  const onChangeDetail = (value, field) => {
+    addDetail({
+      value: parseInt(value) || 0,
+      field,
+    });
+  };
+
   return (
     <Box>
       <Button
@@ -63,12 +70,7 @@ const MainForm = () => {
             value={details[field]}
             key={field}
             text={text}
-            onChange={(value) =>
-              addDetail({
-                value: parseInt(value) || 0,
-                field,
-              })
-            }
+            onChange={(value) => onChangeDetail(value, field)}
           />
         ))}
       </Stack>
@@ -90,12 +92,7 @@ const MainForm = () => {
           <Input.NumberCounterField
             text="Ενεργοί μήνες φορολογικού έτους"
             isFullYear={isFullYear}
-            onChange={(value) =>
-              addDetail({
-                value: parseInt(value) || 0,
-                field: "taxYearDuration",
-              })
-            }
+            onChange={(value) => onChangeDetail(value, "taxYearDuration")}
           />
         )}
       </Stack>
@@ -106,12 +103,7 @@ const MainForm = () => {
             value={details[field]}
             key={field}
             text={text}
-            onChange={(value) =>
-              addDetail({
-                value: parseInt(value) || 0,
-                field,
-              })
-            }
+            onChange={(value) => onChangeDetail(value, field)}
           />
         ))}
       </Stack>

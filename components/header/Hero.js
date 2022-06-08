@@ -8,7 +8,7 @@ const tagStyles = {
   color: "#979797",
 };
 
-const OpeningHeader = () => (
+const HeroHeader = () => (
   <Box maxW="700px" m="auto" p={4} color="white" textAlign="center" py={14}>
     <Heading as="h2" size="3xl" position="relative">
       Taxemu <span style={tagStyles}>Alpha Version</span>
@@ -22,4 +22,4 @@ const OpeningHeader = () => (
   </Box>
 );
 
-export default OpeningHeader;
+export default HeroHeader;

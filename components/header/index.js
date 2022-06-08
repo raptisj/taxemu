@@ -1,3 +1,5 @@
-import OpeningHeader from "./OpeningHeader";
+import Hero from "./Hero";
 
-export { OpeningHeader };
+const Header = { Hero };
+
+export default Header;
