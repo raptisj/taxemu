@@ -1,10 +1,12 @@
 import React, { useEffect, useCallback } from "react";
 import Head from "next/head";
 import { useStore } from "store";
-import { Box, Grid, GridItem } from "@chakra-ui/react";
+import { Box, Grid, GridItem, Text, Tooltip } from "@chakra-ui/react";
 import Table from "components/table";
 import Header from "components/header";
 import Form from "components/form";
+import Image from "next/image";
+import githubLogo from "assets/github-logo.png";
 
 export default function Home() {
   const details = useStore((state) => state.userDetails);
@@ -106,11 +108,44 @@ export default function Home() {
             <Form.MainForm />
           </GridItem>
 
-          <GridItem>
+          <GridItem position="relative">
+            <Tooltip
+              label="Contribute or file an issue. Do it!"
+              aria-label="Contribute or file an issue. Do it!"
+            >
+              <Box position="absolute" top="-50px" right="0">
+                <a
+                  href="https://github.com/raptisj/taxemu"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <Image
+                    src={githubLogo}
+                    alt="Picture of the author"
+                    width={26}
+                    height={26}
+                  />
+                </a>
+              </Box>
+            </Tooltip>
             <Table.IncomeTable />
           </GridItem>
         </Grid>
       </main>
+
+      <Box textAlign="center" p={4}>
+        <Text fontSize="sm" color="gray.500">
+          Made by{" "}
+          <a
+            href="https://twitter.com/JohnRaptisM"
+            target="_blank"
+            rel="noreferrer"
+            style={{ color: "#805ad5" }}
+          >
+            John Raptis
+          </a>
+        </Text>
+      </Box>
     </Box>
   );
 }

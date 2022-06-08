@@ -34,7 +34,7 @@ npm run dev
 
 ### Possible future features for V1 release
 
-- User account data can be persistent
+- User account so data can be persistent
 - Tax history
-- Add customization like any additional tax that is not applied
+- Add customization like any additional tax that is not provided
 - Pie chart for better visualizations

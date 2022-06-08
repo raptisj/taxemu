@@ -28,17 +28,31 @@ const IncomeTable = () => {
     prePaidTax,
   } = details;
 
+  const grossIncomePerMonth = grossIncome / 12;
+  const grossIncomePerYear = (grossIncome / 12) * taxYearDuration;
+  const grossIncomeAfterTaxPerMonth = grossIncomeAfterTax / 12;
+  const grossIncomeAfterTaxPerYear =
+    (grossIncomeAfterTax / 12) * taxYearDuration;
+
+  const grossIncomeAfterTaxPerMonthResult = prePaidTax
+    ? grossIncomeAfterTaxPerMonth - grossIncomePerMonth * PRE_PAID_TAX
+    : grossIncomeAfterTaxPerMonth;
+
+  const grossIncomeAfterTaxPerYearResult = prePaidTax
+    ? grossIncomeAfterTax - grossIncome * PRE_PAID_TAX
+    : grossIncomeAfterTax;
+
   const taxInAdvance =
     grossIncomeAfterTax * 0.55 * (prePaidTaxDiscount ? 0.5 : 1);
 
   const amount = {
     grossIncome: {
-      month: grossIncome / 12,
-      year: (grossIncome / 12) * taxYearDuration,
+      month: grossIncomePerMonth,
+      year: grossIncomePerYear,
     },
     grossIncomeAfterTax: {
-      month: grossIncomeAfterTax / 12,
-      year: (grossIncomeAfterTax / 12) * taxYearDuration,
+      month: grossIncomeAfterTaxPerMonth,
+      year: grossIncomeAfterTaxPerYear,
     },
     accountantFees: {
       month: accountantFees,
@@ -62,7 +76,7 @@ const IncomeTable = () => {
     },
   };
 
-  const prePaidTaxAmount = prePaidTax ? (grossIncome / 12) * PRE_PAID_TAX : 0;
+  const prePaidTaxAmount = prePaidTax ? grossIncomePerMonth * PRE_PAID_TAX : 0;
 
   return (
     <TableContainer position="sticky" top={8}>
@@ -78,8 +92,8 @@ const IncomeTable = () => {
         <Tbody>
           <TableCell
             text="Μικτός μισθός"
-            perMonth={grossIncome / 12}
-            perYear={(grossIncome / 12) * taxYearDuration}
+            perMonth={grossIncomePerMonth}
+            perYear={grossIncomePerYear}
           />
 
           {!!grossIncomeAfterBusinessExpenses && (
@@ -96,16 +110,8 @@ const IncomeTable = () => {
                 Φόρος <br /> (9%, 22%, 28%, 36% και 44%)
               </p>
             }
-            perMonth={
-              prePaidTax
-                ? grossIncomeAfterTax / 12 - (grossIncome / 12) * PRE_PAID_TAX
-                : grossIncomeAfterTax / 12
-            }
-            perYear={
-              prePaidTax
-                ? grossIncomeAfterTax - grossIncome * PRE_PAID_TAX
-                : grossIncomeAfterTax
-            }
+            perMonth={grossIncomeAfterTaxPerMonthResult}
+            perYear={grossIncomeAfterTaxPerYearResult}
           />
 
           {!!prePaidTaxAmount && (
