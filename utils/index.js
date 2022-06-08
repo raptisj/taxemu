@@ -1,5 +1,5 @@
 export const formatCellValue = (val) =>
-  val ? `€${val.toLocaleString("en-US").split(".")[0]}` : "xxxxxx";
+  val ? `€${val.toLocaleString("en-US").split(".")[0]}` : "------";
 
 export const calcFinal = (obj, type) => {
   return Object.keys(obj)
@@ -8,4 +8,4 @@ export const calcFinal = (obj, type) => {
 };
 
 export const finalIncome = (amount, type) =>
-  calcFinal(amount, type) > 0 ? calcFinal(amount, type) : "xxxxxx";
+  calcFinal(amount, type) > 0 ? calcFinal(amount, type) : "------";

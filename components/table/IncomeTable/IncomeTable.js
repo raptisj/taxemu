@@ -161,8 +161,8 @@ const IncomeTable = () => {
           {!!savings && (
             <TableCell
               text={<strong>Αποταμίευση</strong>}
-              perMonth={savings < grossIncome ? savings : "xxxxxx"}
-              perYear={savings < grossIncome ? savings * 12 : "xxxxxx"}
+              perMonth={savings < grossIncome ? savings : "------"}
+              perYear={savings < grossIncome ? savings * 12 : "------"}
               color="green.500"
             />
           )}

@@ -4,7 +4,7 @@ _This is the **alpha version** of Taxemu. A tracker tool for one-person business
 
 The live project can be found [here](https://taxemu.vercel.app/).
 
-![Screenshot](./assets/home-v1.png)
+![Screenshot](./assets/home-v0.1.png)
 
 ## Development
 
@@ -26,7 +26,7 @@ npm run dev
 
 ### Currently
 
-- Calculate tax by apply all necessary tax scales(9%, 22%, 28%, 36% and 44%)
+- Calculate tax by applying all necessary tax scales(9%, 22%, 28%, 36% and 44%)
 - Choose additional tax if applied
 - Choose between full taxation year or partial
 - Calculate operation expenses(accountant fee) and business obligations(efka etc.)
