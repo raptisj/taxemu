@@ -38,3 +38,6 @@ npm run dev
 - Tax history
 - Add customization like any additional tax that is not provided
 - Pie chart for better visualizations
+
+## Author
+John Raptis

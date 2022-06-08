@@ -48,20 +48,27 @@ const MainForm = () => {
 
   return (
     <Box>
-      <Button
-        colorScheme="purple"
-        variant="outline"
-        onClick={removeUserDetails}
-        mt={2}
-        isDisabled={!grossIncome}
+      <Box
         position="sticky"
         top="0"
-        borderRadius={0}
-        zIndex={1}
-        background="#f3f3f3"
+        mt={2}
+        zIndex={10}
+        width="105%"
+        backgroundColor='rgba(243, 243, 243, .15)'
+        backdropFilter="blur(5px)"
       >
-        Clear fields
-      </Button>
+        <Button
+          colorScheme="purple"
+          variant="outline"
+          onClick={removeUserDetails}
+          isDisabled={!grossIncome}
+          borderRadius={0}
+          zIndex={1}
+          background="#f3f3f3"
+        >
+          Clear fields
+        </Button>
+      </Box>
 
       <Stack spacing={4} direction="column" mt={6}>
         {primaryInputList.map(({ text, field }) => (

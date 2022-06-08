@@ -76,8 +76,8 @@ const IncomeTable = () => {
     },
     grossIncomeAfterBusinessExpenses: {
       month: 0,
-      year: grossIncomeAfterBusinessExpenses
-    }
+      year: grossIncomeAfterBusinessExpenses,
+    },
   };
 
   const prePaidTaxAmount = prePaidTax ? grossIncomePerMonth * PRE_PAID_TAX : 0;
