@@ -4,7 +4,7 @@ _This is the **alpha version** of Taxemu. A tracker tool for one-person business
 
 The live project can be found [here](https://taxemu.vercel.app/).
 
-![Screenshot](./assets/home-v0.1.png)
+![Screenshot](./assets/home-v0.2.png)
 
 ## Development
 
@@ -31,13 +31,13 @@ npm run dev
 - Choose between full taxation year or partial
 - Calculate operation expenses(accountant fee) and business obligations(efka etc.)
 - Choose between available tax discounts
+- Pie chart for better visualizations
 
 ### Possible future features for V1 release
 
 - User account so data can be persistent
 - Tax history
 - Add customization like any additional tax that is not provided
-- Pie chart for better visualizations
 
 ## Author
 John Raptis

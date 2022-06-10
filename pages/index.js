@@ -102,6 +102,7 @@ export default function Home() {
           mt={12}
           backgroundColor="#f3f3f3"
           p={4}
+          pb={14}
           borderRadius="4px"
         >
           <GridItem>
@@ -128,7 +129,7 @@ export default function Home() {
                 </a>
               </Box>
             </Tooltip>
-            <Table.IncomeTable />
+              <Table.IncomeTable />
           </GridItem>
         </Grid>
       </main>

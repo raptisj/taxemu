@@ -6,10 +6,12 @@ import {
   Th,
   TableCaption,
   TableContainer,
+  Box,
 } from "@chakra-ui/react";
 import { finalIncome } from "utils";
 import { useStore } from "store";
 import { TableCell } from "./IncomeTableCell";
+import PieChart from "components/charts";
 
 const IncomeTable = () => {
   const details = useStore((state) => state.userDetails);
@@ -83,105 +85,113 @@ const IncomeTable = () => {
   const prePaidTaxAmount = prePaidTax ? grossIncomePerMonth * PRE_PAID_TAX : 0;
 
   return (
-    <TableContainer position="sticky" top={8}>
-      <Table variant="simple">
-        <TableCaption>*τα ποσά είναι κατα προσέγγιση</TableCaption>
-        <Thead>
-          <Tr>
-            <Th></Th>
-            <Th isNumeric>Ανα μηνα</Th>
-            <Th isNumeric>Ανα ετος</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          <TableCell
-            text="Μικτός μισθός"
-            perMonth={grossIncomePerMonth}
-            perYear={grossIncomePerYear}
-          />
-
-          {!!grossIncomeAfterBusinessExpenses && (
+    <Box position="sticky" top={8}>
+      <TableContainer>
+        <Table variant="simple">
+          <TableCaption>*τα ποσά είναι κατα προσέγγιση</TableCaption>
+          <Thead>
+            <Tr>
+              <Th></Th>
+              <Th isNumeric>Ανα μηνα</Th>
+              <Th isNumeric>Ανα ετος</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
             <TableCell
-              text="Έξοδα Επιχείρησης"
-              perMonth="--"
-              perYear={grossIncomeAfterBusinessExpenses}
+              text="Μικτός μισθός"
+              perMonth={grossIncomePerMonth}
+              perYear={grossIncomePerYear}
             />
-          )}
 
-          <TableCell
-            text={
-              <p>
-                Φόρος <br /> (9%, 22%, 28%, 36% και 44%)
-              </p>
-            }
-            perMonth={grossIncomeAfterTaxPerMonthResult}
-            perYear={grossIncomeAfterTaxPerYearResult}
-          />
+            {!!grossIncomeAfterBusinessExpenses && (
+              <TableCell
+                text="Έξοδα Επιχείρησης"
+                perMonth="--"
+                perYear={grossIncomeAfterBusinessExpenses}
+              />
+            )}
 
-          {!!prePaidTaxAmount && (
             <TableCell
-              text="Παρακράτηση Φόρου(-20%)"
-              perMonth={prePaidTaxAmount}
-              perYear={prePaidTaxAmount * taxYearDuration}
-            />
-          )}
-
-          {prePaidNextYearTax && (
-            <TableCell
-              text={`Προκαταβολή φόρου
-                ${prePaidTaxDiscount ? "(με έκπτωση)" : ""}`}
-              perMonth={
-                (grossIncomeAfterTax * 0.55 * (prePaidTaxDiscount ? 0.5 : 1)) /
-                12
+              text={
+                <p>
+                  Φόρος <br /> (9%, 22%, 28%, 36% και 44%)
+                </p>
               }
-              perYear={taxInAdvance}
+              perMonth={grossIncomeAfterTaxPerMonthResult}
+              perYear={grossIncomeAfterTaxPerYearResult}
             />
-          )}
 
-          {!!accountantFees && (
-            <TableCell
-              text="Αμοιβή Λογιστή"
-              perMonth={accountantFees}
-              perYear={accountantFees * 12}
-            />
-          )}
+            {!!prePaidTaxAmount && (
+              <TableCell
+                text="Παρακράτηση Φόρου(-20%)"
+                perMonth={prePaidTaxAmount}
+                perYear={prePaidTaxAmount * taxYearDuration}
+              />
+            )}
 
-          {!!businessObligations && (
-            <TableCell
-              text="Κοινωνική Ασφάλιση(ΕΦΚΑ)"
-              perMonth={businessObligations}
-              perYear={businessObligations * 12}
-            />
-          )}
+            {prePaidNextYearTax && (
+              <TableCell
+                text={`Προκαταβολή φόρου
+                ${prePaidTaxDiscount ? "(με έκπτωση)" : ""}`}
+                perMonth={
+                  (grossIncomeAfterTax *
+                    0.55 *
+                    (prePaidTaxDiscount ? 0.5 : 1)) /
+                  12
+                }
+                perYear={taxInAdvance}
+              />
+            )}
 
-          {!!additionalBusinessObligations && (
-            <TableCell
-              text="Επιπρόσθετος Ποσό"
-              perMonth={additionalBusinessObligations / 12}
-              perYear={additionalBusinessObligations}
-            />
-          )}
+            {!!accountantFees && (
+              <TableCell
+                text="Αμοιβή Λογιστή"
+                perMonth={accountantFees}
+                perYear={accountantFees * 12}
+              />
+            )}
 
-          {!!savings && (
-            <TableCell
-              text={<strong>Αποταμίευση</strong>}
-              perMonth={savings < grossIncome ? savings : "------"}
-              perYear={savings < grossIncome ? savings * 12 : "------"}
-              color="green.500"
-            />
-          )}
+            {!!businessObligations && (
+              <TableCell
+                text="Κοινωνική Ασφάλιση(ΕΦΚΑ)"
+                perMonth={businessObligations}
+                perYear={businessObligations * 12}
+              />
+            )}
 
-          {!!grossIncome && (
-            <TableCell
-              text={<strong>Καθαρό εισόδημα</strong>}
-              perMonth={finalIncome(amount, "month")}
-              perYear={finalIncome(amount, "year")}
-              color="purple.500"
-            />
-          )}
-        </Tbody>
-      </Table>
-    </TableContainer>
+            {!!additionalBusinessObligations && (
+              <TableCell
+                text="Επιπρόσθετος Ποσό"
+                perMonth={additionalBusinessObligations / 12}
+                perYear={additionalBusinessObligations}
+              />
+            )}
+
+            {!!savings && (
+              <TableCell
+                text={<strong>Αποταμίευση</strong>}
+                perMonth={savings < grossIncome ? savings : "------"}
+                perYear={savings < grossIncome ? savings * 12 : "------"}
+                color="green.500"
+              />
+            )}
+
+            {!!grossIncome && (
+              <TableCell
+                text={<strong>Καθαρό εισόδημα</strong>}
+                perMonth={finalIncome(amount, "month")}
+                perYear={finalIncome(amount, "year")}
+                color="purple.500"
+              />
+            )}
+          </Tbody>
+        </Table>
+      </TableContainer>
+
+      <Box width="70%" mx="auto" mt={6}>
+        <PieChart amount={amount} finalIncome={() => finalIncome(amount, "year")} />
+      </Box>
+    </Box>
   );
 };
 
