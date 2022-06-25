@@ -1,4 +1,3 @@
-// import { useEffect, useCallback } from "react";
 import {
   Table,
   Thead,
