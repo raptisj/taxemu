@@ -9,6 +9,54 @@ import Image from "next/image";
 import githubLogo from "assets/github-logo.png";
 
 export default function Home() {
+  const details = useStore((state) => state.userDetails);
+  const addDetail = useStore((state) => state.addDetail);
+
+  const { discountOptions, taxableIncome, taxScales } = details;
+
+  const SCALE_THRESHOLD = 10000;
+
+  const handleTaxScales = useCallback((_taxableIncome, _taxScales) => {
+    let amount = _taxableIncome;
+    let scales = _taxScales.map((scale, index) => {
+      if (amount > SCALE_THRESHOLD) {
+        if (index < 4) {
+          amount -= SCALE_THRESHOLD;
+          scale.amount = SCALE_THRESHOLD * scale.multiplier;
+          scale.from = SCALE_THRESHOLD * index + 1;
+          scale.to = SCALE_THRESHOLD * (index + 1);
+        } else {
+          // Top tax rate, add all other taxable income to scale.to
+          scale.amount = amount * scale.multiplier;
+          scale.from = SCALE_THRESHOLD * index + 1;
+          scale.to = _taxableIncome;
+        }
+      } else {
+        if (index === 0) {
+          // Bottom tax rate, apply discount if applicable
+          scale.multiplier =
+            0.09 * (discountOptions.firstScaleDiscount ? 0.5 : 1);
+        }
+        scale.amount = amount * scale.multiplier;
+        scale.from = SCALE_THRESHOLD * index + 1;
+        scale.to = _taxableIncome;
+        amount = 0;
+      }
+      return scale;
+    });
+
+    return addDetail({
+      value: scales,
+      field: "taxScales",
+    });
+  }, [
+    addDetail,
+    discountOptions.firstScaleDiscount,
+  ]);
+
+  useEffect(() => {
+    handleTaxScales(taxableIncome, taxScales);
+  }, [taxableIncome, discountOptions]);
 
   return (
     <Box minH="100vh" pt={0} pb={12} px="2rem" className="container">

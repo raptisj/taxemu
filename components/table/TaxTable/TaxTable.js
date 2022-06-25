@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+// import { useEffect, useCallback } from "react";
 import {
   Table,
   Thead,
@@ -15,62 +15,8 @@ import { useStore } from "store";
 
 const TaxTable = () => {
   const details = useStore((state) => state.userDetails);
-  const addDetail = useStore((state) => state.addDetail);
 
-  const { discountOptions, taxableIncome, totalTax, taxScales } = details;
-
-  const SCALE_THRESHOLD = 10000;
-
-  const addTaxScalesWrapper = useCallback(
-    (value) => {
-      return addDetail({
-        value,
-        field: "taxScales",
-      });
-    },
-    [addDetail]
-  );
-
-  const handleTaxScales = useCallback(() => {
-    let amount = taxableIncome;
-    let scales = taxScales.map((scale, index) => {
-      if (amount > SCALE_THRESHOLD) {
-        if (index < 4) {
-          amount -= SCALE_THRESHOLD;
-          scale.amount = SCALE_THRESHOLD * scale.multiplier;
-          scale.from = SCALE_THRESHOLD * index + 1;
-          scale.to = SCALE_THRESHOLD * (index + 1);
-        } else {
-          // Top tax rate, add all other taxable income to scale.to
-          scale.amount = amount * scale.multiplier;
-          scale.from = SCALE_THRESHOLD * index + 1;
-          scale.to = taxableIncome;
-        }
-      } else {
-        if (index == 0) {
-          // Bottom tax rate, apply discount if applicable
-          scale.multiplier =
-            0.09 * (discountOptions.firstScaleDiscount ? 0.5 : 1);
-        }
-        scale.amount = amount * scale.multiplier;
-        scale.from = SCALE_THRESHOLD * index + 1;
-        scale.to = taxableIncome;
-        amount = 0;
-      }
-      return scale;
-    });
-
-    return addTaxScalesWrapper(scales);
-  }, [
-    discountOptions.firstScaleDiscount,
-    taxableIncome,
-    taxScales,
-    addTaxScalesWrapper,
-  ]);
-
-  useEffect(() => {
-    handleTaxScales();
-  }, [taxableIncome, discountOptions]);
+  const { totalTax, taxScales } = details;
 
   return (
     <Box>
