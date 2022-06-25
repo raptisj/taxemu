@@ -21,15 +21,15 @@ const TaxTable = () => {
 
   const SCALE_THRESHOLD = 10000;
 
-  const addTaxScalesWrapper = useCallback((value) => {
-    return (
-      addDetail({
+  const addTaxScalesWrapper = useCallback(
+    (value) => {
+      return addDetail({
         value,
         field: "taxScales",
-      }),
-      [addDetail]
-    );
-  });
+      });
+    },
+    [addDetail]
+  );
 
   const handleTaxScales = useCallback(() => {
     let amount = taxableIncome;

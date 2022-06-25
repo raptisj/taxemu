@@ -11,14 +11,10 @@ import { formatCellValue } from "utils";
 import { useStore } from "store";
 import { TaxTable } from "../TaxTable/TaxTable";
 
-
 const TaxAnalysisIcon = () => {
   const details = useStore((state) => state.userDetails);
 
-  const {
-    taxableIncome
-  } = details;
-
+  const { taxableIncome } = details;
 
   return (
     <Popover trigger="hover">
@@ -28,9 +24,12 @@ const TaxAnalysisIcon = () => {
       <PopoverContent width={"max"}>
         <PopoverArrow />
         <PopoverHeader>
-            <p>
-                Φορολογητέο Εισόδημα: { typeof taxableIncome === "number" ? formatCellValue?.(taxableIncome) : "--" }
-            </p>
+          <p>
+            Φορολογητέο Εισόδημα:{" "}
+            {typeof taxableIncome === "number"
+              ? formatCellValue?.(taxableIncome)
+              : "--"}
+          </p>
         </PopoverHeader>
         <PopoverBody>
           <TaxTable />
