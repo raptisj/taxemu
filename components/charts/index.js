@@ -8,7 +8,7 @@ export default function PieChart({ amount, finalIncome }) {
   const preData = [
     {
       label: "Φόρος",
-      value: amount.grossIncomeAfterTax.year,
+      value: amount.totalTax.year,
     },
     {
       label: "Καθαρά",
@@ -16,7 +16,7 @@ export default function PieChart({ amount, finalIncome }) {
     },
     {
       label: "Έξοδα Επιχείρησης",
-      value: amount.grossIncomeAfterBusinessExpenses.year,
+      value: amount.totalBusinessExpenses.year,
     },
     {
       label: "Αμοιβή Λογιστή",
@@ -24,7 +24,7 @@ export default function PieChart({ amount, finalIncome }) {
     },
     {
       label: "Κοινωνική Ασφάλιση(ΕΦΚΑ)",
-      value: amount.businessObligations.year,
+      value: amount.healthInsuranceFees.year,
     },
     {
       label: "Αποταμίευση",

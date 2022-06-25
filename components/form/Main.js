@@ -63,20 +63,20 @@ const MainForm = () => {
       addDetail({
         value,
         field: "taxableIncome",
-      }),
-      [addDetail]
+      })
     );
-  });
+  },
+  [addDetail]);
 
   const addTotalTaxWrapper = useCallback((value) => {
     return (
       addDetail({
         value,
         field: "totalTax",
-      }),
-      [addDetail]
+      })
     );
-  });
+  },
+  [addDetail]);
 
   const onChangeDetail = (value, field) => {
     addDetail({
@@ -119,6 +119,7 @@ const MainForm = () => {
   useEffect(() => {
     handleTotalBusinessExpenses();
   }, [
+    handleTotalBusinessExpenses,
     accountantFees,
     healthInsuranceFees,
     extraBusinessExpenses,
@@ -127,11 +128,11 @@ const MainForm = () => {
 
   useEffect(() => {
     handleTaxableIncome();
-  }, [grossIncome, totalBusinessExpenses]);
+  }, [handleTaxableIncome,grossIncome, totalBusinessExpenses]);
 
   useEffect(() => {
     handleTotalTax();
-  }, [taxScales]);
+  }, [handleTotalTax,taxScales]);
 
   return (
     <Box>
