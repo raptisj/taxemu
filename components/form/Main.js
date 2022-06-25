@@ -1,4 +1,5 @@
-import { Box, Stack, Divider, Button } from "@chakra-ui/react";
+import { useEffect, useCallback } from "react";
+import { Box, Stack, Divider, Button, Text } from "@chakra-ui/react";
 import { Input, Radio } from "../input";
 import { useStore } from "store";
 
@@ -7,24 +8,36 @@ const MainForm = () => {
   const addDetail = useStore((state) => state.addDetail);
   const removeUserDetails = useStore((state) => state.removeUserDetails);
 
-  const { isFullYear, grossIncome } = details;
+  const {
+    isFullYear,
+    grossIncome,
+    accountantFees,
+    healthInsuranceFees,
+    extraBusinessExpenses,
+    totalBusinessExpenses,
+    taxYearDuration,
+    taxScales
+  } = details;
 
-  const primaryInputList = [
+  const incomeInputList = [
     {
       text: "Ετήσιος Μικτός μισθός",
       field: "grossIncome",
     },
-    {
-      text: "Έξοδα Επιχείρησης ανά έτος",
-      field: "grossIncomeAfterBusinessExpenses",
-    },
+  ];
+
+  const expensesInputList = [
     {
       text: "Αμοιβή Λογιστή ανά μήνα",
       field: "accountantFees",
     },
     {
       text: "Κοινωνική Ασφάλιση(ΕΦΚΑ) ανά μήνα",
-      field: "businessObligations",
+      field: "healthInsuranceFees",
+    },
+    {
+      text: "Πρόσθετα Έξοδα Επιχείρησης ανά έτος",
+      field: "extraBusinessExpenses",
     },
   ];
 
@@ -33,11 +46,37 @@ const MainForm = () => {
       text: "Αποταμίευση ανά μήνα",
       field: "savings",
     },
-    {
-      text: "Ετήσιο Επιπρόσθετο Ποσό(π.χ. Ετήσιο τέλος επιτηδεύματος κλτ)",
-      field: "additionalBusinessObligations",
-    },
   ];
+
+  const addTotalBusinessExpensesWrapper = useCallback((value) => {
+    return (
+      addDetail({
+        value,
+        field: "totalBusinessExpenses",
+      }),
+      [addDetail]
+    );
+  });
+
+  const addTaxableIncomeWrapper = useCallback((value) => {
+    return (
+      addDetail({
+        value,
+        field: "taxableIncome",
+      }),
+      [addDetail]
+    );
+  });
+
+  const addTotalTaxWrapper = useCallback((value) => {
+    return (
+      addDetail({
+        value,
+        field: "totalTax",
+      }),
+      [addDetail]
+    );
+  });
 
   const onChangeDetail = (value, field) => {
     addDetail({
@@ -46,6 +85,53 @@ const MainForm = () => {
     });
   };
 
+  const handleTotalBusinessExpenses = useCallback(() => {
+    let totalBusinessExpenses =
+      accountantFees * taxYearDuration +
+      healthInsuranceFees * taxYearDuration +
+      (extraBusinessExpenses / 12) * taxYearDuration;
+    return addTotalBusinessExpensesWrapper(totalBusinessExpenses);
+  }, [
+    accountantFees,
+    healthInsuranceFees,
+    extraBusinessExpenses,
+    taxYearDuration,
+    addTotalBusinessExpensesWrapper,
+  ]);
+
+  const handleTaxableIncome = useCallback(() => {
+    let taxableIncome = grossIncome - totalBusinessExpenses;
+    return addTaxableIncomeWrapper(taxableIncome);
+  }, [grossIncome, totalBusinessExpenses, addTaxableIncomeWrapper]);
+
+  const handleTotalTax = useCallback(() => {
+    let totalTax = taxScales
+      .map((scale) => {
+        return scale.amount;
+      })
+      .reduce((a, b) => {
+        return a + b;
+      });
+
+    return addTotalTaxWrapper(totalTax);
+  }, [taxScales, addTotalTaxWrapper]);
+
+  useEffect(() => {
+    handleTotalBusinessExpenses();
+  }, [
+    accountantFees,
+    healthInsuranceFees,
+    extraBusinessExpenses,
+    taxYearDuration,
+  ]);
+
+  useEffect(() => {
+    handleTaxableIncome();
+  }, [grossIncome, totalBusinessExpenses]);
+
+  useEffect(() => {
+    handleTotalTax();
+  }, [taxScales]);
   return (
     <Box>
       <Box
