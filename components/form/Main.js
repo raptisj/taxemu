@@ -132,6 +132,7 @@ const MainForm = () => {
   useEffect(() => {
     handleTotalTax();
   }, [taxScales]);
+
   return (
     <Box>
       <Box
@@ -140,7 +141,7 @@ const MainForm = () => {
         mt={2}
         zIndex={10}
         width="105%"
-        backgroundColor='rgba(243, 243, 243, .15)'
+        backgroundColor="rgba(243, 243, 243, .15)"
         backdropFilter="blur(5px)"
       >
         <Button
@@ -157,7 +158,28 @@ const MainForm = () => {
       </Box>
 
       <Stack spacing={4} direction="column" mt={6}>
-        {primaryInputList.map(({ text, field }) => (
+        <Text fontWeight={600} color="gray.600">
+          Έσοδα
+        </Text>
+        {incomeInputList.map(({ text, field }) => (
+          <Input.NumberField
+            value={details[field]}
+            key={field}
+            text={text}
+            onChange={(value) => onChangeDetail(value, field)}
+          />
+        ))}
+      </Stack>
+
+      <Box py={6}>
+        <Divider orientation="horizontal" style={{ borderColor: "#c7c7c7" }} />
+      </Box>
+
+      <Stack spacing={4} direction="column" pt={6}>
+        <Text fontWeight={600} color="gray.600">
+          Έξοδα
+        </Text>
+        {expensesInputList.map(({ text, field }) => (
           <Input.NumberField
             value={details[field]}
             key={field}
