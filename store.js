@@ -2,9 +2,10 @@ import create from "zustand";
 
 const initialState = {
   grossIncome: 0,
-  grossIncomeAfterTax: 0,
-  grossIncomeAfterBusinessExpenses: 0,
   accountantFees: 0,
+  healthInsuranceFees: 0,
+  extraBusinessExpenses: 0,
+  totalBusinessExpenses: 0,
   taxableIncome: 0,
   taxScales: [
     {
@@ -30,8 +31,6 @@ const initialState = {
   ],
   totalTax: 0,
   savings: 0,
-  businessObligations: 0,
-  additionalBusinessObligations: 0,
   isFullYear: true,
   taxYearDuration: 12,
   discountOptions: {

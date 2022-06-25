@@ -22,11 +22,11 @@ const IncomeTable = () => {
     grossIncome,
     totalTax,
     accountantFees,
-    businessObligations,
-    additionalBusinessObligations,
+    healthInsuranceFees,
+    extraBusinessExpenses,
+    totalBusinessExpenses,
     savings,
     taxYearDuration,
-    grossIncomeAfterBusinessExpenses,
     discountOptions: { prePaidNextYearTax, prePaidTaxDiscount },
     prePaidTax,
   } = details;
@@ -59,13 +59,13 @@ const IncomeTable = () => {
       month: accountantFees,
       year: accountantFees * 12,
     },
-    businessObligations: {
-      month: businessObligations,
-      year: businessObligations * 12,
+    healthInsuranceFees: {
+      month: healthInsuranceFees,
+      year: healthInsuranceFees * 12,
     },
-    additionalBusinessObligations: {
-      month: additionalBusinessObligations / 12,
-      year: additionalBusinessObligations,
+    extraBusinessExpenses: {
+      month: extraBusinessExpenses / 12,
+      year: extraBusinessExpenses,
     },
     savings: {
       month: savings,
@@ -75,9 +75,9 @@ const IncomeTable = () => {
       month: (prePaidNextYearTax ? taxInAdvance : 0) / 12,
       year: prePaidNextYearTax ? taxInAdvance : 0,
     },
-    grossIncomeAfterBusinessExpenses: {
+    totalBusinessExpenses: {
       month: 0,
-      year: grossIncomeAfterBusinessExpenses,
+      year: totalBusinessExpenses,
     },
   };
 
@@ -102,11 +102,35 @@ const IncomeTable = () => {
               perYear={grossIncomePerYear}
             />
 
-            {!!grossIncomeAfterBusinessExpenses && (
+            {!!totalBusinessExpenses && (
               <TableCell
                 text="Έξοδα Επιχείρησης"
                 perMonth="--"
-                perYear={grossIncomeAfterBusinessExpenses}
+                perYear={totalBusinessExpenses}
+              />
+            )}
+
+            {!!accountantFees && (
+              <TableCell
+                text="Αμοιβή Λογιστή"
+                perMonth={accountantFees}
+                perYear={accountantFees * 12}
+              />
+            )}
+
+            {!!healthInsuranceFees && (
+              <TableCell
+                text="Κοινωνική Ασφάλιση(ΕΦΚΑ)"
+                perMonth={healthInsuranceFees}
+                perYear={healthInsuranceFees * 12}
+              />
+            )}
+
+            {!!extraBusinessExpenses && (
+              <TableCell
+                text="Πρόσθετα έξοδα"
+                perMonth={extraBusinessExpenses / 12}
+                perYear={extraBusinessExpenses}
               />
             )}
 
@@ -139,30 +163,6 @@ const IncomeTable = () => {
               />
             )}
 
-            {!!accountantFees && (
-              <TableCell
-                text="Αμοιβή Λογιστή"
-                perMonth={accountantFees}
-                perYear={accountantFees * 12}
-              />
-            )}
-
-            {!!businessObligations && (
-              <TableCell
-                text="Κοινωνική Ασφάλιση(ΕΦΚΑ)"
-                perMonth={businessObligations}
-                perYear={businessObligations * 12}
-              />
-            )}
-
-            {!!additionalBusinessObligations && (
-              <TableCell
-                text="Επιπρόσθετος Ποσό"
-                perMonth={additionalBusinessObligations / 12}
-                perYear={additionalBusinessObligations}
-              />
-            )}
-
             {!!savings && (
               <TableCell
                 text={<strong>Αποταμίευση</strong>}
@@ -185,7 +185,10 @@ const IncomeTable = () => {
       </TableContainer>
 
       <Box width="70%" mx="auto" mt={6}>
-        <PieChart amount={amount} finalIncome={() => finalIncome(amount, "year")} />
+        <PieChart
+          amount={amount}
+          finalIncome={() => finalIncome(amount, "year")}
+        />
       </Box>
     </Box>
   );
