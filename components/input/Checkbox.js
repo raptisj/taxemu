@@ -51,7 +51,7 @@ const CheckboxGroup = () => {
               }
             >
               <Text fontSize="sm" color="gray.500">
-                50% έκτπωση στο 9%
+                50% έκπτωση στο 9%
                 <InfoIcon marginLeft={2} color="gray.500" />
               </Text>
             </Tooltip>
@@ -81,7 +81,7 @@ const CheckboxGroup = () => {
               }
             >
               <Text fontSize="sm" color="gray.500">
-                Έκτπωση 50% στο 55% της προκαταβολής φόρου
+                Έκπτωση 50% στο 55% της προκαταβολής φόρου
                 <InfoIcon marginLeft={2} color="gray.500" />
               </Text>
             </Tooltip>
