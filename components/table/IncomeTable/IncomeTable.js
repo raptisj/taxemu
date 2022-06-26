@@ -11,6 +11,7 @@ import {
 import { finalIncome } from "utils";
 import { useStore } from "store";
 import { TableCell } from "./IncomeTableCell";
+import TaxAnalysisIcon from "./TaxAnalysisIcon";
 import PieChart from "components/charts";
 
 const IncomeTable = () => {
@@ -19,54 +20,52 @@ const IncomeTable = () => {
   const PRE_PAID_TAX = 0.2;
   const {
     grossIncome,
-    grossIncomeAfterTax,
+    totalTax,
     accountantFees,
-    businessObligations,
-    additionalBusinessObligations,
+    healthInsuranceFees,
+    extraBusinessExpenses,
+    totalBusinessExpenses,
     savings,
     taxYearDuration,
-    grossIncomeAfterBusinessExpenses,
     discountOptions: { prePaidNextYearTax, prePaidTaxDiscount },
     prePaidTax,
   } = details;
 
   const grossIncomePerMonth = grossIncome / 12;
   const grossIncomePerYear = (grossIncome / 12) * taxYearDuration;
-  const grossIncomeAfterTaxPerMonth = grossIncomeAfterTax / 12;
-  const grossIncomeAfterTaxPerYear =
-    (grossIncomeAfterTax / 12) * taxYearDuration;
+  const totalTaxPerMonth = totalTax / 12;
+  const totalTaxPerYear = (totalTax / 12) * taxYearDuration;
 
-  const grossIncomeAfterTaxPerMonthResult = prePaidTax
-    ? grossIncomeAfterTaxPerMonth - grossIncomePerMonth * PRE_PAID_TAX
-    : grossIncomeAfterTaxPerMonth;
+  const totalTaxPerMonthResult = prePaidTax
+    ? totalTaxPerMonth - grossIncomePerMonth * PRE_PAID_TAX
+    : totalTaxPerMonth;
 
-  const grossIncomeAfterTaxPerYearResult = prePaidTax
-    ? grossIncomeAfterTax - grossIncomePerYear * PRE_PAID_TAX
-    : grossIncomeAfterTax;
+  const totalTaxPerYearResult = prePaidTax
+    ? totalTax - grossIncomePerYear * PRE_PAID_TAX
+    : totalTax;
 
-  const taxInAdvance =
-    grossIncomeAfterTax * 0.55 * (prePaidTaxDiscount ? 0.5 : 1);
+  const taxInAdvance = totalTax * 0.55 * (prePaidTaxDiscount ? 0.5 : 1);
 
   const amount = {
     grossIncome: {
       month: grossIncomePerMonth,
       year: grossIncomePerYear,
     },
-    grossIncomeAfterTax: {
-      month: grossIncomeAfterTaxPerMonth,
-      year: grossIncomeAfterTaxPerYear,
+    totalTax: {
+      month: totalTaxPerMonth,
+      year: totalTaxPerYear,
     },
     accountantFees: {
       month: accountantFees,
       year: accountantFees * 12,
     },
-    businessObligations: {
-      month: businessObligations,
-      year: businessObligations * 12,
+    healthInsuranceFees: {
+      month: healthInsuranceFees,
+      year: healthInsuranceFees * 12,
     },
-    additionalBusinessObligations: {
-      month: additionalBusinessObligations / 12,
-      year: additionalBusinessObligations,
+    extraBusinessExpenses: {
+      month: extraBusinessExpenses / 12,
+      year: extraBusinessExpenses,
     },
     savings: {
       month: savings,
@@ -76,9 +75,9 @@ const IncomeTable = () => {
       month: (prePaidNextYearTax ? taxInAdvance : 0) / 12,
       year: prePaidNextYearTax ? taxInAdvance : 0,
     },
-    grossIncomeAfterBusinessExpenses: {
+    totalBusinessExpenses: {
       month: 0,
-      year: grossIncomeAfterBusinessExpenses,
+      year: totalBusinessExpenses,
     },
   };
 
@@ -103,22 +102,46 @@ const IncomeTable = () => {
               perYear={grossIncomePerYear}
             />
 
-            {!!grossIncomeAfterBusinessExpenses && (
+            {!!totalBusinessExpenses && (
               <TableCell
                 text="Έξοδα Επιχείρησης"
                 perMonth="--"
-                perYear={grossIncomeAfterBusinessExpenses}
+                perYear={totalBusinessExpenses}
+              />
+            )}
+
+            {!!accountantFees && (
+              <TableCell
+                text="Αμοιβή Λογιστή"
+                perMonth={accountantFees}
+                perYear={accountantFees * 12}
+              />
+            )}
+
+            {!!healthInsuranceFees && (
+              <TableCell
+                text="Κοινωνική Ασφάλιση(ΕΦΚΑ)"
+                perMonth={healthInsuranceFees}
+                perYear={healthInsuranceFees * 12}
+              />
+            )}
+
+            {!!extraBusinessExpenses && (
+              <TableCell
+                text="Πρόσθετα έξοδα"
+                perMonth={extraBusinessExpenses / 12}
+                perYear={extraBusinessExpenses}
               />
             )}
 
             <TableCell
               text={
-                <p>
-                  Φόρος <br /> (9%, 22%, 28%, 36% και 44%)
-                </p>
+                <div>
+                  Φόρος <TaxAnalysisIcon />
+                </div>
               }
-              perMonth={grossIncomeAfterTaxPerMonthResult}
-              perYear={grossIncomeAfterTaxPerYearResult}
+              perMonth={totalTaxPerMonthResult}
+              perYear={totalTaxPerYearResult}
             />
 
             {!!prePaidTaxAmount && (
@@ -134,36 +157,9 @@ const IncomeTable = () => {
                 text={`Προκαταβολή φόρου
                 ${prePaidTaxDiscount ? "(με έκπτωση)" : ""}`}
                 perMonth={
-                  (grossIncomeAfterTax *
-                    0.55 *
-                    (prePaidTaxDiscount ? 0.5 : 1)) /
-                  12
+                  (totalTax * 0.55 * (prePaidTaxDiscount ? 0.5 : 1)) / 12
                 }
                 perYear={taxInAdvance}
-              />
-            )}
-
-            {!!accountantFees && (
-              <TableCell
-                text="Αμοιβή Λογιστή"
-                perMonth={accountantFees}
-                perYear={accountantFees * 12}
-              />
-            )}
-
-            {!!businessObligations && (
-              <TableCell
-                text="Κοινωνική Ασφάλιση(ΕΦΚΑ)"
-                perMonth={businessObligations}
-                perYear={businessObligations * 12}
-              />
-            )}
-
-            {!!additionalBusinessObligations && (
-              <TableCell
-                text="Επιπρόσθετος Ποσό"
-                perMonth={additionalBusinessObligations / 12}
-                perYear={additionalBusinessObligations}
               />
             )}
 
@@ -189,7 +185,10 @@ const IncomeTable = () => {
       </TableContainer>
 
       <Box width="70%" mx="auto" mt={6}>
-        <PieChart amount={amount} finalIncome={() => finalIncome(amount, "year")} />
+        <PieChart
+          amount={amount}
+          finalIncome={() => finalIncome(amount, "year")}
+        />
       </Box>
     </Box>
   );

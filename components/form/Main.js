@@ -1,4 +1,5 @@
-import { Box, Stack, Divider, Button } from "@chakra-ui/react";
+import { useEffect, useCallback } from "react";
+import { Box, Stack, Divider, Button, Text } from "@chakra-ui/react";
 import { Input, Radio } from "../input";
 import { useStore } from "store";
 
@@ -7,24 +8,36 @@ const MainForm = () => {
   const addDetail = useStore((state) => state.addDetail);
   const removeUserDetails = useStore((state) => state.removeUserDetails);
 
-  const { isFullYear, grossIncome } = details;
+  const {
+    isFullYear,
+    grossIncome,
+    accountantFees,
+    healthInsuranceFees,
+    extraBusinessExpenses,
+    totalBusinessExpenses,
+    taxYearDuration,
+    taxScales,
+  } = details;
 
-  const primaryInputList = [
+  const incomeInputList = [
     {
       text: "Ετήσιος Μικτός μισθός",
       field: "grossIncome",
     },
-    {
-      text: "Έξοδα Επιχείρησης ανά έτος",
-      field: "grossIncomeAfterBusinessExpenses",
-    },
+  ];
+
+  const expensesInputList = [
     {
       text: "Αμοιβή Λογιστή ανά μήνα",
       field: "accountantFees",
     },
     {
       text: "Κοινωνική Ασφάλιση(ΕΦΚΑ) ανά μήνα",
-      field: "businessObligations",
+      field: "healthInsuranceFees",
+    },
+    {
+      text: "Πρόσθετα Έξοδα Επιχείρησης ανά έτος",
+      field: "extraBusinessExpenses",
     },
   ];
 
@@ -32,10 +45,6 @@ const MainForm = () => {
     {
       text: "Αποταμίευση ανά μήνα",
       field: "savings",
-    },
-    {
-      text: "Ετήσιο Επιπρόσθετο Ποσό(π.χ. Ετήσιο τέλος επιτηδεύματος κλτ)",
-      field: "additionalBusinessObligations",
     },
   ];
 
@@ -46,6 +55,66 @@ const MainForm = () => {
     });
   };
 
+  const handleTotalBusinessExpenses = useCallback(() => {
+    let totalBusinessExpenses =
+      accountantFees * taxYearDuration +
+      healthInsuranceFees * taxYearDuration +
+      (extraBusinessExpenses / 12) * taxYearDuration;
+
+    return addDetail({
+      value: totalBusinessExpenses,
+      field: "totalBusinessExpenses",
+    });
+  }, [
+    addDetail,
+    accountantFees,
+    healthInsuranceFees,
+    extraBusinessExpenses,
+    taxYearDuration,
+  ]);
+
+  const handleTaxableIncome = useCallback(() => {
+    let taxableIncome = grossIncome - totalBusinessExpenses;
+
+    return addDetail({
+      value: taxableIncome,
+      field: "taxableIncome",
+    });
+  }, [grossIncome, totalBusinessExpenses, addDetail]);
+
+  const handleTotalTax = useCallback(() => {
+    let totalTax = taxScales
+      .map((scale) => {
+        return scale.amount;
+      })
+      .reduce((a, b) => {
+        return a + b;
+      });
+
+      return addDetail({
+        value: totalTax,
+        field: "totalTax",
+      });
+  }, [taxScales, addDetail]);
+
+  useEffect(() => {
+    handleTotalBusinessExpenses();
+  }, [
+    handleTotalBusinessExpenses,
+    accountantFees,
+    healthInsuranceFees,
+    extraBusinessExpenses,
+    taxYearDuration,
+  ]);
+
+  useEffect(() => {
+    handleTaxableIncome();
+  }, [handleTaxableIncome, grossIncome, totalBusinessExpenses]);
+
+  useEffect(() => {
+    handleTotalTax();
+  }, [handleTotalTax, taxScales]);
+
   return (
     <Box>
       <Box
@@ -54,7 +123,7 @@ const MainForm = () => {
         mt={2}
         zIndex={10}
         width="105%"
-        backgroundColor='rgba(243, 243, 243, .15)'
+        backgroundColor="rgba(243, 243, 243, .15)"
         backdropFilter="blur(5px)"
       >
         <Button
@@ -71,7 +140,28 @@ const MainForm = () => {
       </Box>
 
       <Stack spacing={4} direction="column" mt={6}>
-        {primaryInputList.map(({ text, field }) => (
+        <Text fontWeight={600} color="gray.600">
+          Έσοδα
+        </Text>
+        {incomeInputList.map(({ text, field }) => (
+          <Input.NumberField
+            value={details[field]}
+            key={field}
+            text={text}
+            onChange={(value) => onChangeDetail(value, field)}
+          />
+        ))}
+      </Stack>
+
+      <Box py={6}>
+        <Divider orientation="horizontal" style={{ borderColor: "#c7c7c7" }} />
+      </Box>
+
+      <Stack spacing={4} direction="column" pt={6}>
+        <Text fontWeight={600} color="gray.600">
+          Έξοδα
+        </Text>
+        {expensesInputList.map(({ text, field }) => (
           <Input.NumberField
             value={details[field]}
             key={field}
