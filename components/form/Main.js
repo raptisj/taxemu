@@ -41,6 +41,13 @@ const MainForm = () => {
     },
   ];
 
+  const previousYearTaxInAdvanceInputList = [
+    {
+      text: "Περσινή Προκαταβολή φόρου",
+      field: "previousYearTaxInAdvance",
+    },
+  ];
+
   const secondaryInputList = [
     {
       text: "Αποταμίευση ανά μήνα",
@@ -74,13 +81,13 @@ const MainForm = () => {
   ]);
 
   const handleTaxableIncome = useCallback(() => {
-    let taxableIncome = grossIncome - totalBusinessExpenses;
+    let taxableIncome = ((grossIncome - totalBusinessExpenses) / 12) * taxYearDuration;
 
     return addDetail({
       value: taxableIncome,
       field: "taxableIncome",
     });
-  }, [grossIncome, totalBusinessExpenses, addDetail]);
+  }, [grossIncome, totalBusinessExpenses, addDetail, taxYearDuration]);
 
   const handleTotalTax = useCallback(() => {
     let totalTax = taxScales
@@ -162,6 +169,24 @@ const MainForm = () => {
           Έξοδα
         </Text>
         {expensesInputList.map(({ text, field }) => (
+          <Input.NumberField
+            value={details[field]}
+            key={field}
+            text={text}
+            onChange={(value) => onChangeDetail(value, field)}
+          />
+        ))}
+      </Stack>
+
+      <Box py={6}>
+        <Divider orientation="horizontal" style={{ borderColor: "#c7c7c7" }} />
+      </Box>
+
+      <Stack spacing={4} direction="column" pt={6}>
+        <Text fontWeight={600} color="gray.600">
+          Φόρος
+        </Text>
+        {previousYearTaxInAdvanceInputList.map(({ text, field }) => (
           <Input.NumberField
             value={details[field]}
             key={field}

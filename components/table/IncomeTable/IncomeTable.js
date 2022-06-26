@@ -29,6 +29,7 @@ const IncomeTable = () => {
     taxYearDuration,
     discountOptions: { prePaidNextYearTax, prePaidTaxDiscount },
     prePaidTax,
+    previousYearTaxInAdvance,
   } = details;
 
   const grossIncomePerMonth = grossIncome / 12;
@@ -36,13 +37,25 @@ const IncomeTable = () => {
   const totalTaxPerMonth = totalTax / 12;
   const totalTaxPerYear = (totalTax / 12) * taxYearDuration;
 
-  const totalTaxPerMonthResult = prePaidTax
-    ? totalTaxPerMonth - grossIncomePerMonth * PRE_PAID_TAX
-    : totalTaxPerMonth;
+  const calcTotalTax = (taxAmount, grossIncome, previousYearTaxInAdvance) => {
+    const prePaidTaxCalculation = taxAmount - grossIncome * PRE_PAID_TAX;
+    return (
+      (prePaidTax ? prePaidTaxCalculation : taxAmount) -
+      previousYearTaxInAdvance
+    );
+  };
 
-  const totalTaxPerYearResult = prePaidTax
-    ? totalTax - grossIncomePerYear * PRE_PAID_TAX
-    : totalTax;
+  const totalTaxPerMonthResult = calcTotalTax(
+    totalTaxPerMonth,
+    grossIncomePerMonth,
+    previousYearTaxInAdvance / taxYearDuration
+  );
+
+  const totalTaxPerYearResult = calcTotalTax(
+    totalTax,
+    grossIncomePerYear,
+    previousYearTaxInAdvance
+  );
 
   const taxInAdvance = totalTax * 0.55 * (prePaidTaxDiscount ? 0.5 : 1);
 
@@ -160,6 +173,14 @@ const IncomeTable = () => {
                   (totalTax * 0.55 * (prePaidTaxDiscount ? 0.5 : 1)) / 12
                 }
                 perYear={taxInAdvance}
+              />
+            )}
+
+            {!!previousYearTaxInAdvance && (
+              <TableCell
+                text="Περσινή Προκαταβολή φόρου"
+                perMonth={previousYearTaxInAdvance / taxYearDuration}
+                perYear={previousYearTaxInAdvance}
               />
             )}
 

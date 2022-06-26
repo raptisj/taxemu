@@ -14,10 +14,53 @@ const CheckboxGroup = () => {
   const details = useStore((state) => state.userDetails);
   const addDetail = useStore((state) => state.addDetail);
 
-  const { grossIncome, discountOptions, prePaidTax } = details;
+  const { grossIncome, discountOptions, prePaidTax, previousYearTaxInAdvance } = details;
 
   return (
     <>
+      <Stack spacing={4} direction="column">
+        <Text fontWeight={600} color="gray.600">
+          Κρατήσεις
+        </Text>
+
+        <Checkbox
+          colorScheme="purple"
+          isDisabled={previousYearTaxInAdvance}
+          isChecked={discountOptions.prePaidNextYearTax}
+          onChange={() =>
+            addDetail({
+              value: {
+                ...discountOptions,
+                prePaidNextYearTax: !discountOptions.prePaidNextYearTax,
+              },
+              field: "discountOptions",
+            })
+          }
+        >
+          <Text fontSize="sm" color="gray.500">
+            Προκαταβολή φόρου(55% του συνολικού φόρου)
+          </Text>
+        </Checkbox>
+        <Checkbox
+          colorScheme="purple"
+          isChecked={prePaidTax}
+          onChange={() =>
+            addDetail({
+              value: !prePaidTax,
+              field: "prePaidTax",
+            })
+          }
+        >
+          <Text fontSize="sm" color="gray.500">
+            Παρακράτηση φόρου(-20%)
+          </Text>
+        </Checkbox>
+      </Stack>
+
+      <Box py={6}>
+        <Divider orientation="horizontal" style={{ borderColor: "#c7c7c7" }} />
+      </Box>
+
       <Stack spacing={4} direction="column">
         <Text fontWeight={600} color="gray.600">
           Εκπτώσεις Κρατήσεων
@@ -25,7 +68,7 @@ const CheckboxGroup = () => {
 
         <Checkbox
           colorScheme="purple"
-          isDisabled={grossIncome > 10000}
+          isDisabled={!grossIncome || grossIncome > 10000}
           isChecked={discountOptions.firstScaleDiscount && grossIncome <= 10000}
           onChange={() =>
             addDetail({
@@ -59,6 +102,7 @@ const CheckboxGroup = () => {
         </Checkbox>
         <Checkbox
           colorScheme="purple"
+          isDisabled={!discountOptions.prePaidNextYearTax}
           isChecked={discountOptions.prePaidTaxDiscount}
           onChange={() =>
             addDetail({
@@ -86,47 +130,6 @@ const CheckboxGroup = () => {
               </Text>
             </Tooltip>
           </Flex>
-        </Checkbox>
-      </Stack>
-
-      <Box py={6}>
-        <Divider orientation="horizontal" style={{ borderColor: "#c7c7c7" }} />
-      </Box>
-      <Stack spacing={4} direction="column">
-        <Text fontWeight={600} color="gray.600">
-          Κρατήσεις
-        </Text>
-
-        <Checkbox
-          colorScheme="purple"
-          isChecked={discountOptions.prePaidNextYearTax}
-          onChange={() =>
-            addDetail({
-              value: {
-                ...discountOptions,
-                prePaidNextYearTax: !discountOptions.prePaidNextYearTax,
-              },
-              field: "discountOptions",
-            })
-          }
-        >
-          <Text fontSize="sm" color="gray.500">
-            Προκαταβολή φόρου(55% του συνολικού φόρου)
-          </Text>
-        </Checkbox>
-        <Checkbox
-          colorScheme="purple"
-          isChecked={prePaidTax}
-          onChange={() =>
-            addDetail({
-              value: !prePaidTax,
-              field: "prePaidTax",
-            })
-          }
-        >
-          <Text fontSize="sm" color="gray.500">
-            Παρακράτηση φόρου(-20%)
-          </Text>
         </Checkbox>
       </Stack>
     </>

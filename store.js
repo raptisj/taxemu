@@ -7,6 +7,7 @@ const initialState = {
   extraBusinessExpenses: 0,
   totalBusinessExpenses: 0,
   taxableIncome: 0,
+  previousYearTaxInAdvance: 0,
   taxScales: [
     {
       multiplier: 0.09,
