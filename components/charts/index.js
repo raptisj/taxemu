@@ -38,7 +38,6 @@ export default function PieChart({ amount, finalIncome }) {
       .map((l) => l.label),
     datasets: [
       {
-        label: "€",
         data: preData.map((l) => l.value),
         backgroundColor: [
           "rgba(255, 99, 132, 0.2)",
@@ -61,5 +60,34 @@ export default function PieChart({ amount, finalIncome }) {
     ],
   };
 
-  return <Pie data={data} />;
+  const options = {
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: function (context) {
+            let label = ` ${context.label}`;
+            if (label) {
+              label += ": ";
+            }
+            if (context.parsed !== null) {
+              label += new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "EUR",
+              }).format(context.parsed);
+            }
+            return label;
+          },
+          footer: function (context) {
+            let str = `${(
+              (context[0].parsed / amount.grossIncome.year) *
+              100
+            ).toFixed(1)} % των εσόδων`;
+            return str;
+          },
+        },
+      },
+    },
+  };
+
+  return <Pie data={data} options={options} />;
 }
