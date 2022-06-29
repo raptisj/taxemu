@@ -210,17 +210,6 @@ const MainForm = () => {
           />
         )}
       </Stack>
-{/* 
-      <Stack spacing={4} direction="column" pt={6}>
-        {secondaryInputList.map(({ text, field }) => (
-          <Input.NumberField
-            value={details[field]}
-            key={field}
-            text={text}
-            onChange={(value) => onChangeDetail(value, field)}
-          />
-        ))}
-      </Stack> */}
     </Box>
   );
 };
