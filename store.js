@@ -31,7 +31,6 @@ const initialState = {
     },
   ],
   totalTax: 0,
-  savings: 0,
   isFullYear: true,
   taxYearDuration: 12,
   discountOptions: {

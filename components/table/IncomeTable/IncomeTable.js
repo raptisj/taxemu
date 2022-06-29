@@ -25,7 +25,6 @@ const IncomeTable = () => {
     healthInsuranceFees,
     extraBusinessExpenses,
     totalBusinessExpenses,
-    savings,
     taxYearDuration,
     discountOptions: { prePaidNextYearTax, prePaidTaxDiscount },
     prePaidTax,
@@ -79,10 +78,6 @@ const IncomeTable = () => {
     extraBusinessExpenses: {
       month: extraBusinessExpenses / 12,
       year: extraBusinessExpenses,
-    },
-    savings: {
-      month: savings,
-      year: savings * 12,
     },
     prePaidNextYearTax: {
       month: (prePaidNextYearTax ? taxInAdvance : 0) / 12,
@@ -181,15 +176,6 @@ const IncomeTable = () => {
                 text="Περσινή Προκαταβολή φόρου"
                 perMonth={previousYearTaxInAdvance / taxYearDuration}
                 perYear={previousYearTaxInAdvance}
-              />
-            )}
-
-            {!!savings && (
-              <TableCell
-                text={<strong>Αποταμίευση</strong>}
-                perMonth={savings < grossIncome ? savings : "------"}
-                perYear={savings < grossIncome ? savings * 12 : "------"}
-                color="green.500"
               />
             )}
 

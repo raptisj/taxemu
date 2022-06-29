@@ -48,13 +48,6 @@ const MainForm = () => {
     },
   ];
 
-  const secondaryInputList = [
-    {
-      text: "Αποταμίευση ανά μήνα",
-      field: "savings",
-    },
-  ];
-
   const onChangeDetail = (value, field) => {
     addDetail({
       value: parseInt(value) || 0,
@@ -217,7 +210,7 @@ const MainForm = () => {
           />
         )}
       </Stack>
-
+{/* 
       <Stack spacing={4} direction="column" pt={6}>
         {secondaryInputList.map(({ text, field }) => (
           <Input.NumberField
@@ -227,7 +220,7 @@ const MainForm = () => {
             onChange={(value) => onChangeDetail(value, field)}
           />
         ))}
-      </Stack>
+      </Stack> */}
     </Box>
   );
 };
