@@ -14,7 +14,7 @@ const CheckboxGroup = () => {
   const details = useStore((state) => state.userDetails);
   const addDetail = useStore((state) => state.addDetail);
 
-  const { grossIncome, discountOptions, prePaidTax, previousYearTaxInAdvance } = details;
+  const { grossIncome, discountOptions, withholdingTax, previousYearTaxInAdvance } = details;
 
   return (
     <>
@@ -43,11 +43,11 @@ const CheckboxGroup = () => {
         </Checkbox>
         <Checkbox
           colorScheme="purple"
-          isChecked={prePaidTax}
+          isChecked={withholdingTax}
           onChange={() =>
             addDetail({
-              value: !prePaidTax,
-              field: "prePaidTax",
+              value: !withholdingTax,
+              field: "withholdingTax",
             })
           }
         >

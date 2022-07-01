@@ -17,7 +17,6 @@ const MainForm = () => {
     totalBusinessExpenses,
     taxYearDuration,
     taxScales,
-    previousYearTaxInAdvance,
   } = details;
 
   const incomeInputList = [
@@ -93,10 +92,10 @@ const MainForm = () => {
       });
 
       return addDetail({
-        value: totalTax - previousYearTaxInAdvance,
+        value: totalTax,
         field: "totalTax",
       });
-    }, [taxScales, addDetail, previousYearTaxInAdvance]);
+    }, [taxScales, addDetail]);
 
     useEffect(() => {
     handleTotalBusinessExpenses();

@@ -17,26 +17,29 @@ import PieChart from "components/charts";
 const IncomeTable = () => {
   const details = useStore((state) => state.userDetails);
 
-  const PRE_PAID_TAX = 0.2;
+  const WITHHOLDING_TAX_PERCENTAGE = 0.2;
+  const PRE_PAID_TAX_DISCOUNT = 0.5;
+  const PRE_PAID_TAX_PERCENTAGE = 0.55;
+
   const {
     grossIncome,
-    totalTax,
-    extraBusinessExpenses,
-    totalBusinessExpenses,
     taxYearDuration,
+    totalTax,
+    totalBusinessExpenses,
+    extraBusinessExpenses,
     discountOptions: { prePaidNextYearTax, prePaidTaxDiscount },
-    prePaidTax,
+    withholdingTax,
     previousYearTaxInAdvance,
   } = details;
 
   const grossIncomePerMonth = grossIncome / 12;
   const grossIncomePerYear = (grossIncome / 12) * taxYearDuration;
-  const totalTaxPerMonth = totalTax / taxYearDuration;
 
   const calcTotalTax = (taxAmount, grossIncome, previousYearTaxInAdvance) => {
-    const prePaidTaxCalculation = taxAmount - grossIncome * PRE_PAID_TAX;
+    const prePaidTaxCalculation =
+      taxAmount - grossIncome * WITHHOLDING_TAX_PERCENTAGE;
     return (
-      (prePaidTax ? prePaidTaxCalculation : taxAmount) -
+      (withholdingTax ? prePaidTaxCalculation : taxAmount) -
       previousYearTaxInAdvance
     );
   };
@@ -45,9 +48,12 @@ const IncomeTable = () => {
     totalTax,
     grossIncomePerYear,
     previousYearTaxInAdvance
-    );
-
-  const taxInAdvance = totalTax * 0.55 * (prePaidTaxDiscount ? 0.5 : 1);
+  );
+  
+  const taxInAdvance =
+    totalTax *
+    PRE_PAID_TAX_PERCENTAGE *
+    (prePaidTaxDiscount ? PRE_PAID_TAX_DISCOUNT : 1);
 
   const amount = {
     grossIncome: {
@@ -55,24 +61,26 @@ const IncomeTable = () => {
       year: grossIncomePerYear,
     },
     totalTax: {
-      month: totalTaxPerMonth,
+      month: totalTax / taxYearDuration,
       year: totalTax,
     },
-    extraBusinessExpenses: {
-      month: extraBusinessExpenses / 12,
-      year: extraBusinessExpenses,
-    },
     prePaidNextYearTax: {
-      month: ((prePaidNextYearTax ? taxInAdvance : 0) / taxYearDuration),
+      month: (prePaidNextYearTax ? taxInAdvance : 0) / taxYearDuration,
       year: prePaidNextYearTax ? taxInAdvance : 0,
     },
     totalBusinessExpenses: {
       month: totalBusinessExpenses / taxYearDuration,
       year: totalBusinessExpenses,
     },
+    extraBusinessExpenses: {
+      month: extraBusinessExpenses / 12,
+      year: extraBusinessExpenses,
+    },
   };
 
-  const prePaidTaxAmount = prePaidTax ? grossIncomePerMonth * PRE_PAID_TAX : 0;
+  const prePaidTaxAmount = withholdingTax
+    ? grossIncomePerMonth * WITHHOLDING_TAX_PERCENTAGE
+    : 0;
 
   return (
     <Box position="sticky" top={8}>
@@ -131,9 +139,7 @@ const IncomeTable = () => {
               <TableCell
                 text={`Προκαταβολή φόρου
                 ${prePaidTaxDiscount ? "(με έκπτωση)" : ""}`}
-                perMonth={
-                  (taxInAdvance / taxYearDuration)
-                }
+                perMonth={taxInAdvance / taxYearDuration}
                 perYear={taxInAdvance}
               />
             )}
@@ -162,6 +168,7 @@ const IncomeTable = () => {
         <PieChart
           amount={amount}
           finalIncome={() => finalIncome(amount, "year")}
+          totalTaxPerYearResult={totalTaxPerYearResult}
         />
       </Box>
     </Box>

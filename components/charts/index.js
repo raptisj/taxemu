@@ -4,11 +4,11 @@ import { Pie } from "react-chartjs-2";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export default function PieChart({ amount, finalIncome }) {
+export default function PieChart({ amount, finalIncome, totalTaxPerYearResult }) {
   const preData = [
     {
       label: "Φόρος",
-      value: amount.totalTax.year + amount.prePaidNextYearTax.year,
+      value: totalTaxPerYearResult,
     },
     {
       label: "Καθαρά",

@@ -13,7 +13,7 @@ const TableCell = ({
       <Td>{text}</Td>
       <Td isNumeric={isNumeric}>
         <Text color={color}>
-          {typeof perMonth === "number" ? formatCellValue?.(perMonth) : "--"}
+          {typeof perMonth === "number" && perYear > 0 ? formatCellValue?.(perMonth) : "------"}
         </Text>
       </Td>
       <Td isNumeric={isNumeric}>

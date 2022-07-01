@@ -38,7 +38,7 @@ const initialState = {
     prePaidNextYearTax: false,
     prePaidTaxDiscount: false,
   },
-  prePaidTax: false,
+  withholdingTax: false,
 };
 
 export const useStore = create((set) => ({
