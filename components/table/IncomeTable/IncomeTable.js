@@ -21,8 +21,6 @@ const IncomeTable = () => {
   const {
     grossIncome,
     totalTax,
-    accountantFees,
-    healthInsuranceFees,
     extraBusinessExpenses,
     totalBusinessExpenses,
     taxYearDuration,
@@ -33,8 +31,7 @@ const IncomeTable = () => {
 
   const grossIncomePerMonth = grossIncome / 12;
   const grossIncomePerYear = (grossIncome / 12) * taxYearDuration;
-  const totalTaxPerMonth = totalTax / 12;
-  const totalTaxPerYear = (totalTax / 12) * taxYearDuration;
+  const totalTaxPerMonth = totalTax / taxYearDuration;
 
   const calcTotalTax = (taxAmount, grossIncome, previousYearTaxInAdvance) => {
     const prePaidTaxCalculation = taxAmount - grossIncome * PRE_PAID_TAX;
@@ -44,17 +41,11 @@ const IncomeTable = () => {
     );
   };
 
-  const totalTaxPerMonthResult = calcTotalTax(
-    totalTaxPerMonth,
-    grossIncomePerMonth,
-    previousYearTaxInAdvance / taxYearDuration
-  );
-
   const totalTaxPerYearResult = calcTotalTax(
     totalTax,
     grossIncomePerYear,
     previousYearTaxInAdvance
-  );
+    );
 
   const taxInAdvance = totalTax * 0.55 * (prePaidTaxDiscount ? 0.5 : 1);
 
@@ -65,26 +56,18 @@ const IncomeTable = () => {
     },
     totalTax: {
       month: totalTaxPerMonth,
-      year: totalTaxPerYear,
-    },
-    accountantFees: {
-      month: accountantFees,
-      year: accountantFees * 12,
-    },
-    healthInsuranceFees: {
-      month: healthInsuranceFees,
-      year: healthInsuranceFees * 12,
+      year: totalTax,
     },
     extraBusinessExpenses: {
       month: extraBusinessExpenses / 12,
       year: extraBusinessExpenses,
     },
     prePaidNextYearTax: {
-      month: (prePaidNextYearTax ? taxInAdvance : 0) / 12,
+      month: ((prePaidNextYearTax ? taxInAdvance : 0) / taxYearDuration),
       year: prePaidNextYearTax ? taxInAdvance : 0,
     },
     totalBusinessExpenses: {
-      month: 0,
+      month: totalBusinessExpenses / taxYearDuration,
       year: totalBusinessExpenses,
     },
   };
@@ -113,24 +96,8 @@ const IncomeTable = () => {
             {!!totalBusinessExpenses && (
               <TableCell
                 text="Έξοδα Επιχείρησης"
-                perMonth="--"
+                perMonth={totalBusinessExpenses / taxYearDuration}
                 perYear={totalBusinessExpenses}
-              />
-            )}
-
-            {!!accountantFees && (
-              <TableCell
-                text="Αμοιβή Λογιστή"
-                perMonth={accountantFees}
-                perYear={accountantFees * 12}
-              />
-            )}
-
-            {!!healthInsuranceFees && (
-              <TableCell
-                text="Κοινωνική Ασφάλιση(ΕΦΚΑ)"
-                perMonth={healthInsuranceFees}
-                perYear={healthInsuranceFees * 12}
               />
             )}
 
@@ -148,7 +115,7 @@ const IncomeTable = () => {
                   Φόρος <TaxAnalysisIcon />
                 </div>
               }
-              perMonth={totalTaxPerMonthResult}
+              perMonth={totalTaxPerYearResult / taxYearDuration}
               perYear={totalTaxPerYearResult}
             />
 
@@ -165,7 +132,7 @@ const IncomeTable = () => {
                 text={`Προκαταβολή φόρου
                 ${prePaidTaxDiscount ? "(με έκπτωση)" : ""}`}
                 perMonth={
-                  (totalTax * 0.55 * (prePaidTaxDiscount ? 0.5 : 1)) / 12
+                  (taxInAdvance / taxYearDuration)
                 }
                 perYear={taxInAdvance}
               />

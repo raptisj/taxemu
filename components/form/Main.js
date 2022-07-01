@@ -17,6 +17,7 @@ const MainForm = () => {
     totalBusinessExpenses,
     taxYearDuration,
     taxScales,
+    previousYearTaxInAdvance,
   } = details;
 
   const incomeInputList = [
@@ -57,8 +58,8 @@ const MainForm = () => {
 
   const handleTotalBusinessExpenses = useCallback(() => {
     let totalBusinessExpenses =
-      accountantFees * taxYearDuration +
-      healthInsuranceFees * taxYearDuration +
+      (accountantFees * taxYearDuration) +
+      (healthInsuranceFees * taxYearDuration) +
       (extraBusinessExpenses / 12) * taxYearDuration;
 
     return addDetail({
@@ -92,12 +93,12 @@ const MainForm = () => {
       });
 
       return addDetail({
-        value: totalTax,
+        value: totalTax - previousYearTaxInAdvance,
         field: "totalTax",
       });
-  }, [taxScales, addDetail]);
+    }, [taxScales, addDetail, previousYearTaxInAdvance]);
 
-  useEffect(() => {
+    useEffect(() => {
     handleTotalBusinessExpenses();
   }, [
     handleTotalBusinessExpenses,

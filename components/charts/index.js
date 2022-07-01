@@ -8,7 +8,7 @@ export default function PieChart({ amount, finalIncome }) {
   const preData = [
     {
       label: "Φόρος",
-      value: amount.totalTax.year,
+      value: amount.totalTax.year + amount.prePaidNextYearTax.year,
     },
     {
       label: "Καθαρά",
