@@ -99,23 +99,25 @@ const IncomeTable = () => {
               text="Μικτός μισθός"
               perMonth={grossIncomePerMonth}
               perYear={grossIncomePerYear}
-            />
+              dataTestId='grossIncome'
+              />
 
             {!!totalBusinessExpenses && (
               <TableCell
-                text="Έξοδα Επιχείρησης"
-                perMonth={totalBusinessExpenses / taxYearDuration}
-                perYear={totalBusinessExpenses}
+              text="Έξοδα Επιχείρησης"
+              perMonth={totalBusinessExpenses / taxYearDuration}
+              perYear={totalBusinessExpenses}
+              dataTestId='totalBusinessExpenses'
               />
-            )}
+              )}
 
             {!!extraBusinessExpenses && (
               <TableCell
-                text="Πρόσθετα έξοδα"
-                perMonth={extraBusinessExpenses / 12}
-                perYear={extraBusinessExpenses}
+              text="Πρόσθετα έξοδα"
+              perMonth={extraBusinessExpenses / 12}
+              perYear={extraBusinessExpenses}
               />
-            )}
+              )}
 
             <TableCell
               text={
@@ -125,6 +127,7 @@ const IncomeTable = () => {
               }
               perMonth={totalTaxPerYearResult / taxYearDuration}
               perYear={totalTaxPerYearResult}
+              dataTestId='totalTax'
             />
 
             {!!prePaidTaxAmount && (
@@ -158,6 +161,7 @@ const IncomeTable = () => {
                 perMonth={finalIncome(amount, "month")}
                 perYear={finalIncome(amount, "year")}
                 color="purple.500"
+                dataTestId='finalIncome'
               />
             )}
           </Tbody>

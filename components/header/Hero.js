@@ -10,7 +10,7 @@ const tagStyles = {
 
 const HeroHeader = () => (
   <Box maxW="700px" m="auto" p={4} color="white" textAlign="center" py={14}>
-    <Heading as="h2" size="3xl" position="relative">
+    <Heading as="h2" size="3xl" position="relative" data-testid="heading">
       Taxemu <span style={tagStyles}>Alpha Version</span>
     </Heading>
 

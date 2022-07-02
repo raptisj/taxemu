@@ -57,8 +57,8 @@ const MainForm = () => {
 
   const handleTotalBusinessExpenses = useCallback(() => {
     let totalBusinessExpenses =
-      (accountantFees * taxYearDuration) +
-      (healthInsuranceFees * taxYearDuration) +
+      accountantFees * taxYearDuration +
+      healthInsuranceFees * taxYearDuration +
       (extraBusinessExpenses / 12) * taxYearDuration;
 
     return addDetail({
@@ -74,7 +74,8 @@ const MainForm = () => {
   ]);
 
   const handleTaxableIncome = useCallback(() => {
-    let taxableIncome = ((grossIncome - totalBusinessExpenses) / 12) * taxYearDuration;
+    let taxableIncome =
+      ((grossIncome - totalBusinessExpenses) / 12) * taxYearDuration;
 
     return addDetail({
       value: taxableIncome,
@@ -91,13 +92,13 @@ const MainForm = () => {
         return a + b;
       });
 
-      return addDetail({
-        value: totalTax,
-        field: "totalTax",
-      });
-    }, [taxScales, addDetail]);
+    return addDetail({
+      value: totalTax,
+      field: "totalTax",
+    });
+  }, [taxScales, addDetail]);
 
-    useEffect(() => {
+  useEffect(() => {
     handleTotalBusinessExpenses();
   }, [
     handleTotalBusinessExpenses,
@@ -148,6 +149,7 @@ const MainForm = () => {
             value={details[field]}
             key={field}
             text={text}
+            name={field}
             onChange={(value) => onChangeDetail(value, field)}
           />
         ))}
@@ -166,6 +168,7 @@ const MainForm = () => {
             value={details[field]}
             key={field}
             text={text}
+            name={field}
             onChange={(value) => onChangeDetail(value, field)}
           />
         ))}
