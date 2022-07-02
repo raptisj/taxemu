@@ -21,7 +21,6 @@ describe("Input field to calculate business expenses", () => {
     expect(accountantFeesInputField).toHaveValue("50");
     expect(healthInsuranceInputField).toHaveValue("136");
     expect(extraBusinessExpensesInputField).toHaveValue("120");
-    screen.debug(null, Infinity);
 
     const tableFieldMonth = screen.getByTestId(
       "totalBusinessExpenses_tableCell_month"
@@ -33,7 +32,7 @@ describe("Input field to calculate business expenses", () => {
     const totalExpenses =
       ((Number(accountantFeesInputField.value) +
       Number(healthInsuranceInputField.value)) * 12) + Number(extraBusinessExpensesInputField.value);
-    console.log(totalExpenses);
+
     expect(tableFieldYear).toHaveTextContent(
       "€" + totalExpenses.toLocaleString("en-US").split(".")[0]
     );
