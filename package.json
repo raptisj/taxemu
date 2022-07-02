@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "test": "jest",
     "start": "next start",
     "lint": "next lint"
   },
@@ -22,7 +23,13 @@
     "zustand": "^4.0.0-rc.1"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.3.0",
+    "@testing-library/user-event": "^14.2.1",
     "eslint": "8.17.0",
-    "eslint-config-next": "12.1.6"
+    "eslint-config-next": "12.1.6",
+    "jest": "^28.1.2",
+    "jest-canvas-mock": "^2.4.0",
+    "jest-environment-jsdom": "^28.1.2"
   }
 }

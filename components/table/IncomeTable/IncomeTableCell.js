@@ -7,17 +7,20 @@ const TableCell = ({
   perYear,
   isNumeric = true,
   color = "",
+  dataTestId = "",
 }) => {
   return (
     <Tr>
       <Td>{text}</Td>
       <Td isNumeric={isNumeric}>
-        <Text color={color}>
-          {typeof perMonth === "number" && perYear > 0 ? formatCellValue?.(perMonth) : "------"}
+        <Text color={color} data-testid={`${dataTestId}_tableCell_month`}>
+          {typeof perMonth === "number" && perYear > 0
+            ? formatCellValue?.(perMonth)
+            : "------"}
         </Text>
       </Td>
       <Td isNumeric={isNumeric}>
-        <Text color={color}>{formatCellValue(perYear)}</Text>
+        <Text color={color} data-testid={`${dataTestId}_tableCell_year`}>{formatCellValue(perYear)}</Text>
       </Td>
     </Tr>
   );
