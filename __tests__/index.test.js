@@ -102,33 +102,3 @@ describe("Taxable year duration radio(11 months)", () => {
     );
   });
 });
-
-
-// describe("Input field to calculate business expenses", () => {
-//     it("should add expenses", async () => {
-//       render(<Home />);
-  
-//       const accountantFeesInputField = screen.getByTestId("accountantFees_form");
-//         const healthInsuranceInputField = screen.getByTestId("healthInsuranceFees_form");
-//       await userEvent.type(accountantFeesInputField, "50");
-//     //   const extraBusinessExpensesInputField = screen.getByTestId("extraBusinessExpenses_form");
-//     //   await userEvent.type(healthInsuranceInputField, "136");
-//     //   await userEvent.type(accountantFeesInputField, "0");
-  
-//       // console.log(accountantFeesInputField.value)
-//       screen.debug(null, Infinity)
-//       // expect(accountantFeesInputField).toBeInTheDocument();
-//       expect(accountantFeesInputField).toHaveValue("50");
-//     //   expect(healthInsuranceInputField).toHaveValue("136");
-  
-//     //   const tableFieldMonth = screen.getByTestId("totalBusinessExpenses_tableCell_month");
-//     //   const tableFieldYear = screen.getByTestId("totalBusinessExpenses_tableCell_year");
-//       // .toLocaleString("en-US").split(".")[0]
-//       // const totalExpenses = accountantFeesInputField.value + healthInsuranceInputField.value + extraBusinessExpensesInputField.value
-//       // expect(tableFieldYear).toHaveTextContent("€" + totalExpenses);
-//       // expect(tableFieldMonth).toHaveTextContent(
-//       //   String("€" + (2400 / 12).toFixed(0))
-//       // );
-//     });
-//   });
-  
