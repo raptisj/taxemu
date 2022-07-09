@@ -15,7 +15,7 @@ import { useStore } from "store";
 const TaxTable = () => {
   const details = useStore((state) => state.userDetails);
 
-  const { totalTax, taxScales } = details;
+  const { totalTax, taxScales, previousYearTaxInAdvance } = details;
 
   return (
     <Box>
@@ -41,6 +41,23 @@ const TaxTable = () => {
               } else return false;
             })}
 
+            {previousYearTaxInAdvance && (
+              <Tr>
+                <Td pt={1} pb={1}></Td>
+                <Td pt={1} pb={1}></Td>
+                <Td isNumeric pt={1} pb={1}>
+                  <strong>Περσινή Προκαταβολή φόρου</strong>
+                </Td>
+                <Td isNumeric pt={1} pb={1}>
+                  <strong>
+                    {typeof previousYearTaxInAdvance === "number"
+                      ? formatCellValue?.(previousYearTaxInAdvance)
+                      : "--"}
+                  </strong>
+                </Td>
+              </Tr>
+            )}
+
             <Tr>
               <Td pt={1} pb={1}></Td>
               <Td pt={1} pb={1}></Td>
@@ -50,7 +67,7 @@ const TaxTable = () => {
               <Td isNumeric pt={1} pb={1}>
                 <strong>
                   {typeof totalTax === "number"
-                    ? formatCellValue?.(totalTax)
+                    ? formatCellValue?.(previousYearTaxInAdvance ? totalTax - previousYearTaxInAdvance : totalTax)
                     : "--"}
                 </strong>
               </Td>
