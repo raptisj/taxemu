@@ -41,22 +41,20 @@ const TaxTable = () => {
               } else return false;
             })}
 
-            {previousYearTaxInAdvance && (
-              <Tr>
-                <Td pt={1} pb={1}></Td>
-                <Td pt={1} pb={1}></Td>
-                <Td isNumeric pt={1} pb={1}>
-                  <strong>Περσινή Προκαταβολή φόρου</strong>
-                </Td>
-                <Td isNumeric pt={1} pb={1}>
-                  <strong>
-                    {typeof previousYearTaxInAdvance === "number"
-                      ? formatCellValue?.(previousYearTaxInAdvance)
-                      : "--"}
-                  </strong>
-                </Td>
-              </Tr>
-            )}
+            <Tr>
+              <Td pt={1} pb={1}></Td>
+              <Td pt={1} pb={1}></Td>
+              <Td isNumeric pt={1} pb={1}>
+                <strong>Περσινή Προκαταβολή φόρου</strong>
+              </Td>
+              <Td isNumeric pt={1} pb={1}>
+                <strong>
+                  {typeof previousYearTaxInAdvance === "number"
+                    ? formatCellValue?.(previousYearTaxInAdvance)
+                    : "--"}
+                </strong>
+              </Td>
+            </Tr>
 
             <Tr>
               <Td pt={1} pb={1}></Td>
@@ -67,7 +65,11 @@ const TaxTable = () => {
               <Td isNumeric pt={1} pb={1}>
                 <strong>
                   {typeof totalTax === "number"
-                    ? formatCellValue?.(previousYearTaxInAdvance ? totalTax - previousYearTaxInAdvance : totalTax)
+                    ? formatCellValue?.(
+                        previousYearTaxInAdvance
+                          ? totalTax - previousYearTaxInAdvance
+                          : totalTax
+                      )
                     : "--"}
                 </strong>
               </Td>
@@ -78,4 +80,5 @@ const TaxTable = () => {
     </Box>
   );
 };
+
 export { TaxTable };
