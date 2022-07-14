@@ -41,8 +41,17 @@ const initialState = {
   withholdingTax: false,
 };
 
+const welcomeInitialState = {
+  entity: "employee",
+};
+
 export const useStore = create((set) => ({
   userDetails: initialState,
+  welcomeDetails: welcomeInitialState,
+  addWelcomeDetail: ({ value, field }) =>
+    set((state) => ({
+      welcomeDetails: { ...state.welcomeDetails, [field]: value },
+    })),
   addDetail: ({ value, field }) =>
     set((state) => ({
       userDetails: { ...state.userDetails, [field]: value },

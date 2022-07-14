@@ -10,9 +10,11 @@ import githubLogo from "assets/github-logo.png";
 
 export default function Home() {
   const details = useStore((state) => state.userDetails);
+  const welcomeDetails = useStore((state) => state.welcomeDetails);
   const addDetail = useStore((state) => state.addDetail);
 
   const { discountOptions, taxableIncome, taxScales } = details;
+  const { entity } = welcomeDetails;
 
   const SCALE_THRESHOLD = 10000;
 
@@ -61,7 +63,7 @@ export default function Home() {
   return (
     <Box minH="100vh" pt={0} pb={12} px="2rem" className="container">
       <Head>
-        <title>Taxemu</title>
+        <title>Taxemu - Υπολογισμός καθαρού ή μικτού μισθού μισθωτού ή ατομικής επιχείρησης</title>
         <meta
           name="description"
           content="Το Taxemu είναι ενα open-source εργαλείο για να μπορείς να έχεις μια εικόνα των εξόδων και κρατήσεων της ατομικής σου επιχείρησης"
