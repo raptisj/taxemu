@@ -1,12 +1,6 @@
 import { useState } from "react";
-import {
-  Box,
-  Text,
-  Flex,
-  NumberInput,
-  NumberInputField,
-} from "@chakra-ui/react";
-import { Content, ContentWithMenu } from "./contents";
+import { Box, Text, Flex } from "@chakra-ui/react";
+import Stepper from "components/stepper";
 
 export const BusinessSecondStep = () => {
   const [insurancePeriod, setInsurancePeriod] = useState("μηνιαίες");
@@ -34,61 +28,66 @@ export const BusinessSecondStep = () => {
     <Box mt="100px">
       <Text color="gray.400">Συνεχίζοντας...</Text>
       <Flex mt={8} flexDirection="column">
-        <Flex flexWrap="wrap">
-          <Content text="Οι" />
+        <Flex flexWrap="wrap" alignItems="center">
+          <Stepper.Content text="Οι" mr={2} />
 
-          <ContentWithMenu
+          <Stepper.MenuPopover
             name={insurancePeriod}
             onChange={handleInsuranePeriod}
             options={["μηνιαίες", "ετήσιες"]}
             menuTitle="Επίλεξε περίοδο"
+            mb={4}
           />
 
-          <Content text="εισφορές μου στον ΕΦΚΑ είναι" ml={2} />
+          <Stepper.Content text="εισφορές μου στον ΕΦΚΑ" mr={2} mb={4} />
 
-          <Content text="€" fontWeight="600" color="gray.700" ml={2} />
-
-          <NumberInput
-            borderBottomColor="gray.400"
-            ml={2}
-            onChange={handleInsuranceAmount}
-            value={insuranceAmount || ""}
-          >
-            <NumberInputField
-              borderRadius={0}
-              fontSize="30px"
-              maxW="200px"
-              padding={0}
+          <Flex alignItems="center">
+            <Stepper.Content text="είναι" mr={2} mb={4} />
+            <Stepper.Content
+              text="€"
+              fontWeight="600"
+              color="gray.700"
+              mb={4}
+              mr={2}
             />
-          </NumberInput>
+
+            <Stepper.NumberInput
+              onChange={handleInsuranceAmount}
+              value={insuranceAmount}
+            />
+          </Flex>
         </Flex>
-        <br />
 
-        <Flex flexWrap="wrap">
-          <Content text="και έχω επιπλέον έξοδα επιχείρησης" ml={2} />
+        <Flex flexWrap="wrap" alignItems="center">
+          <Stepper.Content text="και έχω επιπλέον έξοδα" mr={2} mb={4} />
 
-          <NumberInput
-            borderBottomColor="gray.400"
-            ml={2}
-            onChange={handleExpensesAmount}
-            value={expensesAmount || ""}
-          >
-            <NumberInputField
-              borderRadius={0}
-              fontSize="30px"
-              maxW="200px"
-              padding={0}
+          <Flex alignItems="center">
+            <Stepper.Content text="επιχείρησης" mr={2} mb={4} />
+            <Stepper.Content
+              text="€"
+              fontWeight="600"
+              color="gray.700"
+              mr={2}
+              mb={4}
             />
-          </NumberInput>
 
-          <Content text="τον" ml={2} />
+            <Stepper.NumberInput
+              onChange={handleExpensesAmount}
+              value={expensesAmount}
+            />
+          </Flex>
 
-          <ContentWithMenu
-            name={expensesPeriod}
-            onChange={handleExpensesPeriod}
-            options={["χρόνο", "μήνα"]}
-            menuTitle="Επίλεξε περίοδο"
-          />
+          <Flex alignItems="center">
+            <Stepper.Content text="τον" mr={2} mb={4} />
+
+            <Stepper.MenuPopover
+              name={expensesPeriod}
+              onChange={handleExpensesPeriod}
+              options={["χρόνο", "μήνα"]}
+              menuTitle="Επίλεξε περίοδο"
+              mb={4}
+            />
+          </Flex>
         </Flex>
       </Flex>
     </Box>

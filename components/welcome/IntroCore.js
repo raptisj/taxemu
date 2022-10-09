@@ -1,14 +1,8 @@
-import { useState, useEffect, useCallback } from "react";
-import {
-  Box,
-  Text,
-  Flex,
-  NumberInput,
-  NumberInputField,
-} from "@chakra-ui/react";
+import { useState, useEffect } from "react";
+import { Box, Text, Flex } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useStore } from "store";
-import { Content, ContentWithMenu } from "./contents";
+import Stepper from "components/stepper";
 
 export const IntroCore = () => {
   const details = useStore((state) => state.welcomeDetails);
@@ -64,88 +58,76 @@ export const IntroCore = () => {
       <Text color="gray.400">Πρώτα απ’όλα...</Text>
       <Flex mt={8} flexDirection="column">
         <Flex flexWrap="wrap" alignItems="center">
-          <Content text="Είμαι" />
+          <Stepper.Content text="Είμαι" mr={2} mb={4} />
 
-          <ContentWithMenu
+          <Stepper.MenuPopover
             name={name}
             onChange={onChange}
             options={["Μισθωτός", "Ελεύθερος επαγγελματίας"]}
             menuTitle="Επίλεξε κατηγορία"
+            mb={4}
           />
-          
         </Flex>
-        <br />
 
         {isBusiness ? (
           <Flex flexWrap="wrap" alignItems="center">
-            <Content text="με" />
+            <Stepper.Content text="με" mb={4} mr={2} />
 
-            <ContentWithMenu
+            <Stepper.MenuPopover
               name={period}
               onChange={handlePeriod}
               options={["Μηνιαίο", "Ετήσιο"]}
               menuTitle="Επίλεξε περίοδο"
+              mb={4}
             />
 
-            <Content text="μικτό εισόδημα" ml={2} />
+            <Stepper.Content text="μικτό" mr={2} mb={4} />
 
-            <Content text="€" fontWeight="600" color="gray.700" ml={2} />
-
-            <NumberInput
-              borderBottomColor="gray.400"
-              ml={2}
-              onChange={handleAmount}
-              value={amount || ""}
-            >
-              <NumberInputField
-                borderRadius={0}
+            <Flex alignItems="center">
+              <Stepper.Content text="εισόδημα" mr={2} mb={4} />
+              <Stepper.Content
+                text="€"
                 fontWeight="600"
-                fontSize="30px"
-                maxW="200px"
-                padding={0}
-                _hover={{
-                  borderColor: "transparent",
-                  borderBottomColor: "gray.400",
-                }}
+                color="gray.700"
+                mr={2}
+                mb={4}
               />
-            </NumberInput>
+
+              <Stepper.NumberInput onChange={handleAmount} value={amount} />
+            </Flex>
           </Flex>
         ) : (
           <Flex flexWrap="wrap" alignItems="center">
-            <Content text="με" />
+            <Stepper.Content text="με" mb={4} />
 
-            <ContentWithMenu
+            <Stepper.MenuPopover
               name={period}
               onChange={handlePeriod}
               options={["Μηνιαίο", "Ετήσιο"]}
               menuTitle="Επίλεξε περίοδο"
+              mb={4}
             />
 
-            <ContentWithMenu
+            <Stepper.MenuPopover
               name={incomeType}
               onChange={handleIncomeType}
               options={["Μικτό", "Καθαρό"]}
               menuTitle="Επίλεξε εισόδημα"
+              mb={4}
             />
 
-            <Content text="εισόδημα" ml={2} />
-
-            <Content text="€" fontWeight="600" color="gray.700" ml={2} />
-
-            <NumberInput
-              borderBottomColor="gray.400"
-              ml={2}
-              onChange={handleAmount}
-              value={amount || ""}
-            >
-              <NumberInputField
-                borderRadius={0}
+            <Flex>
+              <Stepper.Content text="εισόδημα" mr={2} mb={4} />
+              <Stepper.Content
+                text="€"
                 fontWeight="600"
-                fontSize="30px"
-                maxW="200px"
-                padding={0}
+                color="gray.700"
+                mr={2}
+                mb={4}
               />
-            </NumberInput>
+
+              <Stepper.NumberInput onChange={handleAmount} value={amount} />
+            </Flex>
           </Flex>
         )}
       </Flex>

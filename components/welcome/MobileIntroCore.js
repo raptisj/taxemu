@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useStore } from "store";
-import { Content, ContentWithDrawer } from "./contents";
+import Stepper from "components/stepper";
 
 export const MobileIntroCore = () => {
   const details = useStore((state) => state.welcomeDetails);
@@ -64,9 +64,9 @@ export const MobileIntroCore = () => {
       <Text color="gray.400">Πρώτα απ’όλα...</Text>
       <Flex mt={8} flexDirection="column">
         <Flex flexWrap="wrap" alignItems="center">
-          <Content text="Είμαι" />
+          <Stepper.Content text="Είμαι" />
 
-          <ContentWithDrawer
+          <Stepper.MenuDrawer
             onChange={handleEntity}
             name={name}
             options={["Μισθωτός", "Ελεύθερος επαγγελματίας"]}
@@ -77,20 +77,20 @@ export const MobileIntroCore = () => {
         {isBusiness ? (
           <Flex flexDirection="column">
             <Flex alignItems="center">
-              <Content text="με" />
+              <Stepper.Content text="με" />
 
-              <ContentWithDrawer
+              <Stepper.MenuDrawer
                 onChange={handlePeriod}
                 name={period}
                 options={["Μηνιαίο", "Ετήσιο"]}
               />
 
-              <Content text="μικτό εισόδημα" ml={2} />
+              <Stepper.Content text="μικτό εισόδημα" ml={2} />
             </Flex>
             <br />
 
             <Flex alignItems="center">
-              <Content text="€" ml={2} fontWeight="600" color="gray.700" />
+              <Stepper.Content text="€" ml={2} fontWeight="600" color="gray.700" />
 
               <NumberInput
                 borderBottomColor="gray.400"
@@ -117,15 +117,15 @@ export const MobileIntroCore = () => {
         ) : (
           <Flex flexDirection="column">
             <Flex alignItems="center">
-              <Content text="με" />
+              <Stepper.Content text="με" />
 
-              <ContentWithDrawer
+              <Stepper.MenuDrawer
                 onChange={handlePeriod}
                 name={period}
                 options={["Μηνιαίο", "Ετήσιο"]}
               />
 
-              <ContentWithDrawer
+              <Stepper.MenuDrawer
                 onChange={handleIncomeType}
                 name={incomeType}
                 options={["μικτό", "καθαρό"]}
@@ -134,9 +134,9 @@ export const MobileIntroCore = () => {
             <br />
 
             <Flex alignItems="center">
-              <Content text="εισόδημα" ml={2} />
+              <Stepper.Content text="εισόδημα" ml={2} />
 
-              <Content text="€" ml={2} fontWeight="600" color="gray.700" />
+              <Stepper.Content text="€" ml={2} fontWeight="600" color="gray.700" />
 
               <NumberInput
                 borderBottomColor="gray.400"

@@ -6,7 +6,7 @@ import {
   NumberInput,
   NumberInputField,
 } from "@chakra-ui/react";
-import { Content, ContentWithDrawer } from "./contents";
+import Stepper from "components/stepper";
 
 export const MobileBusinessSecondStep = () => {
   const [insurancePeriod, setInsurancePeriod] = useState("μηνιαίες");
@@ -35,22 +35,22 @@ export const MobileBusinessSecondStep = () => {
       <Text color="gray.400">Συνεχίζοντας...</Text>
       <Flex mt={8} flexDirection="column">
         <Flex alignItems="center">
-          <Content text="Οι" />
+          <Stepper.Content text="Οι" />
 
-          <ContentWithDrawer
+          <Stepper.MenuDrawer
             onChange={handleInsuranePeriod}
             name={insurancePeriod}
             options={["μηνιαίες", "ετήσιες"]}
           />
 
-          <Content text="εισφορές μου" ml={2} />
+          <Stepper.Content text="εισφορές μου" ml={2} />
         </Flex>
         <br />
 
         <Flex alignItems="center">
-          <Content text="στον ΕΦΚΑ είναι" ml={2} />
+          <Stepper.Content text="στον ΕΦΚΑ είναι" ml={2} />
 
-          <Content text="€" fontWeight="600" color="gray.700" ml={2} />
+          <Stepper.Content text="€" fontWeight="600" color="gray.700" ml={2} />
 
           <NumberInput
             borderBottomColor="gray.400"
@@ -70,12 +70,12 @@ export const MobileBusinessSecondStep = () => {
         <br />
 
         <Flex alignItems="center">
-          <Content text="και έχω επιπλέον έξοδα επιχείρησης" ml={2} />
+          <Stepper.Content text="και έχω επιπλέον έξοδα επιχείρησης" ml={2} />
         </Flex>
         <br />
 
         <Flex alignItems="center">
-          <Content text="€" fontWeight="600" color="gray.700" ml={2} />
+          <Stepper.Content text="€" fontWeight="600" color="gray.700" ml={2} />
 
           <NumberInput
             borderBottomColor="gray.400"
@@ -92,9 +92,9 @@ export const MobileBusinessSecondStep = () => {
             />
           </NumberInput>
 
-          <Content text="τον" ml={2} />
+          <Stepper.Content text="τον" ml={2} />
 
-          <ContentWithDrawer
+          <Stepper.MenuDrawer
             onChange={handleExpensesPeriod}
             name={expensesPeriod}
             options={["μήνα", "χρόνο"]}

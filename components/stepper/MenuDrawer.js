@@ -12,26 +12,10 @@ import {
   DrawerOverlay,
   DrawerContent,
   useDisclosure,
-  MenuList,
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
-export const Content = ({ text, ...rest }) => {
-  return (
-    <Heading
-      as="h3"
-      size={["sm", "md", "lg"]}
-      position="relative"
-      fontWeight="400"
-      color="gray.400"
-      {...rest}
-    >
-      {text}
-    </Heading>
-  );
-};
-
-export const ContentWithDrawer = ({ name, options = [], onChange }) => {
+export const MenuDrawer = ({ name, options = [], onChange }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleOnChange = (value) => {
@@ -100,46 +84,6 @@ export const ContentWithDrawer = ({ name, options = [], onChange }) => {
           </MenuOptionGroup>
         </DrawerContent>
       </Drawer>
-    </Menu>
-  );
-};
-
-export const ContentWithMenu = ({ name, options = [], onChange, menuTitle }) => {
-  return (
-    <Menu>
-      <MenuButton
-        as={Button}
-        rightIcon={<ChevronDownIcon fontSize="24px" />}
-        background="transparent"
-        ml={2}
-        borderBottom="1px"
-        borderRadius={0}
-        height={["auto", "2.5rem"]}
-        p={["6px 0", "1rem"]}
-      >
-        <Heading
-          as="h3"
-          size={["sm", "md", "lg"]}
-          position="relative"
-          fontWeight="600"
-          color="gray.700"
-          minW="100px"
-        >
-          {name.toLowerCase()}
-        </Heading>
-      </MenuButton>
-      <MenuList>
-        <MenuOptionGroup onChange={onChange} defaultValue={name}>
-          <MenuItemOption value="" isDisabled>
-            <Text>{menuTitle}</Text>
-          </MenuItemOption>
-          {options.map((option) => (
-            <MenuItemOption value={option} key={option}>
-              {option}
-            </MenuItemOption>
-          ))}
-        </MenuOptionGroup>
-      </MenuList>
     </Menu>
   );
 };
