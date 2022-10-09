@@ -30,7 +30,7 @@ export const Content = ({ text, ...rest }) => {
     </Heading>
   );
 };
-Drawer
+
 export const ContentWithDrawer = ({ name, options = [], onChange }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 

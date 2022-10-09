@@ -49,7 +49,7 @@ const IncomeTable = () => {
     grossIncomePerYear,
     previousYearTaxInAdvance
   );
-  
+
   const taxInAdvance =
     totalTax *
     PRE_PAID_TAX_PERCENTAGE *
@@ -99,25 +99,25 @@ const IncomeTable = () => {
               text="Μικτός μισθός"
               perMonth={grossIncomePerMonth}
               perYear={grossIncomePerYear}
-              dataTestId='grossIncome'
-              />
+              dataTestId="grossIncome"
+            />
 
             {!!totalBusinessExpenses && (
               <TableCell
-              text="Έξοδα Επιχείρησης"
-              perMonth={totalBusinessExpenses / taxYearDuration}
-              perYear={totalBusinessExpenses}
-              dataTestId='totalBusinessExpenses'
+                text="Έξοδα Επιχείρησης"
+                perMonth={totalBusinessExpenses / taxYearDuration}
+                perYear={totalBusinessExpenses}
+                dataTestId="totalBusinessExpenses"
               />
-              )}
+            )}
 
             {!!extraBusinessExpenses && (
               <TableCell
-              text="Πρόσθετα έξοδα"
-              perMonth={extraBusinessExpenses / 12}
-              perYear={extraBusinessExpenses}
+                text="Πρόσθετα έξοδα"
+                perMonth={extraBusinessExpenses / 12}
+                perYear={extraBusinessExpenses}
               />
-              )}
+            )}
 
             <TableCell
               text={
@@ -127,7 +127,7 @@ const IncomeTable = () => {
               }
               perMonth={totalTaxPerYearResult / taxYearDuration}
               perYear={totalTaxPerYearResult}
-              dataTestId='totalTax'
+              dataTestId="totalTax"
             />
 
             {!!prePaidTaxAmount && (
@@ -161,7 +161,7 @@ const IncomeTable = () => {
                 perMonth={finalIncome(amount, "month")}
                 perYear={finalIncome(amount, "year")}
                 color="purple.500"
-                dataTestId='finalIncome'
+                dataTestId="finalIncome"
               />
             )}
           </Tbody>
