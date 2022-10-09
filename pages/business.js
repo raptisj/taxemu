@@ -57,7 +57,7 @@ const CalculatorBusiness = () => {
     push(`/${value}`);
   };
 
-  const calculatorTypeValue = pathname?.split("/")[1]; // || details.calculatorType;
+  const calculatorTypeValue = pathname?.split("/")[1]; 
   const isGrossMonthly = grossMonthOrYear === "month";
 
   const onSelectTaxationYear = (e) => {

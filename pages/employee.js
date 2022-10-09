@@ -55,7 +55,7 @@ const CalculatorEmployee = () => {
     activeInput,
   } = userDetails;
 
-  const calculatorTypeValue = pathname?.split("/")[1]; // || details.calculatorType;
+  const calculatorTypeValue = pathname?.split("/")[1];
   const isGrossMonthly = grossMonthOrYear === "month";
   const isFinalMonthly = finalMonthOrYear === "month";
 
@@ -235,12 +235,6 @@ const CalculatorEmployee = () => {
     const toBeTaxed = (grossMonthly - insuranceMonthly) * salaryMonthCount;
     const grossAfterInsurance = grossIncomeMonthly - insuranceMonthly;
 
-    // TODO: might not be needed
-    // addEmployeeDetail({
-    //   value: toBeTaxed,
-    //   field: "taxableIncome",
-    // });
-
     addEmployeeDetail({
       value: insuranceMonthly,
       field: "insurancePerMonth",
@@ -250,12 +244,6 @@ const CalculatorEmployee = () => {
       value: insuranceMonthly * salaryMonthCount,
       field: "insurancePerYear",
     });
-
-    // TODO: refactor the above to this
-    // addEmployeeInsurance({
-    //   value: { year: insuranceMonthly * salaryMonthCount, month: insuranceMonthly},
-    //   field: "insurance",
-    // });
 
     const scales = calculateWithCurrentScales({
       currentScales: taxScales,
