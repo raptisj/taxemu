@@ -16,22 +16,20 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
   Checkbox,
-  Heading,
-  Button,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useStore } from "store";
-import { ChevronDownIcon, CloseIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Navigation } from "../components/navigation";
 import { Layout } from "../components/layout";
 import Table from "../components/table";
+import FormElements from "../components/input";
 import { sortByMultiplier } from "../utils";
 
 const CalculatorEmployee = () => {
   const userDetails = useStore((state) => state.userDetails.employee);
-  const removeUserDetails = useStore((state) => state.removeUserDetails);
-  const addDetail = useStore((state) => state.addDetail); // maybe a function of its own to change calc type
   const addEmployeeDetail = useStore((state) => state.addEmployeeDetail);
+  const changeCalculatorType = useStore((state) => state.changeCalculatorType);
   const { push, pathname } = useRouter();
   const [showSection, setShowSection] = useState(false);
 
@@ -60,7 +58,7 @@ const CalculatorEmployee = () => {
   const isFinalMonthly = finalMonthOrYear === "month";
 
   const onChange = (value) => {
-    addDetail({
+    changeCalculatorType({
       value,
       field: "calculatorType",
     });
@@ -362,39 +360,27 @@ const CalculatorEmployee = () => {
       >
         <GridItem>
           <Box>
-            <Box>
-              <Text fontWeight="500" color="gray.700">
-                Κατηγορία
-              </Text>
-              <RadioGroup
-                onChange={onChange}
-                value={calculatorTypeValue}
-                mt={2}
-              >
-                <Stack direction="row">
-                  <Radio value="business">
-                    <Text fontSize="14px">Ελέυθερος επαγγελματίας</Text>
-                  </Radio>
-                  <Radio value="employee" fontSize="14px">
-                    <Text fontSize="14px">Μισθωτός</Text>
-                  </Radio>
-                </Stack>
-              </RadioGroup>
-            </Box>
+            <FormElements.RadioGroup
+              label="Κατηγορία"
+              onChange={onChange}
+              value={calculatorTypeValue}
+              options={[
+                { title: "Ελέυθερος επαγγελματίας", key: "business" },
+                { title: "Μισθωτός", key: "employee" },
+              ]}
+            />
 
             <Box mt={4}>
-              <Text fontWeight="500" color="gray.700">
-                Ετήσιοι μισθοί
-              </Text>
-              <Select
+              <FormElements.Select
+                label="Ετήσιοι μισθοί"
                 onChange={onSelectSalaryMonthCount}
-                mt={2}
                 defaultValue={salaryMonthCount}
-              >
-                <option value="12">12</option>
-                <option value="14">14</option>
-                <option value="14.5">14.5</option>
-              </Select>
+                options={[
+                  { value: "12", text: "12" },
+                  { value: "14", text: "14" },
+                  { value: "14.5", text: "14.5" },
+                ]}
+              />
             </Box>
           </Box>
 
@@ -423,19 +409,15 @@ const CalculatorEmployee = () => {
                   <NumberInputField placeholder="π.χ. €10000" />
                 </NumberInput>
               </GridItem>
-              <GridItem>
-                <Text fontWeight="500" color="gray.700" mt={4}>
-                  Ανά
-                </Text>
-
-                <Select
+              <GridItem mt={4}>
+                <FormElements.Select
+                  label="Ανά"
                   onChange={onSelectGrossMonthOrYear}
-                  borderColor="gray.200"
-                  mt={2}
-                >
-                  <option value="year">Έτος</option>
-                  <option value="month">Μήνα</option>
-                </Select>
+                  options={[
+                    { value: "year", text: "Έτος" },
+                    { value: "month", text: "Μήνα" },
+                  ]}
+                />
               </GridItem>
             </Grid>
 
@@ -445,7 +427,7 @@ const CalculatorEmployee = () => {
 
             <Grid gridTemplateColumns="2fr 1fr" gap="0 16px">
               <GridItem>
-                <Text fontWeight="500" color="gray.700" mt={4}>
+                <Text fontWeight="500" color="gray.700">
                   Καθαρό εισόδημα
                 </Text>
                 <NumberInput
@@ -468,18 +450,14 @@ const CalculatorEmployee = () => {
                 </NumberInput>
               </GridItem>
               <GridItem>
-                <Text fontWeight="500" color="gray.700" mt={4}>
-                  Ανά
-                </Text>
-
-                <Select
+                <FormElements.Select
+                  label="Ανά"
                   onChange={onSelectFinalIncomeMonthOfYear}
-                  borderColor="gray.200"
-                  mt={2}
-                >
-                  <option value="year">Έτος</option>
-                  <option value="month">Μήνα</option>
-                </Select>
+                  options={[
+                    { value: "year", text: "Έτος" },
+                    { value: "month", text: "Μήνα" },
+                  ]}
+                />
               </GridItem>
             </Grid>
           </Box>
@@ -505,31 +483,27 @@ const CalculatorEmployee = () => {
             {showSection && (
               <Box>
                 <Box mt={4}>
-                  <Text fontWeight="500" color="gray.700">
-                    Φορολογικό έτος
-                  </Text>
-                  <Select
+                  <FormElements.Select
+                    label="Φορολογικό έτος"
                     onChange={onSelectTaxationYear}
-                    mt={2}
                     defaultValue={taxationYear}
-                  >
-                    <option value="2022">2022</option>
-                    <option value="2021">2021</option>
-                  </Select>
+                    options={[
+                      { value: "2022", text: "2022" },
+                      { value: "2021", text: "2021" },
+                    ]}
+                  />
                 </Box>
 
                 <Box mt={4}>
-                  <Text fontWeight="500" color="gray.700">
-                    Ασφαλιστικός φορέας
-                  </Text>
-                  <Select
+                  <FormElements.Select
+                    label="Ασφαλιστικός φορέας"
                     onChange={onSelectInsuranceCarrier}
-                    mt={2}
                     defaultValue={insuranceCarrier}
-                  >
-                    <option value="efka">ΕΦΚΑ</option>
-                    <option value="tsmede">ΤΣΜΕΔΕ</option>
-                  </Select>
+                    options={[
+                      { value: "efka", text: "ΕΦΚΑ" },
+                      { value: "tsmede", text: "ΤΣΜΕΔΕ" },
+                    ]}
+                  />
                 </Box>
 
                 <Box mt={4}>
@@ -586,28 +560,8 @@ const CalculatorEmployee = () => {
           borderColor="gray.100"
           paddingLeft="40px"
         >
-          <Flex justifyContent="space-between">
-            <Heading
-              as="h2"
-              size="lg"
-              noOfLines={1}
-              fontWeight="500"
-              color="gray.500"
-            >
-              Αποτέλεσμα*
-            </Heading>
-            <Button
-              leftIcon={<CloseIcon fontSize={8} />}
-              colorScheme="gray"
-              variant="outline"
-              fontSize="12px"
-              height="30px"
-              onClick={removeUserDetails}
-            >
-              Εκκαθάριση όλων των πεδίων
-            </Button>
-          </Flex>
-          <Table.V2 />
+          <Table.Header />
+          <Table.Employee />
         </GridItem>
       </Grid>
     </Layout>

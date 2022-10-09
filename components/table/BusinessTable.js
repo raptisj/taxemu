@@ -45,7 +45,7 @@ const BusinessTable = () => {
           <Tr background="purple.400">
             <Td>
               <Text color="white" fontWeight="700" fontSize="sm">
-                Καθαρός μισθός
+                Καθαρό Εισόδημα
               </Text>
             </Td>
             <Td>
@@ -62,7 +62,7 @@ const BusinessTable = () => {
           <Tr>
             <Td>
               <Text color="gray.700" fontWeight="500" fontSize="sm">
-                Μικτός μισθός
+                Μικτό Εισόδημα
               </Text>
             </Td>
             <Td>

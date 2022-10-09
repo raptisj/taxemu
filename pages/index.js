@@ -10,11 +10,9 @@ import githubLogo from "assets/github-logo.png";
 
 export default function Home() {
   const details = useStore((state) => state.userDetails);
-  const welcomeDetails = useStore((state) => state.welcomeDetails);
   const addDetail = useStore((state) => state.addDetail);
 
   const { discountOptions, taxableIncome, taxScales } = details;
-  const { entity } = welcomeDetails;
 
   const SCALE_THRESHOLD = 10000;
 

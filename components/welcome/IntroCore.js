@@ -5,24 +5,23 @@ import { useStore } from "store";
 import Stepper from "components/stepper";
 
 export const IntroCore = () => {
-  const details = useStore((state) => state.welcomeDetails);
-  const addWelcomeDetail = useStore((state) => state.addWelcomeDetail);
+  const calculatorType = useStore((state) => state.userDetails.calculatorType);
+  const changeCalculatorType = useStore((state) => state.changeCalculatorType);
   const addDetail = useStore((state) => state.addDetail);
   const router = useRouter();
-  const isBusiness = details.entity === "business";
-  const name =
-    details.entity === "business" ? "Ελεύθερος επαγγελματίας" : "Μισθωτός";
-
-  const onChange = (value) => {
-    addWelcomeDetail({
-      value: value.toLowerCase() === "μισθωτός" ? "employee" : "business",
-      field: "entity",
-    });
-  };
-
   const [period, setPeriod] = useState("Ετήσιο");
   const [amount, setAmount] = useState("");
   const [incomeType, setIncomeType] = useState("Μικτό");
+
+  const isBusiness = calculatorType === "business";
+  const name = isBusiness ? "Ελεύθερος επαγγελματίας" : "Μισθωτός";
+
+  const handleCalculatorType = (value) => {
+    changeCalculatorType({
+      value: value.toLowerCase() === "μισθωτός" ? "employee" : "business",
+      field: "calculatorType",
+    });
+  };
 
   const handlePeriod = (value) => {
     setPeriod(value);
@@ -62,7 +61,7 @@ export const IntroCore = () => {
 
           <Stepper.MenuPopover
             name={name}
-            onChange={onChange}
+            onChange={handleCalculatorType}
             options={["Μισθωτός", "Ελεύθερος επαγγελματίας"]}
             menuTitle="Επίλεξε κατηγορία"
             mb={4}

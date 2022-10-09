@@ -12,7 +12,7 @@ import {
 import { useStore } from "store";
 import { formatCellValue } from "utils";
 
-const TableV2 = () => {
+const EmployeeTable = () => {
   const userDetails = useStore((state) => state.userDetails.employee);
 
   const {
@@ -96,4 +96,4 @@ const TableV2 = () => {
   );
 };
 
-export default TableV2;
+export default EmployeeTable;

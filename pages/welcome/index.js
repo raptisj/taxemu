@@ -32,13 +32,13 @@ const mobileTabs = {
 };
 
 const Welcome = () => {
-  const details = useStore((state) => state.welcomeDetails);
+  const calculatorType = useStore((state) => state.userDetails.calculatorType);
   const router = useRouter();
   const currentTab = router.query.tab;
   const [isLargerThan30] = useMediaQuery("(min-width: 30em)");
   const tabs = isLargerThan30 ? desktopTabs : mobileTabs;
 
-  const isBusiness = details.entity === "business";
+  const isBusiness = calculatorType === "business";
   const finalTabs = isBusiness
     ? Object.keys(tabs)
     : Object.keys(tabs).slice(0, -1);
@@ -55,12 +55,12 @@ const Welcome = () => {
       if (e.which === 13) {
         router.push(
           tabIndex === tabNames.length - 1
-            ? `/${details.entity}`
+            ? `/${calculatorType}`
             : { query: { ...router.query, tab: tabNames[tabIndex + 1] } }
         );
       }
     });
-  }, [tabNames, tabIndex, router, details]);
+  }, [tabNames, tabIndex, router, calculatorType]);
 
   return (
     <Layout>
@@ -68,9 +68,9 @@ const Welcome = () => {
 
       <Tabs index={tabIndex}>
         <TabPanels>
-          {tabComponents.map((comp) => (
-            <TabPanel key={comp.type} p={0}>
-              {comp}
+          {tabComponents.map((component) => (
+            <TabPanel key={component.type} p={0}>
+              {component}
             </TabPanel>
           ))}
         </TabPanels>
@@ -105,7 +105,7 @@ const Welcome = () => {
           onClick={() =>
             router.push(
               tabIndex === tabNames.length - 1
-                ? `/${details.entity}`
+                ? `/${calculatorType}`
                 : { query: { ...router.query, tab: tabNames[tabIndex + 1] } }
             )
           }
@@ -126,7 +126,7 @@ const Welcome = () => {
           rightIcon={<ArrowForwardIcon />}
           color="gray.700"
           background={{ base: "transparent", sm: "gray.200" }}
-          onClick={() => router.push(`/${details.entity}`)}
+          onClick={() => router.push(`/${calculatorType}`)}
         >
           Απ’ευθείας στον υπολογιστή φόρου
         </Button>

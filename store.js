@@ -77,8 +77,8 @@ const initialState = {
     finalIncomeMonthly: 0,
     grossMonthOrYear: "year",
     businessExpensesMonthOrYear: "month",
-    // accountantFees: 0, // depricate
-    // healthInsuranceFees: 0, // depricate
+    // accountantFees: 0, // deprecate
+    // healthInsuranceFees: 0, // deprecate
     extraBusinessExpenses: 0,
     totalBusinessExpenses: 0,
     taxableIncome: 0,
@@ -96,28 +96,6 @@ const initialState = {
         ...taxScales2021,
       },
     },
-    // taxScales: [
-    //   {
-    //     multiplier: 0.09,
-    //     amount: 0,
-    //   },
-    //   {
-    //     multiplier: 0.22,
-    //     amount: 0,
-    //   },
-    //   {
-    //     multiplier: 0.28,
-    //     amount: 0,
-    //   },
-    //   {
-    //     multiplier: 0.36,
-    //     amount: 0,
-    //   },
-    //   {
-    //     multiplier: 0.44,
-    //     amount: 0,
-    //   },
-    // ],
     insuranceScaleSelection: 1,
     insurance: {
       month: 0,
@@ -145,7 +123,9 @@ const initialState = {
     },
     withholdingTax: false,
   },
-  ///////////
+  ////////////   /////////////   ///////////
+  ///// TO BE DEPRECATED AFTER V2 /////////
+  //////////   /////////////   ///////////
   grossIncome: 0,
   accountantFees: 0,
   healthInsuranceFees: 0,
@@ -186,23 +166,17 @@ const initialState = {
   withholdingTax: false,
 };
 
-const welcomeInitialState = {
-  entity: "employee",
-  calculatorType: "employee",
-  taxYearDuration: 12,
-};
-
 export const useStore = create((set) => ({
   userDetails: initialState,
-  welcomeDetails: welcomeInitialState,
-  addWelcomeDetail: ({ value, field }) =>
-    set((state) => ({
-      welcomeDetails: { ...state.welcomeDetails, [field]: value },
-    })),
+  // TODO: to be depricated with v2
   addDetail: ({ value, field }) =>
     set((state) => ({
       userDetails: { ...state.userDetails, [field]: value },
-    })), // to be depricated
+    })),
+  changeCalculatorType: ({ value, field }) =>
+    set((state) => ({
+      userDetails: { ...state.userDetails, [field]: value },
+    })),
   addEmployeeDetail: ({ value, field }) =>
     set((state) => ({
       userDetails: {

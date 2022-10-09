@@ -1,7 +1,13 @@
 import IncomeTable from "./IncomeTable";
-import V2 from "./TableV2";
+import EmployeeTable from "./EmployeeTable";
 import BusinessTable from "./BusinessTable";
+import TableHeader from "./TableHeader";
 
-const Table = { IncomeTable, V2, BusinessTable };
+const Table = {
+  IncomeTable,
+  Employee: EmployeeTable,
+  Business: BusinessTable,
+  Header: TableHeader,
+};
 
 export default Table;

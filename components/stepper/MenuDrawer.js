@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
-export const MenuDrawer = ({ name, options = [], onChange }) => {
+export const MenuDrawer = ({ name, options = [], onChange, ...rest }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleOnChange = (value) => {
@@ -45,6 +45,7 @@ export const MenuDrawer = ({ name, options = [], onChange }) => {
           background: "transparent",
           outline: 0,
         }}
+        {...rest}
       >
         <Heading
           as="h3"

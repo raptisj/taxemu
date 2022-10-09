@@ -12,8 +12,8 @@ export const StepperNumberInput = ({ onChange, value }) => {
     >
       <NumberInputField
         fontWeight="600"
-        fontSize={["20px", "20px", "30px"]}
-        maxW="200px"
+        fontSize={["16px", "20px", "30px"]}
+        maxW={["100px", "100px", "160px"]}
         padding={0}
       />
     </NumberInput>

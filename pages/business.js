@@ -25,11 +25,12 @@ import { Navigation } from "../components/navigation";
 import { Layout } from "../components/layout";
 import { QuestionIcon } from "@chakra-ui/icons";
 import Table from "../components/table";
+import FormElements from "../components/input";
 
 const CalculatorBusiness = () => {
   const userDetails = useStore((state) => state.userDetails.business);
   const addBusinessDetail = useStore((state) => state.addBusinessDetail);
-  const addDetail = useStore((state) => state.addDetail);
+  const changeCalculatorType = useStore((state) => state.changeCalculatorType);
   const { push, pathname } = useRouter();
   const [showSection, setShowSection] = useState(false);
 
@@ -49,7 +50,7 @@ const CalculatorBusiness = () => {
   } = userDetails;
 
   const onChange = (value) => {
-    addDetail({
+    changeCalculatorType({
       value,
       field: "calculatorType",
     });
@@ -57,7 +58,7 @@ const CalculatorBusiness = () => {
     push(`/${value}`);
   };
 
-  const calculatorTypeValue = pathname?.split("/")[1]; 
+  const calculatorTypeValue = pathname?.split("/")[1];
   const isGrossMonthly = grossMonthOrYear === "month";
 
   const onSelectTaxationYear = (e) => {
@@ -191,15 +192,15 @@ const CalculatorBusiness = () => {
         discountOptions.specialInsuranceScale ? 0 : insuranceScaleSelection
       ].amount * taxYearDuration;
 
-      const insuranceValue = {
-        month: insurancePerYear / taxYearDuration,
-        year: insurancePerYear
-      }
+    const insuranceValue = {
+      month: insurancePerYear / taxYearDuration,
+      year: insurancePerYear,
+    };
 
-      addBusinessDetail({
-        value: insuranceValue,
-        field: "insurance",
-      });
+    addBusinessDetail({
+      value: insuranceValue,
+      field: "insurance",
+    });
 
     const taxableIncome =
       grossIncome - insurancePerYear - extraBusinessExpenses;
@@ -287,38 +288,26 @@ const CalculatorBusiness = () => {
       >
         <GridItem>
           <Box>
-            <Box>
-              <Text fontWeight="500" color="gray.700">
-                Κατηγορία
-              </Text>
-              <RadioGroup
-                onChange={onChange}
-                value={calculatorTypeValue}
-                mt={2}
-              >
-                <Stack direction="row">
-                  <Radio value="business">
-                    <Text fontSize="14px">Ελέυθερος επαγγελματίας</Text>
-                  </Radio>
-                  <Radio value="employee" fontSize="14px">
-                    <Text fontSize="14px">Μισθωτός</Text>
-                  </Radio>
-                </Stack>
-              </RadioGroup>
-            </Box>
+            <FormElements.RadioGroup
+              label="Κατηγορία"
+              onChange={onChange}
+              value={calculatorTypeValue}
+              options={[
+                { title: "Ελέυθερος επαγγελματίας", key: "business" },
+                { title: "Μισθωτός", key: "employee" },
+              ]}
+            />
 
             <Box mt={4}>
-              <Text fontWeight="500" color="gray.700">
-                Φορολογικό έτος
-              </Text>
-              <Select
+              <FormElements.Select
+                label="Φορολογικό έτος"
                 onChange={onSelectTaxationYear}
-                mt={2}
                 defaultValue={taxationYear}
-              >
-                <option value="2022">2022</option>
-                <option value="2021">2021</option>
-              </Select>
+                options={[
+                  { value: "2022", text: "2022" },
+                  { value: "2021", text: "2021" },
+                ]}
+              />
             </Box>
 
             <Box mt={4}>
@@ -375,19 +364,15 @@ const CalculatorBusiness = () => {
                   <NumberInputField />
                 </NumberInput>
               </GridItem>
-              <GridItem>
-                <Text fontWeight="500" color="gray.700" mt={4}>
-                  Ανά
-                </Text>
-
-                <Select
+              <GridItem mt={4}>
+                <FormElements.Select
+                  label="Ανά"
                   onChange={onSelectGrossIncomeMonthOfYear}
-                  borderColor="gray.200"
-                  mt={2}
-                >
-                  <option value="year">Έτος</option>
-                  <option value="month">Μήνα</option>
-                </Select>
+                  options={[
+                    { value: "year", text: "Έτος" },
+                    { value: "month", text: "Μήνα" },
+                  ]}
+                />
               </GridItem>
             </Grid>
 
@@ -434,20 +419,14 @@ const CalculatorBusiness = () => {
               Έξοδα
             </Text>
 
-            <RadioGroup
+            <FormElements.RadioGroup
               onChange={onChangeBusinessExpensesMonthOrYear}
               value={businessExpensesMonthOrYear}
-              mt={2}
-            >
-              <Stack direction="row">
-                <Radio value="month" defaultChecked>
-                  <Text fontSize="14px">Ανά μήνα</Text>
-                </Radio>
-                <Radio value="year" fontSize="14px">
-                  <Text fontSize="14px">Ανά έτος</Text>
-                </Radio>
-              </Stack>
-            </RadioGroup>
+              options={[
+                { title: "Ανά μήνα", key: "month" },
+                { title: "Ανά έτος", key: "year" },
+              ]}
+            />
 
             <Grid gridTemplateColumns="2fr 1fr" gap="0 16px" mt={4}>
               <GridItem>
@@ -621,8 +600,13 @@ const CalculatorBusiness = () => {
             )}
           </Box>
         </GridItem>
-        <GridItem>
-          <Table.BusinessTable />
+        <GridItem
+          borderLeft="1px solid"
+          borderColor="gray.100"
+          paddingLeft="40px"
+        >
+          <Table.Header />
+          <Table.Business />
         </GridItem>
       </Grid>
     </Layout>
