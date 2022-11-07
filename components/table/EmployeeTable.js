@@ -33,60 +33,68 @@ const EmployeeTable = () => {
         </TableCaption>
         <Thead>
           <Tr>
-            <Th></Th>
-            <Th>ΑΝΑ ΜΗΝΑ</Th>
-            <Th>ΑΝΑ ΕΤΟΣ</Th>
+            <Th border="none"></Th>
+            <Th border="none">ΑΝΑ ΜΗΝΑ</Th>
+            <Th border="none">ΑΝΑ ΕΤΟΣ</Th>
           </Tr>
         </Thead>
         <Tbody>
-          <Tr background="purple.400">
-            <Td>
-              <Text color="white" fontWeight="700" fontSize="sm">
+          <Tr>
+            <Td borderBottomWidth={1} borderColor="gray.500">
+              <Text fontWeight="700" fontSize="sm">
                 Καθαρός μισθός
               </Text>
             </Td>
-            <Td>
-              <Text color="white" fontWeight="600" fontSize="sm">
+            <Td borderBottomWidth={1} borderColor="gray.500">
+              <Text fontWeight="600" fontSize="sm">
                 {formatCellValue(finalIncomeMonthly)}
               </Text>
             </Td>
-            <Td isNumeric>
-              <Text color="white" fontWeight="600" fontSize="sm">
+            <Td isNumeric borderBottomWidth={1} borderColor="gray.500">
+              <Text fontWeight="600" fontSize="sm">
                 {formatCellValue(finalIncomeYearly)}
               </Text>
             </Td>
           </Tr>
           <Tr>
-            <Td>
+            <Td border="none">
               <Text color="gray.700" fontWeight="500" fontSize="sm">
                 Μικτός μισθός
               </Text>
             </Td>
-            <Td>
+            <Td border="none">
               <Text color="gray.700" fontSize="sm">
                 {formatCellValue(grossIncomeMonthly)}
               </Text>
             </Td>
-            <Td isNumeric>
+            <Td isNumeric border="none">
               <Text color="gray.700" fontSize="sm">
                 {formatCellValue(grossIncomeYearly)}
               </Text>
             </Td>
           </Tr>
           <Tr>
-            <Td>
+            <Td border="none">
               <Text color="gray.700" fontWeight="500" fontSize="sm">
                 Φορός
               </Text>
             </Td>
-            <Td>
+            <Td border="none">
               <Text color="gray.700" fontSize="sm">
-                {formatCellValue(grossIncomeMonthly > taxMonthly && taxMonthly > 0 ? taxMonthly : null)}
+                {formatCellValue(
+                  grossIncomeMonthly > taxMonthly && taxMonthly > 0
+                    ? taxMonthly
+                    : null
+                )}
               </Text>
             </Td>
-            <Td isNumeric>
+            <Td isNumeric border="none">
               <Text color="gray.700" fontSize="sm">
-                {formatCellValue(grossIncomeYearly > taxYearly && taxYearly > 0 ? taxYearly : null)}
+                {formatCellValue(
+                  grossIncomeYearly > taxYearly && taxYearly > 0
+                    ? taxYearly
+                    : null
+                )}
               </Text>
             </Td>
           </Tr>

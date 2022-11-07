@@ -7,7 +7,7 @@ export const Sidebar = ({ children, onClick }) => {
 
   return (
     <>
-      <Box>{children}</Box>
+      <Box minHeight='calc(100vh - 260px)'>{children}</Box>
       <Flex
         position="sticky"
         bottom={0}

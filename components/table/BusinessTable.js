@@ -36,41 +36,41 @@ const BusinessTable = () => {
         </TableCaption>
         <Thead>
           <Tr>
-            <Th></Th>
-            <Th>ΑΝΑ ΜΗΝΑ</Th>
-            <Th>ΑΝΑ ΕΤΟΣ</Th>
+            <Th border="none"></Th>
+            <Th border="none">ΑΝΑ ΜΗΝΑ</Th>
+            <Th border="none">ΑΝΑ ΕΤΟΣ</Th>
           </Tr>
         </Thead>
         <Tbody>
-          <Tr background="purple.400">
-            <Td>
-              <Text color="white" fontWeight="700" fontSize="sm">
+          <Tr>
+            <Td borderBottomWidth={1} borderColor="gray.500">
+              <Text fontWeight="700" fontSize="sm">
                 Καθαρό Εισόδημα
               </Text>
             </Td>
-            <Td>
-              <Text color="white" fontWeight="600" fontSize="sm">
+            <Td borderBottomWidth={1} borderColor="gray.500">
+              <Text fontWeight="600" fontSize="sm">
                 {formatCellValue(finalIncome.month, !!finalIncome.year)}
               </Text>
             </Td>
-            <Td isNumeric>
-              <Text color="white" fontWeight="600" fontSize="sm">
+            <Td isNumeric borderBottomWidth={1} borderColor="gray.500">
+              <Text fontWeight="600" fontSize="sm">
                 {formatCellValue(finalIncome.year, !!finalIncome.year)}
               </Text>
             </Td>
           </Tr>
           <Tr>
-            <Td>
+            <Td border="none">
               <Text color="gray.700" fontWeight="500" fontSize="sm">
                 Μικτό Εισόδημα
               </Text>
             </Td>
-            <Td>
+            <Td border="none">
               <Text color="gray.700" fontSize="sm">
                 {formatCellValue(grossIncomeMonthly, !!finalIncome.year)}
               </Text>
             </Td>
-            <Td isNumeric>
+            <Td isNumeric border="none">
               <Text color="gray.700" fontSize="sm">
                 {formatCellValue(
                   (grossIncomeYearly / 12) * taxYearDuration,
@@ -80,12 +80,12 @@ const BusinessTable = () => {
             </Td>
           </Tr>
           <Tr>
-            <Td>
+            <Td border="none">
               <Text color="gray.700" fontWeight="500" fontSize="sm">
                 Πρόσθετα έξοδα
               </Text>
             </Td>
-            <Td>
+            <Td border="none">
               <Text color="gray.700" fontSize="sm">
                 {formatCellValue(
                   extraBusinessExpenses / taxYearDuration,
@@ -93,24 +93,24 @@ const BusinessTable = () => {
                 )}
               </Text>
             </Td>
-            <Td isNumeric>
+            <Td isNumeric border="none">
               <Text color="gray.700" fontSize="sm">
                 {formatCellValue(extraBusinessExpenses, !!finalIncome.year)}
               </Text>
             </Td>
           </Tr>
           <Tr>
-            <Td>
+            <Td border="none">
               <Text color="gray.700" fontWeight="500" fontSize="sm">
                 Ασφάλιση
               </Text>
             </Td>
-            <Td>
+            <Td border="none">
               <Text color="gray.700" fontSize="sm">
                 {formatCellValue(insurance.month, !!finalIncome.year)}
               </Text>
             </Td>
-            <Td isNumeric>
+            <Td isNumeric border="none">
               <Text color="gray.700" fontSize="sm">
                 {formatCellValue(insurance.year, !!finalIncome.year)}
               </Text>
@@ -119,12 +119,12 @@ const BusinessTable = () => {
 
           {discountOptions.prePaidNextYearTax && (
             <Tr>
-              <Td>
+              <Td border="none">
                 <Text color="gray.700" fontWeight="500" fontSize="sm">
                   Προκαταβολή φόρου
                 </Text>
               </Td>
-              <Td>
+              <Td border="none">
                 <Text color="gray.700" fontSize="sm">
                   {formatCellValue(
                     taxInAdvance.month > 0 ? taxInAdvance.month : null,
@@ -132,7 +132,7 @@ const BusinessTable = () => {
                   )}
                 </Text>
               </Td>
-              <Td isNumeric>
+              <Td isNumeric border="none">
                 <Text color="gray.700" fontSize="sm">
                   {formatCellValue(
                     taxInAdvance.year > 0 ? taxInAdvance.year : null,
@@ -143,17 +143,17 @@ const BusinessTable = () => {
             </Tr>
           )}
           <Tr>
-            <Td>
+            <Td border="none">
               <Text color="gray.700" fontWeight="500" fontSize="sm">
                 Φορός
               </Text>
             </Td>
-            <Td>
+            <Td border="none">
               <Text color="gray.700" fontSize="sm">
                 {formatCellValue(totalTax.month, !!finalIncome.year)}
               </Text>
             </Td>
-            <Td isNumeric>
+            <Td isNumeric border="none">
               <Text color="gray.700" fontSize="sm">
                 {formatCellValue(totalTax.year, !!finalIncome.year)}
               </Text>
