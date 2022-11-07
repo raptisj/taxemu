@@ -1,10 +1,6 @@
 import { Flex, Button, Heading } from "@chakra-ui/react";
-import { CloseIcon } from "@chakra-ui/icons";
-import { useStore } from "store";
 
-const TableHeader = () => {
-  const removeUserDetails = useStore((state) => state.removeUserDetails);
-
+const TableHeader = ({ onSubmitAction }) => {
   return (
     <Flex justifyContent="space-between">
       <Heading
@@ -16,15 +12,13 @@ const TableHeader = () => {
       >
         Αποτέλεσμα*
       </Heading>
+
       <Button
-        leftIcon={<CloseIcon fontSize={8} />}
-        colorScheme="gray"
-        variant="outline"
-        fontSize="12px"
-        height="30px"
-        onClick={removeUserDetails}
+        height="32px"
+        colorScheme="purple"
+        onClick={onSubmitAction}
       >
-        Εκκαθάριση όλων των πεδίων
+        Υπολόγισε αποτέλεσμα
       </Button>
     </Flex>
   );

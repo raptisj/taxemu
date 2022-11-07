@@ -1,5 +1,5 @@
-export const formatCellValue = (val) =>
-  val ? `€${val.toLocaleString("en-US").split(".")[0]}` : "------";
+export const formatCellValue = (val, submitGuard = true) =>
+  val && submitGuard ? `€${val.toLocaleString("en-US").split(".")[0]}` : "------";
 
 export const calcFinal = (obj, type) => {
   return Object.keys(obj)

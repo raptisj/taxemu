@@ -9,7 +9,7 @@ export const Layout = ({ children }) => {
       <Flex
         minH="100vh"
         px={{ base: "1rem", md: "5rem" }}
-        py={{ base: "2.5rem", md: "1.5rem" }}
+        pt={{ base: "2.5rem", md: "1.5rem" }}
         direction="column"
         alignItems="start"
       >

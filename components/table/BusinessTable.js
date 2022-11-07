@@ -1,13 +1,13 @@
 import {
-  Table,
-  Thead,
-  Tbody,
   Tr,
   Th,
   Td,
+  Text,
+  Table,
+  Thead,
+  Tbody,
   TableCaption,
   TableContainer,
-  Text,
 } from "@chakra-ui/react";
 import { useStore } from "store";
 import { formatCellValue } from "utils";
@@ -50,12 +50,12 @@ const BusinessTable = () => {
             </Td>
             <Td>
               <Text color="white" fontWeight="600" fontSize="sm">
-                {formatCellValue(finalIncome.month)}
+                {formatCellValue(finalIncome.month, !!finalIncome.year)}
               </Text>
             </Td>
             <Td isNumeric>
               <Text color="white" fontWeight="600" fontSize="sm">
-                {formatCellValue(finalIncome.year)}
+                {formatCellValue(finalIncome.year, !!finalIncome.year)}
               </Text>
             </Td>
           </Tr>
@@ -67,12 +67,15 @@ const BusinessTable = () => {
             </Td>
             <Td>
               <Text color="gray.700" fontSize="sm">
-                {formatCellValue(grossIncomeMonthly)}
+                {formatCellValue(grossIncomeMonthly, !!finalIncome.year)}
               </Text>
             </Td>
             <Td isNumeric>
               <Text color="gray.700" fontSize="sm">
-                {formatCellValue((grossIncomeYearly / 12) * taxYearDuration)}
+                {formatCellValue(
+                  (grossIncomeYearly / 12) * taxYearDuration,
+                  !!finalIncome.year
+                )}
               </Text>
             </Td>
           </Tr>
@@ -84,12 +87,15 @@ const BusinessTable = () => {
             </Td>
             <Td>
               <Text color="gray.700" fontSize="sm">
-                {formatCellValue(extraBusinessExpenses / taxYearDuration)}
+                {formatCellValue(
+                  extraBusinessExpenses / taxYearDuration,
+                  !!finalIncome.year
+                )}
               </Text>
             </Td>
             <Td isNumeric>
               <Text color="gray.700" fontSize="sm">
-                {formatCellValue(extraBusinessExpenses)}
+                {formatCellValue(extraBusinessExpenses, !!finalIncome.year)}
               </Text>
             </Td>
           </Tr>
@@ -101,12 +107,12 @@ const BusinessTable = () => {
             </Td>
             <Td>
               <Text color="gray.700" fontSize="sm">
-                {formatCellValue(insurance.month)}
+                {formatCellValue(insurance.month, !!finalIncome.year)}
               </Text>
             </Td>
             <Td isNumeric>
               <Text color="gray.700" fontSize="sm">
-                {formatCellValue(insurance.year)}
+                {formatCellValue(insurance.year, !!finalIncome.year)}
               </Text>
             </Td>
           </Tr>
@@ -121,14 +127,16 @@ const BusinessTable = () => {
               <Td>
                 <Text color="gray.700" fontSize="sm">
                   {formatCellValue(
-                    taxInAdvance.month > 0 ? taxInAdvance.month : null
+                    taxInAdvance.month > 0 ? taxInAdvance.month : null,
+                    !!finalIncome.year
                   )}
                 </Text>
               </Td>
               <Td isNumeric>
                 <Text color="gray.700" fontSize="sm">
                   {formatCellValue(
-                    taxInAdvance.year > 0 ? taxInAdvance.year : null
+                    taxInAdvance.year > 0 ? taxInAdvance.year : null,
+                    !!finalIncome.yea
                   )}
                 </Text>
               </Td>
@@ -142,12 +150,12 @@ const BusinessTable = () => {
             </Td>
             <Td>
               <Text color="gray.700" fontSize="sm">
-                {formatCellValue(totalTax.month)}
+                {formatCellValue(totalTax.month, !!finalIncome.year)}
               </Text>
             </Td>
             <Td isNumeric>
               <Text color="gray.700" fontSize="sm">
-                {formatCellValue(totalTax.year)}
+                {formatCellValue(totalTax.year, !!finalIncome.year)}
               </Text>
             </Td>
           </Tr>

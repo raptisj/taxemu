@@ -1,5 +1,5 @@
+import { useEffect } from "react";
 import {
-  Button,
   Flex,
   TabPanel,
   TabPanels,
@@ -8,7 +8,6 @@ import {
   useMediaQuery,
   Hide,
 } from "@chakra-ui/react";
-import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
 import { useStore } from "store";
 import {
@@ -16,10 +15,10 @@ import {
   BusinessSecondStep,
   MobileIntroCore,
   MobileBusinessSecondStep,
-} from "../../components/welcome";
-import { Navigation } from "../../components/navigation";
-import { Layout } from "../../components/layout";
-import { useEffect } from "react";
+} from "../components/welcome";
+import { Navigation } from "../components/navigation";
+import { Layout } from "../components/layout";
+import Stepper from "components/stepper";
 
 const desktopTabs = {
   intro: <IntroCore />,
@@ -83,25 +82,19 @@ const Welcome = () => {
         flexDirection={{ base: "column-reverse", sm: "row" }}
       >
         {tabIndex > 0 && (
-          <Button
-            width={{ base: "full", sm: "auto" }}
-            colorScheme="purple"
+          <Stepper.NavigationButton
+            text="Προηγούμενο"
             variant="outline"
-            mr={{ base: 0, sm: 3 }}
             onClick={() =>
               router.push({
                 query: { ...router.query, tab: tabNames[tabIndex - 1] },
               })
             }
-          >
-            Προηγούμενο
-          </Button>
+          />
         )}
-        <Button
-          width={{ base: "full", sm: "auto" }}
-          colorScheme="purple"
+        <Stepper.NavigationButton
+          text="Επόμενο"
           background="purple.600"
-          mb={{ base: 3, sm: 0 }}
           onClick={() =>
             router.push(
               tabIndex === tabNames.length - 1
@@ -109,9 +102,7 @@ const Welcome = () => {
                 : { query: { ...router.query, tab: tabNames[tabIndex + 1] } }
             )
           }
-        >
-          Επόμενο
-        </Button>
+        />
         <Hide below="sm">
           <Text color="gray.400" ml={4}>
             ή πάτα Enter
@@ -120,16 +111,10 @@ const Welcome = () => {
       </Flex>
 
       {tabIndex === 0 && (
-        <Button
-          width={{ base: "full", sm: "auto" }}
-          mt={{ base: "initial", sm: "auto" }}
-          rightIcon={<ArrowForwardIcon />}
-          color="gray.700"
-          background={{ base: "transparent", sm: "gray.200" }}
+        <Stepper.RedirectButton
           onClick={() => router.push(`/${calculatorType}`)}
-        >
-          Απ’ευθείας στον υπολογιστή φόρου
-        </Button>
+          text="Απ’ευθείας στον υπολογιστή φόρου"
+        />
       )}
     </Layout>
   );
