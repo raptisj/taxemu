@@ -1,13 +1,10 @@
 import { Button, Box, Flex } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
-import { useStore } from "store";
 
-export const Sidebar = ({ children, onClick }) => {
-  const removeUserDetails = useStore((state) => state.removeUserDetails);
-
+export const Sidebar = ({ children, onSubmitAction, onClear }) => {
   return (
     <>
-      <Box minHeight='calc(100vh - 260px)'>{children}</Box>
+      <Box minHeight="calc(100vh - 260px)">{children}</Box>
       <Flex
         position="sticky"
         bottom={0}
@@ -23,7 +20,7 @@ export const Sidebar = ({ children, onClick }) => {
           width={{ base: "full" }}
           colorScheme="purple"
           mr={{ base: 0, sm: 3 }}
-          onClick={onClick}
+          onClick={onSubmitAction}
         >
           Υπολόγισε αποτέλεσμα
         </Button>
@@ -35,7 +32,7 @@ export const Sidebar = ({ children, onClick }) => {
           fontSize="12px"
           p={4}
           width="140px"
-          onClick={removeUserDetails}
+          onClick={onClear}
         >
           Εκκαθάριση
         </Button>

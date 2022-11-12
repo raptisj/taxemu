@@ -1,11 +1,12 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { useStore } from "store";
 import { useToast } from "@chakra-ui/react";
 
-export const useCalculateBusiness = ({ userDetails }) => {
-//   const userDetails = useStore((state) => state.userDetails.business);
+export const useCalculateBusiness = () => {
+  const userDetails = useStore((state) => state.userDetails.business);
+  const hasError = useStore((state) => state.userDetails.hasError);
   const addBusinessDetail = useStore((state) => state.addBusinessDetail);
-  const [hasError, setHasError] = useState(false);
+  const setHasError = useStore((state) => state.setHasError);
   const toast = useToast();
 
   const {
@@ -79,7 +80,7 @@ export const useCalculateBusiness = ({ userDetails }) => {
   );
 
   const centralCalculation = () => {
-    setHasError(false);
+    setHasError({ value: false });
     if (!grossIncomeYearly || !grossIncomeMonthly) {
       toast({
         title: "Λείπουν απαιτούμενα πεδία!",
@@ -87,7 +88,7 @@ export const useCalculateBusiness = ({ userDetails }) => {
         isClosable: true,
         status: "warning",
       });
-      return setHasError(true);
+      return setHasError({ value: true });
     }
 
     const grossPerYear = (grossIncomeYearly / 12) * taxYearDuration;

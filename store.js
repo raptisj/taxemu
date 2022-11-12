@@ -3,6 +3,7 @@ import { insuranceScales2021, taxScales2021 } from "./constants";
 
 const initialState = {
   calculatorType: "employee",
+  hasError: false,
   employee: {
     grossIncomeYearly: 0,
     finalIncomeYearly: 0,
@@ -176,6 +177,10 @@ export const useStore = create((set) => ({
   changeCalculatorType: ({ value, field }) =>
     set((state) => ({
       userDetails: { ...state.userDetails, [field]: value },
+    })),
+  setHasError: ({ value }) =>
+    set((state) => ({
+      userDetails: { ...state.userDetails, hasError: value },
     })),
   addEmployeeDetail: ({ value, field }) =>
     set((state) => ({
