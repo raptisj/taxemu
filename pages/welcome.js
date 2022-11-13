@@ -1,15 +1,15 @@
 import { useEffect } from "react";
 import {
   Flex,
+  Text,
+  Hide,
+  Tabs,
   TabPanel,
   TabPanels,
-  Tabs,
-  Text,
   useMediaQuery,
-  Hide,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import { useStore } from "store";
+import { useRouter } from "next/router";
 import {
   IntroCore,
   BusinessSecondStep,

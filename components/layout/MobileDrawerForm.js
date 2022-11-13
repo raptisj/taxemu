@@ -6,13 +6,10 @@ import {
   DrawerContent,
   DrawerCloseButton,
 } from "@chakra-ui/react";
-import { useCalculateBusiness } from "hooks";
 
-const MobileDrawerForm = ({ children, isOpen, onClose }) => {
-  const { centralCalculation } = useCalculateBusiness();
-
+const MobileDrawerForm = ({ children, isOpen, onClose, onCalculate }) => {
   const onClick = () => {
-    centralCalculation();
+    onCalculate();
     onClose();
     return;
   };
@@ -34,6 +31,7 @@ const MobileDrawerForm = ({ children, isOpen, onClose }) => {
           width="100%"
           p={4}
           backgroundColor="white"
+          mt="auto"
         >
           <Button colorScheme="purple" width="full" onClick={onClick}>
             Υπολόγισε

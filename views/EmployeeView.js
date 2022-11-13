@@ -1,18 +1,18 @@
 import { Box, Grid, GridItem } from "@chakra-ui/react";
-import { Sidebar } from "../components/layout";
-import Table from "../components/table";
-import { useCalculateBusiness } from "hooks";
-import BusinessForm from "components/business/BusinessForm";
 import { useStore } from "store";
+import { Sidebar } from "components/layout";
+import Table from "components/table";
+import { useCalculateEmployee } from "hooks";
+import EmployeeForm from "components/employee/EmployeeForm";
 
-const BusinessView = () => {
-  const { centralCalculation } = useCalculateBusiness();
+const EmployeeView = () => {
+  const { centralCalculation } = useCalculateEmployee();
   const removeUserDetails = useStore((state) => state.removeUserDetails);
 
   return (
     <Grid
       width="100%"
-      templateColumns={["1fr", "386px 1fr"]}
+      templateColumns="386px 1fr"
       gap={6}
       maxW="1200px"
       mt={[10, 16]}
@@ -24,7 +24,7 @@ const BusinessView = () => {
           onSubmitAction={centralCalculation}
           onClear={removeUserDetails}
         >
-          <BusinessForm />
+          <EmployeeForm />
         </Sidebar>
       </GridItem>
 
@@ -36,11 +36,11 @@ const BusinessView = () => {
       >
         <Box position="sticky" top={8}>
           <Table.Header onSubmitAction={centralCalculation} />
-          <Table.Business />
+          <Table.Employee />
         </Box>
       </GridItem>
     </Grid>
   );
 };
 
-export default BusinessView;
+export default EmployeeView;

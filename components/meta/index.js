@@ -1,16 +1,11 @@
 import Head from "next/head";
+import { META_TITLE, META_DESCRIPTION } from "constants";
 
 export const Meta = () => {
   return (
     <Head>
-      <title>
-        Taxemu - Υπολογισμός καθαρού ή μικτού μισθού μισθωτού ή ατομικής
-        επιχείρησης
-      </title>
-      <meta
-        name="description"
-        content="Το Taxemu είναι ενα open-source εργαλείο για να μπορείς να έχεις μια εικόνα των εξόδων και κρατήσεων της ατομικής σου επιχείρησης"
-      />
+      <title>{META_TITLE}</title>
+      <meta name="description" content={META_DESCRIPTION} />
       <link rel="icon" href="/favicon.ico" />
     </Head>
   );

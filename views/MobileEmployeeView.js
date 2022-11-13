@@ -1,17 +1,17 @@
 import { Box, Button, useDisclosure } from "@chakra-ui/react";
 import Table from "components/table";
-import BusinessForm from "components/business/BusinessForm";
 import MobileDrawerForm from "components/layout/MobileDrawerForm";
-import { useCalculateBusiness } from "hooks";
+import EmployeeForm from "components/employee/EmployeeForm";
+import { useCalculateEmployee } from "hooks";
 
-const MobileBusinessView = () => {
+const MobileEmployeeView = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { centralCalculation } = useCalculateBusiness();
+  const { centralCalculation } = useCalculateEmployee();
 
   return (
     <>
       <Box position="relative" height="calc(100vh - 150px)" mt={[10, 16]}>
-        <Table.MobileBusinessTable />
+        <Table.MobileEmployeeTable />
 
         <Box
           borderTop="1px solid"
@@ -28,13 +28,17 @@ const MobileBusinessView = () => {
         </Box>
       </Box>
 
-      <MobileDrawerForm isOpen={isOpen} onClose={onClose} onCalculate={centralCalculation}>
+      <MobileDrawerForm
+        isOpen={isOpen}
+        onClose={onClose}
+        onCalculate={centralCalculation}
+      >
         <Box padding={4}>
-          <BusinessForm showCalculatorType={false} />
+          <EmployeeForm showCalculatorType={false} />
         </Box>
       </MobileDrawerForm>
     </>
   );
 };
 
-export default MobileBusinessView;
+export default MobileEmployeeView;

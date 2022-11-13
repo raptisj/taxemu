@@ -1,8 +1,8 @@
 import { useMediaQuery } from "@chakra-ui/react";
 import { Navigation } from "components/navigation";
 import { Layout } from "components/layout";
-import BusinessView from "views/BusinessView";
 import MobileBusinessView from "views/MobileBusinessView";
+import BusinessView from "views/BusinessView";
 
 const Business = () => {
   const [isLargerThan30] = useMediaQuery("(min-width: 30em)");
