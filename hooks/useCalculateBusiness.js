@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useStore } from "store";
 import { useToast } from "@chakra-ui/react";
 
@@ -78,6 +78,12 @@ export const useCalculateBusiness = () => {
     },
     [discountOptions.firstScaleDiscount]
   );
+
+  useEffect(() => {
+    if (hasError && (grossIncomeYearly || grossIncomeMonthly)) {
+      return setHasError({ value: false });
+    }
+  }, [grossIncomeYearly, grossIncomeMonthly, hasError, setHasError]);
 
   const centralCalculation = () => {
     setHasError({ value: false });

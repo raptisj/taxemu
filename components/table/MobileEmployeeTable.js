@@ -29,8 +29,8 @@ const MobileEmployeeTable = () => {
 
       <Tabs isFitted mt={6}>
         <TabList>
-          <Tab>Ανά μήνα</Tab>
-          <Tab>Ανά έτος</Tab>
+          <Tab _focus={{ outline: 0 }}>Ανά μήνα</Tab>
+          <Tab _focus={{ outline: 0 }}>Ανά έτος</Tab>
         </TabList>
 
         <TabPanels>

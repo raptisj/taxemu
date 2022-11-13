@@ -1,9 +1,13 @@
 import { useStore } from "store";
+import { useToast } from "@chakra-ui/react";
 import { sortByMultiplier } from "../utils";
 
 export const useCalculateEmployee = () => {
   const userDetails = useStore((state) => state.userDetails.employee);
+  const hasError = useStore((state) => state.userDetails.hasError);
   const addEmployeeDetail = useStore((state) => state.addEmployeeDetail);
+  const setHasError = useStore((state) => state.setHasError);
+  const toast = useToast();
 
   const {
     grossIncomeYearly,
@@ -84,6 +88,17 @@ export const useCalculateEmployee = () => {
 
   // TOOO improve this function
   const centralCalculation = () => {
+    setHasError({ value: false });
+    if (!grossIncomeYearly || !grossIncomeMonthly) {
+      toast({
+        title: "Λείπουν απαιτούμενα πεδία!",
+        position: "top",
+        isClosable: true,
+        status: "warning",
+      });
+      return setHasError({ value: true });
+    }
+
     const grossMonthly = discountOptions.returnBaseInland
       ? grossIncomeMonthly * RETURN_BASE_INLAND_PERCENTAGE
       : grossIncomeMonthly;
@@ -189,5 +204,6 @@ export const useCalculateEmployee = () => {
 
   return {
     centralCalculation,
+    hasError
   };
 };

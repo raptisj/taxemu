@@ -17,8 +17,8 @@ const MobileDrawerForm = ({ children, isOpen, onClose, onCalculate }) => {
   return (
     <Drawer placement="bottom" onClose={onClose} isOpen={isOpen} size="full">
       <DrawerOverlay />
-      <DrawerContent overflowY="auto" paddingTop={8}>
-        <DrawerCloseButton />
+      <DrawerContent overflowY="auto" paddingTop={16}>
+        <DrawerCloseButton top="60px" />
 
         {children}
 

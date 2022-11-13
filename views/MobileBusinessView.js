@@ -28,7 +28,11 @@ const MobileBusinessView = () => {
         </Box>
       </Box>
 
-      <MobileDrawerForm isOpen={isOpen} onClose={onClose} onCalculate={centralCalculation}>
+      <MobileDrawerForm
+        isOpen={isOpen}
+        onClose={onClose}
+        onCalculate={centralCalculation}
+      >
         <Box padding={4}>
           <BusinessForm showCalculatorType={false} />
         </Box>

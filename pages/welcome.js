@@ -83,6 +83,7 @@ const Welcome = () => {
       >
         {tabIndex > 0 && (
           <Stepper.NavigationButton
+            mt={[2, 0]}
             text="Προηγούμενο"
             variant="outline"
             onClick={() =>
