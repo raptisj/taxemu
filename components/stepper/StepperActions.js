@@ -23,6 +23,7 @@ export const RedirectButton = ({ onClick, text, ...rest }) => {
       rightIcon={<ArrowForwardIcon />}
       color="gray.700"
       background={{ base: "transparent", sm: "gray.200" }}
+      marginTop={{ base: 2, sm: 'auto' }}
       onClick={onClick}
       {...rest}
     >

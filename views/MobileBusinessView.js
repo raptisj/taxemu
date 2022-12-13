@@ -6,7 +6,7 @@ import { useCalculateBusiness } from "hooks";
 
 const MobileBusinessView = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { centralCalculation } = useCalculateBusiness();
+  const { centralCalculation, hasError } = useCalculateBusiness();
 
   return (
     <>

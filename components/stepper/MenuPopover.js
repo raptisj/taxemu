@@ -12,6 +12,7 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 
 export const MenuPopover = ({
   name,
+  label = '',
   options = [],
   onChange,
   menuTitle,
@@ -38,7 +39,7 @@ export const MenuPopover = ({
           color="gray.700"
           minW="100px"
         >
-          {name.toLowerCase()}
+          {label.toLowerCase()}
         </Heading>
       </MenuButton>
       <MenuList>
@@ -47,8 +48,8 @@ export const MenuPopover = ({
             <Text>{menuTitle}</Text>
           </MenuItemOption>
           {options.map((option) => (
-            <MenuItemOption value={option} key={option}>
-              {option}
+            <MenuItemOption value={option.value} key={option.value}>
+              {option.text}
             </MenuItemOption>
           ))}
         </MenuOptionGroup>

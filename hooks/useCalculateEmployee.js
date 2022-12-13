@@ -4,9 +4,9 @@ import { sortByMultiplier } from "../utils";
 
 export const useCalculateEmployee = () => {
   const userDetails = useStore((state) => state.userDetails.employee);
-  const hasError = useStore((state) => state.userDetails.hasError);
+  const hasError = useStore((state) => state.userDetails.employee.hasError);
   const addEmployeeDetail = useStore((state) => state.addEmployeeDetail);
-  const setHasError = useStore((state) => state.setHasError);
+  const setEmployeeHasError = useStore((state) => state.setEmployeeHasError);
   const toast = useToast();
 
   const {
@@ -88,16 +88,16 @@ export const useCalculateEmployee = () => {
 
   // TOOO improve this function
   const centralCalculation = () => {
-    setHasError({ value: false });
-    if (!grossIncomeYearly || !grossIncomeMonthly) {
-      toast({
-        title: "Λείπουν απαιτούμενα πεδία!",
-        position: "top",
-        isClosable: true,
-        status: "warning",
-      });
-      return setHasError({ value: true });
-    }
+    // setEmployeeHasError({ value: false });
+    // if (!grossIncomeYearly || !grossIncomeMonthly) {
+    //   toast({
+    //     title: "Λείπουν απαιτούμενα πεδία!",
+    //     position: "top",
+    //     isClosable: true,
+    //     status: "warning",
+    //   });
+    //   return setEmployeeHasError({ value: true });
+    // }
 
     const grossMonthly = discountOptions.returnBaseInland
       ? grossIncomeMonthly * RETURN_BASE_INLAND_PERCENTAGE
@@ -204,6 +204,6 @@ export const useCalculateEmployee = () => {
 
   return {
     centralCalculation,
-    hasError
+    hasError,
   };
 };

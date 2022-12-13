@@ -19,6 +19,7 @@ import {
 import { Navigation } from "../components/navigation";
 import { Layout } from "../components/layout";
 import Stepper from "components/stepper";
+import { useCalculateBusiness, useCalculateEmployee } from "hooks";
 
 const desktopTabs = {
   intro: <IntroCore />,
@@ -35,6 +36,9 @@ const Welcome = () => {
   const router = useRouter();
   const currentTab = router.query.tab;
   const [isLargerThan30] = useMediaQuery("(min-width: 30em)");
+  const { centralCalculation: calculateBusiness } = useCalculateBusiness();
+  const { centralCalculation: calculateEmployee } = useCalculateEmployee();
+  // const userDetails = useStore((state) => state.userDetails);
   const tabs = isLargerThan30 ? desktopTabs : mobileTabs;
 
   const isBusiness = calculatorType === "business";
@@ -61,8 +65,23 @@ const Welcome = () => {
     });
   }, [tabNames, tabIndex, router, calculatorType]);
 
+  const onNext = () => {
+    // check if it has one screen which means its employee screen
+    if (tabIndex === tabNames.length - 1) {
+      calculateEmployee();
+    } else {
+      calculateBusiness();
+    }
+
+    router.push(
+      tabIndex === tabNames.length - 1
+        ? `/${calculatorType}`
+        : { query: { ...router.query, tab: tabNames[tabIndex + 1] } }
+    );
+  };
+
   return (
-    <Layout>
+    <Layout pb={8}>
       <Navigation />
 
       <Tabs index={tabIndex}>
@@ -96,13 +115,7 @@ const Welcome = () => {
         <Stepper.NavigationButton
           text="Επόμενο"
           background="purple.600"
-          onClick={() =>
-            router.push(
-              tabIndex === tabNames.length - 1
-                ? `/${calculatorType}`
-                : { query: { ...router.query, tab: tabNames[tabIndex + 1] } }
-            )
-          }
+          onClick={() => onNext()}
         />
         <Hide below="sm">
           <Text color="gray.400" ml={4}>

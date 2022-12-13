@@ -1,27 +1,24 @@
-import { useState } from "react";
 import { Box, Text, Flex } from "@chakra-ui/react";
 import Stepper from "components/stepper";
+import { useStore } from "store";
 
 export const BusinessSecondStep = () => {
-  const [insurancePeriod, setInsurancePeriod] = useState("μηνιαίες");
-  const [expensesPeriod, setExpensesPeriod] = useState("χρόνο");
-  const [insuranceAmount, setInsuranceAmount] = useState("");
-  const [expensesAmount, setExpensesAmount] = useState("");
+  const userDetails = useStore((state) => state.userDetails);
+  const addBusinessDetail = useStore((state) => state.addBusinessDetail);
 
-  const handleInsuranePeriod = (value) => {
-    setInsurancePeriod(value.toLowerCase());
-  };
+  const handleInsurance = (value) => {
+    addBusinessDetail({
+      value: {
+        ...userDetails.business.discountOptions,
+        specialInsuranceScale: value === "0",
+      },
+      field: "discountOptions",
+    });
 
-  const handleExpensesPeriod = (value) => {
-    setExpensesPeriod(value.toLowerCase());
-  };
-
-  const handleInsuranceAmount = (value) => {
-    setInsuranceAmount(value);
-  };
-
-  const handleExpensesAmount = (value) => {
-    setExpensesAmount(value);
+    addBusinessDetail({
+      value: Number(value),
+      field: "insuranceScaleSelection",
+    });
   };
 
   return (
@@ -29,15 +26,16 @@ export const BusinessSecondStep = () => {
       <Text color="gray.400">Συνεχίζοντας...</Text>
       <Flex mt={8} flexDirection="column">
         <Flex flexWrap="wrap" alignItems="center">
-          <Stepper.Content text="Οι" mr={2} />
+          <Stepper.Content text="Οι" mr={2} mb={4} />
+          <Stepper.Content text="μηνιαίες" mr={2} mb={4} />
 
-          <Stepper.MenuPopover
+          {/* <Stepper.MenuPopover
             name={insurancePeriod}
             onChange={handleInsuranePeriod}
             options={["μηνιαίες", "ετήσιες"]}
             menuTitle="Επίλεξε περίοδο"
             mb={4}
-          />
+          /> */}
 
           <Stepper.Content text="εισφορές μου στον ΕΦΚΑ" mr={2} mb={4} />
 
@@ -51,10 +49,30 @@ export const BusinessSecondStep = () => {
               mr={2}
             />
 
-            <Stepper.NumberInput
+            <Stepper.MenuPopover
+              onChange={(value) => handleInsurance(value)}
+              name={userDetails.business.insuranceScaleSelection.toString()}
+              label={userDetails.business.taxationYearScales[
+                userDetails.business.taxationYear
+              ].insuranceScales[
+                userDetails.business.insuranceScaleSelection
+              ].amount.toString()}
+              options={[
+                { value: "0", text: 136 },
+                { value: "1", text: 220 },
+                { value: "2", text: 262 },
+                { value: "3", text: 312 },
+                { value: "4", text: 373 },
+                { value: "5", text: 445 },
+              ]}
+              menuTitle="Επίλεξε περίοδο"
+              mb={4}
+            />
+
+            {/* <Stepper.NumberInput
               onChange={handleInsuranceAmount}
               value={insuranceAmount}
-            />
+            /> */}
           </Flex>
         </Flex>
 
@@ -72,13 +90,18 @@ export const BusinessSecondStep = () => {
             />
 
             <Stepper.NumberInput
-              onChange={handleExpensesAmount}
-              value={expensesAmount}
+              onChange={(value) =>
+                addBusinessDetail({
+                  value: Number(value),
+                  field: "extraBusinessExpenses",
+                })
+              }
+              value={userDetails.business.extraBusinessExpenses}
             />
           </Flex>
 
-          <Flex alignItems="center">
-            <Stepper.Content text="τον" mr={2} mb={4} />
+          {/* <Flex alignItems="center"> */}
+          {/* <Stepper.Content text="τον" mr={2} mb={4} />
 
             <Stepper.MenuPopover
               name={expensesPeriod}
@@ -86,8 +109,8 @@ export const BusinessSecondStep = () => {
               options={["χρόνο", "μήνα"]}
               menuTitle="Επίλεξε περίοδο"
               mb={4}
-            />
-          </Flex>
+            /> */}
+          {/* </Flex> */}
         </Flex>
       </Flex>
     </Box>

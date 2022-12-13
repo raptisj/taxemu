@@ -3,8 +3,8 @@ import { insuranceScales2021, taxScales2021 } from "./constants";
 
 const initialState = {
   calculatorType: "employee",
-  hasError: false,
   employee: {
+    hasError: false,
     grossIncomeYearly: 0,
     finalIncomeYearly: 0,
     grossIncomeMonthly: 0,
@@ -12,7 +12,7 @@ const initialState = {
     grossMonthOrYear: "year",
     finalMonthOrYear: "year",
     salaryMonthCount: 14,
-    taxationYear: 2021,
+    taxationYear: 2022,
     taxableIncome: 0,
     taxYearly: 0,
     taxMonthly: 0,
@@ -72,6 +72,7 @@ const initialState = {
   },
   ////////
   business: {
+    hasError: false,
     grossIncomeYearly: 0,
     grossIncomeMonthly: 0,
     finalIncomeYearly: 0,
@@ -84,7 +85,7 @@ const initialState = {
     totalBusinessExpenses: 0,
     taxableIncome: 0,
     previousYearTaxInAdvance: 0,
-    taxationYear: 2021,
+    taxationYear: 2022,
     taxationYearScales: {
       2022: {
         value: 0,
@@ -178,9 +179,13 @@ export const useStore = create((set) => ({
     set((state) => ({
       userDetails: { ...state.userDetails, [field]: value },
     })),
-  setHasError: ({ value }) =>
+  setBusinessHasError: ({ value }) =>
     set((state) => ({
-      userDetails: { ...state.userDetails, hasError: value },
+      userDetails: { ...state.userDetails.business, hasError: value },
+    })),
+  setEmployeeHasError: ({ value }) =>
+    set((state) => ({
+      userDetails: { ...state.userDetails.employee, hasError: value },
     })),
   addEmployeeDetail: ({ value, field }) =>
     set((state) => ({

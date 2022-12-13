@@ -4,9 +4,9 @@ import { useToast } from "@chakra-ui/react";
 
 export const useCalculateBusiness = () => {
   const userDetails = useStore((state) => state.userDetails.business);
-  const hasError = useStore((state) => state.userDetails.hasError);
+  const hasError = useStore((state) => state.userDetails.business.hasError);
   const addBusinessDetail = useStore((state) => state.addBusinessDetail);
-  const setHasError = useStore((state) => state.setHasError);
+  const setBusinessHasError = useStore((state) => state.setBusinessHasError);
   const toast = useToast();
 
   const {
@@ -81,21 +81,21 @@ export const useCalculateBusiness = () => {
 
   useEffect(() => {
     if (hasError && (grossIncomeYearly || grossIncomeMonthly)) {
-      return setHasError({ value: false });
+      return setBusinessHasError({ value: false });
     }
-  }, [grossIncomeYearly, grossIncomeMonthly, hasError, setHasError]);
+  }, [grossIncomeYearly, grossIncomeMonthly, hasError, setBusinessHasError]);
 
   const centralCalculation = () => {
-    setHasError({ value: false });
-    if (!grossIncomeYearly || !grossIncomeMonthly) {
-      toast({
-        title: "Λείπουν απαιτούμενα πεδία!",
-        position: "top",
-        isClosable: true,
-        status: "warning",
-      });
-      return setHasError({ value: true });
-    }
+    // setBusinessHasError({ value: false });
+    // if (!grossIncomeYearly || !grossIncomeMonthly) {
+    //   toast({
+    //     title: "Λείπουν απαιτούμενα πεδία!",
+    //     position: "top",
+    //     isClosable: true,
+    //     status: "warning",
+    //   });
+    //   return setBusinessHasError({ value: true });
+    // }
 
     const grossPerYear = (grossIncomeYearly / 12) * taxYearDuration;
 

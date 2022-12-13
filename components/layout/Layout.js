@@ -1,7 +1,7 @@
 import { Flex } from "@chakra-ui/react";
 import { Meta } from "../meta";
 
-export const Layout = ({ children }) => {
+export const Layout = ({ children, ...rest }) => {
   return (
     <>
       <Meta />
@@ -12,6 +12,7 @@ export const Layout = ({ children }) => {
         pt={{ base: "2.5rem", md: "1.5rem" }}
         direction="column"
         alignItems="start"
+        {...rest}
       >
         {children}
       </Flex>

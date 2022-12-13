@@ -45,6 +45,7 @@ const BusinessForm = ({ showCalculatorType = true }) => {
     businessExpensesMonthOrYear,
     discountOptions,
     withholdingTax,
+    extraBusinessExpenses
   } = userDetails;
 
   const onChange = (value) => {
@@ -231,7 +232,7 @@ const BusinessForm = ({ showCalculatorType = true }) => {
           <Text fontWeight="500" color="gray.700">
             Πρόσθετα έξοδα επιχείρησης
           </Text>
-          <NumberInput mt={2} onChange={onChangeExtraBusinessExpenses}>
+          <NumberInput mt={2} onChange={onChangeExtraBusinessExpenses} value={extraBusinessExpenses || ''}>
             <NumberInputField />
           </NumberInput>
         </Box>
