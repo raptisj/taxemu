@@ -27,7 +27,7 @@ const initialState = {
     insuranceCarrier: "efka", // efka | tsmede
     taxationYearScales: {
       2022: {
-        insurancePercentage: 0.13867,
+        insurancePercentage: 0.1387,
       },
       2021: {
         insurancePercentage: 0.1412,

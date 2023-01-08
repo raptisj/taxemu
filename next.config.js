@@ -15,3 +15,15 @@ module.exports = {
 };
 
 module.exports = nextConfig;
+
+
+
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: "/welcome", // make '/' in v2 release
+  //       destination: "/welcome",
+  //       permanent: true,
+  //     },
+  //   ];
+  // },

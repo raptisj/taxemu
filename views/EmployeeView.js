@@ -6,8 +6,14 @@ import { useCalculateEmployee } from "hooks";
 import EmployeeForm from "components/employee/EmployeeForm";
 
 const EmployeeView = () => {
-  const { centralCalculation } = useCalculateEmployee();
+  const { centralCalculation, reverseCentralCalculation } =
+    useCalculateEmployee();
   const removeUserDetails = useStore((state) => state.removeUserDetails);
+
+  const userDetails = useStore((state) => state.userDetails.employee);
+
+  const { activeInput } = userDetails;
+  const isGrossAction = activeInput === "gross";
 
   return (
     <Grid
@@ -21,7 +27,7 @@ const EmployeeView = () => {
     >
       <GridItem>
         <Sidebar
-          onSubmitAction={centralCalculation}
+          onSubmitAction={isGrossAction ? centralCalculation : reverseCentralCalculation}
           onClear={removeUserDetails}
         >
           <EmployeeForm />
@@ -35,7 +41,7 @@ const EmployeeView = () => {
         position="relative"
       >
         <Box position="sticky" top={8}>
-          <Table.Header onSubmitAction={centralCalculation} />
+          <Table.Header onSubmitAction={isGrossAction ? centralCalculation : reverseCentralCalculation} />
           <Table.Employee />
         </Box>
       </GridItem>

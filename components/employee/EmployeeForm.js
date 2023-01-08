@@ -135,7 +135,6 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
               Καθαρό εισόδημα
             </Text>
             <NumberInput
-              isDisabled // this is temporary until formula is ready
               mt={2}
               onChange={(value) => onChangeFinalIncome(value, salaryMonthCount)}
               value={

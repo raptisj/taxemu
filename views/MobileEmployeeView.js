@@ -3,10 +3,16 @@ import Table from "components/table";
 import MobileDrawerForm from "components/layout/MobileDrawerForm";
 import EmployeeForm from "components/employee/EmployeeForm";
 import { useCalculateEmployee } from "hooks";
+import { useStore } from "store";
 
 const MobileEmployeeView = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { centralCalculation } = useCalculateEmployee();
+  const { centralCalculation, reverseCentralCalculation } = useCalculateEmployee();
+
+  const userDetails = useStore((state) => state.userDetails.employee);
+
+  const { activeInput } = userDetails;
+  const isGrossAction = activeInput === "gross";
 
   return (
     <>
@@ -31,7 +37,7 @@ const MobileEmployeeView = () => {
       <MobileDrawerForm
         isOpen={isOpen}
         onClose={onClose}
-        onCalculate={centralCalculation}
+        onCalculate={isGrossAction ? centralCalculation : reverseCentralCalculation}
       >
         <Box padding={4}>
           <EmployeeForm showCalculatorType={false} />

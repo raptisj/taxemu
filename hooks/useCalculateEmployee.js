@@ -87,7 +87,7 @@ export const useCalculateEmployee = () => {
   };
 
   // TOOO improve this function
-  const centralCalculation = () => {
+  const centralCalculation = (outsideGrossMonth = 0) => {
     // setEmployeeHasError({ value: false });
     // if (!grossIncomeYearly || !grossIncomeMonthly) {
     //   toast({
@@ -99,15 +99,18 @@ export const useCalculateEmployee = () => {
     //   return setEmployeeHasError({ value: true });
     // }
 
+    const currentGrossMonth =
+      activeInput === "gross" ? grossIncomeMonthly : outsideGrossMonth;
+
     const grossMonthly = discountOptions.returnBaseInland
-      ? grossIncomeMonthly * RETURN_BASE_INLAND_PERCENTAGE
-      : grossIncomeMonthly;
+      ? currentGrossMonth * RETURN_BASE_INLAND_PERCENTAGE
+      : currentGrossMonth;
 
     const insuranceMonthly =
-      grossIncomeMonthly * taxationYearScales[taxationYear].insurancePercentage;
+      currentGrossMonth * taxationYearScales[taxationYear].insurancePercentage;
 
     const toBeTaxed = (grossMonthly - insuranceMonthly) * salaryMonthCount;
-    const grossAfterInsurance = grossIncomeMonthly - insuranceMonthly;
+    const grossAfterInsurance = currentGrossMonth - insuranceMonthly;
 
     addEmployeeDetail({
       value: insuranceMonthly,
@@ -149,7 +152,6 @@ export const useCalculateEmployee = () => {
 
     // TODO: proper check
     if (activeInput === "gross") {
-      // console.log("in gross mode");
       addEmployeeDetail({
         value: Number(
           (
@@ -174,36 +176,40 @@ export const useCalculateEmployee = () => {
       });
     }
 
-    if (activeInput === "final") {
-      // console.log("in final mode");
-      addEmployeeDetail({
-        value: Number(
-          (
-            grossAfterInsurance -
-            (canApplyDiscount ? Math.round(totalTax - discount) : 0) /
-              salaryMonthCount
-          ).toFixed(0)
-        ),
-        field: "grossIncomeMonthly",
-      });
+    return Number(
+      (
+        grossAfterInsurance -
+        (canApplyDiscount ? Math.round(totalTax - discount) : 0) /
+          salaryMonthCount
+      ).toFixed(0)
+    );
+  };
 
-      addEmployeeDetail({
-        value: (
-          Number(
-            grossAfterInsurance -
-              (canApplyDiscount ? Math.round(totalTax - discount) : 0) /
-                salaryMonthCount
-          ) * salaryMonthCount
-        ).toFixed(0),
-        field: "grossIncomeYearly",
-      });
+  const reverseCentralCalculation = () => {
+    let reverseResult = 0;
+    let i = finalIncomeMonthly * 2;
+    for (i; i > 0; i--) {
+      const grossResult = centralCalculation(i);
+      if (grossResult === finalIncomeMonthly) {
+        reverseResult = i;
+        break;
+      }
     }
-    // console.log(finalIncomeYearly, "finalIncomeYearly");
-    // console.log(finalIncomeMonthly, "finalIncomeMonthly");
+
+    addEmployeeDetail({
+      value: Number(reverseResult.toFixed(0)),
+      field: "grossIncomeMonthly",
+    });
+
+    addEmployeeDetail({
+      value: Number(reverseResult.toFixed(0)) * salaryMonthCount,
+      field: "grossIncomeYearly",
+    });
   };
 
   return {
     centralCalculation,
     hasError,
+    reverseCentralCalculation,
   };
 };
