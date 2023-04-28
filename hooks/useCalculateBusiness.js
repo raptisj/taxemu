@@ -97,12 +97,25 @@ export const useCalculateBusiness = () => {
     //   return setBusinessHasError({ value: true });
     // }
 
+    // const findAmountPerYear = (amount, duration) => (amount / 12) * duration;
+    // const grossPerYear = findAmountPerYear(grossIncomeYearly, taxYearDuration);
     const grossPerYear = (grossIncomeYearly / 12) * taxYearDuration;
 
     const grossIncome = isGrossMonthly
       ? grossIncomeMonthly * taxYearDuration
       : grossPerYear;
 
+    // const getInsuranceAmount = () => {
+    //   const scale = discountOptions.specialInsuranceScale
+    //     ? 0 // 0 means special scale
+    //     : insuranceScaleSelection;
+
+    //   return taxationYearScales[taxationYear].insuranceScales[scale].amount;
+    // };
+    // const insurancePerYear = findAmountPerYear(
+    //   getInsuranceAmount(),
+    //   taxYearDuration
+    // );
     const insurancePerYear =
       taxationYearScales[taxationYear].insuranceScales[
         discountOptions.specialInsuranceScale ? 0 : insuranceScaleSelection
@@ -118,12 +131,22 @@ export const useCalculateBusiness = () => {
       field: "insurance",
     });
 
+    // const findTaxableIncome = (gross, insurance, expenses) =>
+    //   gross - insurance - expenses;
+    // const taxableIncome = findTaxableIncome(
+    //   grossIncome,
+    //   insurancePerYear,
+    //   extraBusinessExpenses
+    // );
     const taxableIncome =
       grossIncome - insurancePerYear - extraBusinessExpenses;
 
+    // console.log(      grossIncome, insurancePerYear, extraBusinessExpenses, '      grossIncome - insurancePerYear - extraBusinessExpenses')
     const totalTax = calculateWithCurrentScales({
       toBeTaxed: taxableIncome,
     });
+    // console.log(totalTax, 'totalTax')
+    // console.log(taxableIncome, 'taxableIncome')
 
     const value = {
       month: totalTax / taxYearDuration,
@@ -135,12 +158,28 @@ export const useCalculateBusiness = () => {
       field: "totalTax",
     });
 
+    // const findTaxInAdvance = (tax) => {
+    //   let t = tax * PRE_PAID_TAX_PERCENTAGE;
+
+    //   if (discountOptions.prePaidTaxDiscount) {
+    //     t * PRE_PAID_TAX_DISCOUNT;
+    //   }
+
+    //   return t;
+    // };
+
+    // console.log(
+    //   discountOptions.prePaidNextYearTax,
+    //   "discountOptions.prePaidNextYearTax"
+    // );
+    // console.log(totalTax, "totalTax");
     if (discountOptions.prePaidNextYearTax) {
       const taxInAdvance =
         totalTax *
         PRE_PAID_TAX_PERCENTAGE *
         (discountOptions.prePaidTaxDiscount ? PRE_PAID_TAX_DISCOUNT : 1);
 
+      // console.log(taxInAdvance, "taxInAdvance");
       const taxInAdvanceValue = {
         month: taxInAdvance / taxYearDuration,
         year: taxInAdvance,
@@ -151,6 +190,17 @@ export const useCalculateBusiness = () => {
         field: "taxInAdvance",
       });
     }
+
+    // const findFinal = (arr) => {
+
+    // }
+    // const final = findFinal([
+    //   grossPerYear,
+    //   totalTax,
+    //   taxInAdvance.year,
+    //   extraBusinessExpenses,
+    //   insurancePerYear,
+    // ]);
 
     const final =
       grossPerYear -

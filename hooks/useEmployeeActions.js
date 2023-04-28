@@ -2,7 +2,8 @@ import { useStore } from "store";
 
 export const useEmployeeActions = () => {
   const userDetails = useStore((state) => state.userDetails.employee);
-  const addEmployeeDetail = useStore((state) => state.addEmployeeDetail);
+  const updateEmployee = useStore((state) => state.updateEmployee);
+  const setHasError = useStore((state) => state.setHasError);
 
   const {
     grossIncomeYearly,
@@ -15,99 +16,98 @@ export const useEmployeeActions = () => {
   const isGrossMonthly = grossMonthOrYear === "month";
   const isFinalMonthly = finalMonthOrYear === "month";
 
+  // for generic utils
+  const findMonthlyAmount = (amount, months) => {
+    return Math.round(Number(amount) / Number(months));
+  };
+
+  const findYearlyAmount = (amount, months) => {
+    return Math.round(Number(amount) * Number(months));
+  };
+
+  const findInsurancePerMonth = (amount, months, insurancePercentage) => {
+    return Math.round(findMonthlyAmount(amount, months) * insurancePercentage);
+  };
+
   const onSelectSalaryMonthCount = (e) => {
-    addEmployeeDetail({
-      value: Number(e.target.value),
-      field: "salaryMonthCount",
-    });
+    const value = Number(e.target.value);
 
-    addEmployeeDetail({
-      value: Math.round(Number(grossIncomeYearly) / Number(e.target.value)),
-      field: "grossIncomeMonthly",
-    });
-
-    addEmployeeDetail({
-      value: Math.round(
-        (grossIncomeYearly / Number(e.target.value)) *
-          taxationYearScales[taxationYear].insurancePercentage
+    updateEmployee({
+      salaryMonthCount: value,
+      grossIncomeMonthly: findMonthlyAmount(grossIncomeYearly, value),
+      insurancePerMonth: findInsurancePerMonth(
+        grossIncomeYearly,
+        value,
+        taxationYearScales[taxationYear].insurancePercentage
       ),
-      field: "insurancePerMonth",
     });
   };
 
   // dedicated function in store
   const onChangeGrossIncome = (value, count) => {
-    addEmployeeDetail({
-      value: Math.round(Number(value)),
-      field: isGrossMonthly ? "grossIncomeMonthly" : "grossIncomeYearly",
+    // TODO: deprecate the first two
+    updateEmployee({
+      [isGrossMonthly ? "grossIncomeMonthly" : "grossIncomeYearly"]: Math.round(
+        Number(value)
+      ),
+      [isGrossMonthly ? "grossIncomeYearly" : "grossIncomeMonthly"]:
+        isGrossMonthly
+          ? findYearlyAmount(value, count)
+          : findMonthlyAmount(value, count),
+      activeInput: "gross",
+      grossIncome: {
+        month: isGrossMonthly
+          ? Math.round(Number(value))
+          : findMonthlyAmount(value, count),
+        year: isGrossMonthly
+          ? findYearlyAmount(value, count)
+          : Math.round(Number(value)),
+      },
     });
 
-    // to upate the opposite.
-    addEmployeeDetail({
-      value: isGrossMonthly
-        ? Math.round(Number(value) * count)
-        : Math.round(Number(value) / count),
-      field: isGrossMonthly ? "grossIncomeYearly" : "grossIncomeMonthly",
-    });
-
-    addEmployeeDetail({
-      value: "gross",
-      field: "activeInput",
-    });
+    setHasError({ entity: "employee", value: false });
   };
 
   const onSelectGrossMonthOrYear = (e) => {
-    addEmployeeDetail({
-      value: e.target.value,
-      field: "grossMonthOrYear",
+    updateEmployee({
+      grossMonthOrYear: e.target.value,
     });
   };
 
   const onChangeFinalIncome = (value, count) => {
-    addEmployeeDetail({
-      value: Math.round(Number(value)),
-      field: isFinalMonthly ? "finalIncomeMonthly" : "finalIncomeYearly",
-    });
-
-    // to upate the opposite.
-    addEmployeeDetail({
-      value: isFinalMonthly
-        ? Math.round(Number(value) * count)
-        : Math.round(Number(value) / count),
-      field: isFinalMonthly ? "finalIncomeYearly" : "finalIncomeMonthly",
-    });
-
-    addEmployeeDetail({
-      value: "final",
-      field: "activeInput",
+    updateEmployee({
+      [isFinalMonthly ? "finalIncomeMonthly" : "finalIncomeYearly"]: Math.round(
+        Number(value)
+      ),
+      [isFinalMonthly ? "finalIncomeYearly" : "finalIncomeMonthly"]:
+        isGrossMonthly
+          ? findYearlyAmount(value, count)
+          : findMonthlyAmount(value, count),
+      activeInput: "final",
     });
   };
 
   const onSelectFinalIncomeMonthOfYear = (e) => {
-    addEmployeeDetail({
-      value: e.target.value,
-      field: "finalMonthOrYear",
+    updateEmployee({
+      finalMonthOrYear: e.target.value,
     });
   };
 
   const onSelectTaxationYear = (e) => {
-    addEmployeeDetail({
-      value: Number(e.target.value),
-      field: "taxationYear",
+    updateEmployee({
+      taxationYear: Number(e.target.value),
     });
   };
 
   const onSelectInsuranceCarrier = (e) => {
-    addEmployeeDetail({
-      value: e.target.value,
-      field: "insuranceCarrier",
+    updateEmployee({
+      insuranceCarrier: e.target.value,
     });
   };
 
   const onChangeNumberOfChildren = (value) => {
-    addEmployeeDetail({
-      value: Number(value),
-      field: "numberOfChildren",
+    updateEmployee({
+      numberOfChildren: Number(value),
     });
   };
 

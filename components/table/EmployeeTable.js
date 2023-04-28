@@ -20,8 +20,7 @@ const EmployeeTable = () => {
     finalIncomeYearly,
     grossIncomeMonthly,
     grossIncomeYearly,
-    taxMonthly,
-    taxYearly,
+    finalTax
   } = userDetails;
 
   return (
@@ -82,8 +81,8 @@ const EmployeeTable = () => {
             <Td border="none">
               <Text color="gray.700" fontSize="sm">
                 {formatCellValue(
-                  grossIncomeMonthly > taxMonthly && taxMonthly > 0
-                    ? taxMonthly
+                  grossIncomeMonthly > finalTax.month && finalTax.month > 0
+                    ? finalTax.month
                     : null
                 )}
               </Text>
@@ -91,8 +90,8 @@ const EmployeeTable = () => {
             <Td isNumeric border="none">
               <Text color="gray.700" fontSize="sm">
                 {formatCellValue(
-                  grossIncomeYearly > taxYearly && taxYearly > 0
-                    ? taxYearly
+                  grossIncomeYearly > finalTax.year && finalTax.year > 0
+                    ? finalTax.year
                     : null
                 )}
               </Text>

@@ -136,7 +136,7 @@ const BusinessTable = () => {
                 <Text color="gray.700" fontSize="sm">
                   {formatCellValue(
                     taxInAdvance.year > 0 ? taxInAdvance.year : null,
-                    !!finalIncome.yea
+                    !!finalIncome.year
                   )}
                 </Text>
               </Td>

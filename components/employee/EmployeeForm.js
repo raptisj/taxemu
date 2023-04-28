@@ -7,6 +7,8 @@ import {
   Divider,
   GridItem,
   Checkbox,
+  FormControl,
+  FormErrorMessage,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
@@ -17,14 +19,18 @@ import { useRouter } from "next/router";
 import { useStore } from "store";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import FormElements from "components/input";
-import { useEmployeeActions } from "hooks";
+import { useEmployeeActions, useCalculateEmployee } from "hooks";
 
 const EmployeeForm = ({ showCalculatorType = true }) => {
   const userDetails = useStore((state) => state.userDetails.employee);
   const addEmployeeDetail = useStore((state) => state.addEmployeeDetail);
-  const changeCalculatorType = useStore((state) => state.changeCalculatorType);
+  const update = useStore((state) => state.update);
   const { push, pathname } = useRouter();
   const [showSection, setShowSection] = useState(false);
+  const { hasError } = useCalculateEmployee();
+
+  // console.log(hasError, "hasError");
+
   const {
     onSelectSalaryMonthCount,
     onChangeGrossIncome,
@@ -50,12 +56,12 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
     finalMonthOrYear,
   } = userDetails;
 
+  console.log(userDetails, "userDetails");
   const calculatorTypeValue = pathname?.split("/")[1];
 
   const onChange = (value) => {
-    changeCalculatorType({
-      value,
-      field: "calculatorType",
+    update({
+      calculatorType: value,
     });
 
     push(`/${value}`);
@@ -101,17 +107,25 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
             <Text fontWeight="500" color="gray.700" mt={4}>
               Μικτό εισόδημα
             </Text>
-            <NumberInput
-              mt={2}
-              onChange={(value) => onChangeGrossIncome(value, salaryMonthCount)}
-              value={
-                grossMonthOrYear === "month"
-                  ? grossIncomeMonthly || ""
-                  : grossIncomeYearly || ""
-              }
-            >
-              <NumberInputField placeholder="π.χ. €10000" />
-            </NumberInput>
+
+            <FormControl isInvalid={hasError}>
+              <NumberInput
+                mt={2}
+                onChange={(value) =>
+                  onChangeGrossIncome(value, salaryMonthCount)
+                }
+                value={
+                  grossMonthOrYear === "month"
+                    ? grossIncomeMonthly || ""
+                    : grossIncomeYearly || ""
+                }
+              >
+                <NumberInputField placeholder="π.χ. €10000" />
+              </NumberInput>
+              <FormErrorMessage>
+                Απαιτείται η προσθήκη αυτού του πεδίου
+              </FormErrorMessage>
+            </FormControl>
           </GridItem>
           <GridItem mt={4}>
             <FormElements.Select

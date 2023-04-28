@@ -4,6 +4,7 @@ import BusinessTable from "./BusinessTable";
 import TableHeader from "./TableHeader";
 import MobileBusinessTable from "./MobileBusinessTable";
 import MobileEmployeeTable from "./MobileEmployeeTable";
+import ExplainerInfo from "./ExplainerInfo";
 
 const Table = {
   IncomeTable,
@@ -11,7 +12,8 @@ const Table = {
   Business: BusinessTable,
   Header: TableHeader,
   MobileBusinessTable,
-  MobileEmployeeTable
+  MobileEmployeeTable,
+  ExplainerInfo,
 };
 
 export default Table;

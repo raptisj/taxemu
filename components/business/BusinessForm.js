@@ -21,7 +21,7 @@ import { useCalculateBusiness, useBusinessActions } from "hooks";
 const BusinessForm = ({ showCalculatorType = true }) => {
   const userDetails = useStore((state) => state.userDetails.business);
   const addBusinessDetail = useStore((state) => state.addBusinessDetail);
-  const changeCalculatorType = useStore((state) => state.changeCalculatorType);
+  const update = useStore((state) => state.update);
   const { push, pathname } = useRouter();
   const { getInsuranceTotal, hasError } = useCalculateBusiness();
 
@@ -45,13 +45,12 @@ const BusinessForm = ({ showCalculatorType = true }) => {
     businessExpensesMonthOrYear,
     discountOptions,
     withholdingTax,
-    extraBusinessExpenses
+    extraBusinessExpenses,
   } = userDetails;
 
   const onChange = (value) => {
-    changeCalculatorType({
-      value,
-      field: "calculatorType",
+    update({
+      calculatorType: value,
     });
 
     push(`/${value}`);
@@ -232,7 +231,11 @@ const BusinessForm = ({ showCalculatorType = true }) => {
           <Text fontWeight="500" color="gray.700">
             Πρόσθετα έξοδα επιχείρησης
           </Text>
-          <NumberInput mt={2} onChange={onChangeExtraBusinessExpenses} value={extraBusinessExpenses || ''}>
+          <NumberInput
+            mt={2}
+            onChange={onChangeExtraBusinessExpenses}
+            value={extraBusinessExpenses || ""}
+          >
             <NumberInputField />
           </NumberInput>
         </Box>

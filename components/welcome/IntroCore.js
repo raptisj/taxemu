@@ -6,7 +6,7 @@ import Stepper from "components/stepper";
 
 export const IntroCore = () => {
   const calculatorType = useStore((state) => state.userDetails.calculatorType);
-  const changeCalculatorType = useStore((state) => state.changeCalculatorType);
+  const update = useStore((state) => state.update);
   const addBusinessDetail = useStore((state) => state.addBusinessDetail);
   const addEmployeeDetail = useStore((state) => state.addEmployeeDetail);
   const userDetails = useStore((state) => state.userDetails);
@@ -22,9 +22,8 @@ export const IntroCore = () => {
     userDetails.employee.grossMonthOrYear === "month";
 
   const handleCalculatorType = (value) => {
-    changeCalculatorType({
-      value,
-      field: "calculatorType",
+    update({
+      calculatorType: value,
     });
   };
 

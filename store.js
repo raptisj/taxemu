@@ -9,21 +9,36 @@ const initialState = {
     finalIncomeYearly: 0,
     grossIncomeMonthly: 0,
     finalIncomeMonthly: 0,
+    grossIncome: {
+      month: 0,
+      year: 0,
+    },
     grossMonthOrYear: "year",
     finalMonthOrYear: "year",
     salaryMonthCount: 14,
     taxationYear: 2022,
     taxableIncome: 0,
-    taxYearly: 0,
-    taxMonthly: 0,
     ...taxScales2021,
     activeInput: "gross", // gross | final
-    totalTax: 0,
+    taxAfterDiscount: 0,
     discountOptions: {
       returnBaseInland: false,
     },
-    insurancePerYear: 0,
-    insurancePerMonth: 0,
+    currentInsuranceDiscount: 0,
+    insurance: {
+      month: 0,
+      year: 0,
+    },
+    // initial means before discount
+    initialTax: {
+      month: 0,
+      year: 0,
+    },
+    // final means after discount
+    finalTax: {
+      month: 0,
+      year: 0,
+    },
     insuranceCarrier: "efka", // efka | tsmede
     taxationYearScales: {
       2022: {
@@ -175,18 +190,14 @@ export const useStore = create((set) => ({
     set((state) => ({
       userDetails: { ...state.userDetails, [field]: value },
     })),
+
+  // TODO: to be depricated with v2
   changeCalculatorType: ({ value, field }) =>
     set((state) => ({
       userDetails: { ...state.userDetails, [field]: value },
     })),
-  setBusinessHasError: ({ value }) =>
-    set((state) => ({
-      userDetails: { ...state.userDetails.business, hasError: value },
-    })),
-  setEmployeeHasError: ({ value }) =>
-    set((state) => ({
-      userDetails: { ...state.userDetails.employee, hasError: value },
-    })),
+
+  // TODO: to be depricated with v2
   addEmployeeDetail: ({ value, field }) =>
     set((state) => ({
       userDetails: {
@@ -194,6 +205,8 @@ export const useStore = create((set) => ({
         employee: { ...state.userDetails.employee, [field]: value },
       },
     })),
+
+  // TODO: to be depricated with v2
   addBusinessDetail: ({ value, field }) =>
     set((state) => ({
       userDetails: {
@@ -201,5 +214,50 @@ export const useStore = create((set) => ({
         business: { ...state.userDetails.business, [field]: value },
       },
     })),
+
+  // TODO: to be depricated with v2
+  setBusinessHasError: ({ value }) =>
+    set((state) => ({
+      userDetails: { ...state.userDetails.business, hasError: value },
+    })),
+
+  // TODO: to be depricated with v2
+  setEmployeeHasError: ({ value }) =>
+    set((state) => ({
+      userDetails: {
+        ...state.userDetails,
+        employee: { ...state.userDetails.employee, hasError: value },
+      },
+    })),
+
+  update: (newState) =>
+    set((state) => ({
+      userDetails: { ...state.userDetails, ...newState },
+    })),
+
+  updateEmployee: (newState) =>
+    set((state) => ({
+      userDetails: {
+        ...state.userDetails,
+        employee: { ...state.userDetails.employee, ...newState },
+      },
+    })),
+
+  updateBusiness: (newState) =>
+    set((state) => ({
+      userDetails: {
+        ...state.userDetails,
+        business: { ...state.userDetails.business, ...newState },
+      },
+    })),
+
+  setHasError: ({ entity, value }) =>
+    set((state) => ({
+      userDetails: {
+        ...state.userDetails,
+        [entity]: { ...state.userDetails[entity], hasError: value },
+      },
+    })),
+
   removeUserDetails: () => set({ userDetails: initialState }),
 }));

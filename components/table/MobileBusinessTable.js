@@ -117,7 +117,7 @@ const MobileBusinessTable = () => {
                 <Text>
                   {formatCellValue(
                     taxInAdvance.year > 0 ? taxInAdvance.year : null,
-                    !!finalIncome.yea
+                    !!finalIncome.year
                   )}
                 </Text>
               </Flex>
