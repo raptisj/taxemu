@@ -6,6 +6,7 @@ import {
   DrawerContent,
   DrawerCloseButton,
 } from "@chakra-ui/react";
+import { SubmitButtonContent } from "components/form";
 
 const MobileDrawerForm = ({ children, isOpen, onClose, onCalculate }) => {
   const onClick = () => {
@@ -34,7 +35,7 @@ const MobileDrawerForm = ({ children, isOpen, onClose, onCalculate }) => {
           mt="auto"
         >
           <Button colorScheme="purple" width="full" onClick={onClick}>
-            Υπολόγισε
+            <SubmitButtonContent />
           </Button>
         </Box>
       </DrawerContent>

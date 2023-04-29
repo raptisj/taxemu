@@ -1,5 +1,6 @@
 import { Button, Box, Flex } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
+import { SubmitButtonContent } from "../form";
 
 export const Sidebar = ({ children, onSubmitAction, onClear }) => {
   return (
@@ -22,7 +23,7 @@ export const Sidebar = ({ children, onSubmitAction, onClear }) => {
           mr={{ base: 0, sm: 3 }}
           onClick={onSubmitAction}
         >
-          Υπολόγισε αποτέλεσμα
+          <SubmitButtonContent />
         </Button>
 
         <Button

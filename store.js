@@ -84,6 +84,22 @@ const initialState = {
       //   discount: 0.2,
       // },
     },
+    tableResults: {
+      finalIncome: {
+        month: 0,
+        year: 0,
+      },
+      grossIncome: {
+        month: 0,
+        year: 0,
+      },
+      finalTax: {
+        month: 0,
+        year: 0,
+      },
+      salaryMonthCount: 14,
+    },
+    dirtyFormState: [],
   },
   ////////
   business: {
@@ -240,6 +256,17 @@ export const useStore = create((set) => ({
       userDetails: {
         ...state.userDetails,
         employee: { ...state.userDetails.employee, ...newState },
+      },
+    })),
+
+  updateEmployeeTable: (newState) =>
+    set((state) => ({
+      userDetails: {
+        ...state.userDetails,
+        employee: {
+          ...state.userDetails.employee,
+          tableResults: { ...state.userDetails.employee.tableResults, ...newState },
+        },
       },
     })),
 

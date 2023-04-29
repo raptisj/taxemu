@@ -1,24 +1,40 @@
-import { useEffect } from "react";
-import { Box, Text, Flex } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import { useStore } from "store";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 import Stepper from "components/stepper";
+import { Box, Text, Flex } from "@chakra-ui/react";
 
 export const MobileIntroCore = () => {
   const calculatorType = useStore((state) => state.userDetails.calculatorType);
   const update = useStore((state) => state.update);
   const addBusinessDetail = useStore((state) => state.addBusinessDetail);
-  const addEmployeeDetail = useStore((state) => state.addEmployeeDetail);
   const userDetails = useStore((state) => state.userDetails);
+  const employeeDetails = useStore((state) => state.userDetails.employee);
+  const updateEmployee = useStore((state) => state.updateEmployee);
   const router = useRouter();
 
   const isBusiness = calculatorType === "business";
   const name = isBusiness ? "Ελεύθερος επαγγελματίας" : "Μισθωτός";
+
   const { grossIncomeMonthly, grossIncomeYearly, grossMonthOrYear } =
     userDetails.business;
   const isGrossMonthly = grossMonthOrYear === "month";
+
+  const { activeInput } = employeeDetails;
   const isGrossMonthlyEmployee =
     userDetails.employee.grossMonthOrYear === "month";
+  const isFinalMonthlyEmployee =
+    userDetails.employee.finalMonthOrYear === "month";
+
+  const grossAmount = isGrossMonthlyEmployee
+    ? userDetails.employee.grossIncomeMonthly || ""
+    : userDetails.employee.grossIncomeYearly || "";
+
+  const finalAmount = isFinalMonthlyEmployee
+    ? userDetails.employee.finalIncomeMonthly || ""
+    : userDetails.employee.finalIncomeYearly || "";
+
+  const accountInputValue = activeInput === "gross" ? grossAmount : finalAmount;
 
   const handleCalculatorType = (value) => {
     update({
@@ -27,22 +43,27 @@ export const MobileIntroCore = () => {
   };
 
   const onChangeGrossIncomeEmployee = (value, count = 14) => {
-    addEmployeeDetail({
-      value: Math.round(Number(value)),
-      field: isGrossMonthlyEmployee
-        ? "grossIncomeMonthly"
-        : "grossIncomeYearly",
-    });
+    if (activeInput === "gross") {
+      updateEmployee({
+        [isGrossMonthlyEmployee ? "grossIncomeMonthly" : "grossIncomeYearly"]:
+          Math.round(Number(value)),
+        [isGrossMonthlyEmployee ? "grossIncomeYearly" : "grossIncomeMonthly"]:
+          isGrossMonthlyEmployee
+            ? Math.round(Number(value) * count)
+            : Math.round(Number(value) / count),
+      });
+    }
 
-    // to upate the opposite.
-    addEmployeeDetail({
-      value: isGrossMonthlyEmployee
-        ? Math.round(Number(value) * count)
-        : Math.round(Number(value) / count),
-      field: isGrossMonthlyEmployee
-        ? "grossIncomeYearly"
-        : "grossIncomeMonthly",
-    });
+    if (activeInput === "final") {
+      updateEmployee({
+        [isFinalMonthlyEmployee ? "finalIncomeMonthly" : "finalIncomeYearly"]:
+          Math.round(Number(value)),
+        [isFinalMonthlyEmployee ? "finalIncomeYearly" : "finalIncomeMonthly"]:
+          isFinalMonthlyEmployee
+            ? Math.round(Number(value) * count)
+            : Math.round(Number(value) / count),
+      });
+    }
   };
 
   const onChangeGrossIncome = (value, count = 12) => {
@@ -139,14 +160,23 @@ export const MobileIntroCore = () => {
 
               <Stepper.MenuDrawer
                 onChange={(value) =>
-                  addEmployeeDetail({
-                    value,
-                    field: "grossMonthOrYear",
+                  updateEmployee({
+                    [activeInput === "gross"
+                      ? "grossMonthOrYear"
+                      : "finalMonthOrYear"]: value,
                   })
                 }
-                name={userDetails.employee.grossMonthOrYear}
+                name={
+                  activeInput === "gross"
+                    ? userDetails.employee.grossMonthOrYear
+                    : userDetails.employee.finalMonthOrYear
+                }
                 label={
-                  userDetails.employee.grossMonthOrYear === "year"
+                  userDetails.employee[
+                    activeInput === "gross"
+                      ? "grossMonthOrYear"
+                      : "finalMonthOrYear"
+                  ] === "year"
                     ? "Ετήσιο"
                     : "Μηνιαίο"
                 }
@@ -160,17 +190,12 @@ export const MobileIntroCore = () => {
 
               <Stepper.MenuDrawer
                 onChange={(value) =>
-                  addEmployeeDetail({
-                    value,
-                    field: "activeInput",
+                  updateEmployee({
+                    activeInput: value,
                   })
                 }
-                name={userDetails.employee.activeInput}
-                label={
-                  userDetails.employee.activeInput === "gross"
-                    ? "μικτό"
-                    : "καθαρό"
-                }
+                name={activeInput}
+                label={activeInput === "gross" ? "μικτό" : "καθαρό"}
                 options={[
                   { value: "gross", text: "μικτό" },
                   { value: "final", text: "καθαρό" },
@@ -193,11 +218,7 @@ export const MobileIntroCore = () => {
 
               <Stepper.NumberInput
                 onChange={(value) => onChangeGrossIncomeEmployee(value)}
-                value={
-                  userDetails.employee.grossMonthOrYear === "month"
-                    ? userDetails.employee.grossIncomeMonthly || ""
-                    : userDetails.employee.grossIncomeYearly || ""
-                }
+                value={accountInputValue}
               />
             </Flex>
           </Flex>

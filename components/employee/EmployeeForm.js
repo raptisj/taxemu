@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Box,
   Text,
@@ -15,10 +14,11 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
+import { useState } from "react";
 import { useStore } from "store";
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import { useRouter } from "next/router";
 import FormElements from "components/input";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import { useEmployeeActions, useCalculateEmployee } from "hooks";
 
 const EmployeeForm = ({ showCalculatorType = true }) => {
@@ -28,8 +28,6 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
   const { push, pathname } = useRouter();
   const [showSection, setShowSection] = useState(false);
   const { hasError } = useCalculateEmployee();
-
-  // console.log(hasError, "hasError");
 
   const {
     onSelectSalaryMonthCount,
@@ -56,7 +54,6 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
     finalMonthOrYear,
   } = userDetails;
 
-  console.log(userDetails, "userDetails");
   const calculatorTypeValue = pathname?.split("/")[1];
 
   const onChange = (value) => {

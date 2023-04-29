@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import {
   Flex,
   Text,
@@ -8,17 +7,18 @@ import {
   TabPanels,
   useMediaQuery,
 } from "@chakra-ui/react";
-import { useStore } from "store";
-import { useRouter } from "next/router";
 import {
   IntroCore,
   BusinessSecondStep,
   MobileIntroCore,
   MobileBusinessSecondStep,
 } from "../components/welcome";
-import { Navigation } from "../components/navigation";
-import { Layout } from "../components/layout";
+import { useStore } from "store";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 import Stepper from "components/stepper";
+import { Layout } from "../components/layout";
+import { Navigation } from "../components/navigation";
 import { useCalculateBusiness, useCalculateEmployee } from "hooks";
 
 const desktopTabs = {
@@ -37,8 +37,13 @@ const Welcome = () => {
   const currentTab = router.query.tab;
   const [isLargerThan30] = useMediaQuery("(min-width: 30em)");
   const { centralCalculation: calculateBusiness } = useCalculateBusiness();
-  const { centralCalculation: calculateEmployee } = useCalculateEmployee();
-  // const userDetails = useStore((state) => state.userDetails);
+  const { centralCalculation: calculateEmployee, reverseCentralCalculation } =
+    useCalculateEmployee();
+  const employeeDetails = useStore((state) => state.userDetails.employee);
+
+  const { activeInput } = employeeDetails;
+  const isGrossAction = activeInput === "gross";
+
   const tabs = isLargerThan30 ? desktopTabs : mobileTabs;
 
   const isBusiness = calculatorType === "business";
@@ -54,21 +59,33 @@ const Welcome = () => {
   const tabIndex = Math.max(tabNames.indexOf(currentTab), 0);
 
   useEffect(() => {
-    window.addEventListener("keyup", (e) => {
+    function handleRoute(e) {
       if (e.which === 13) {
+        // trigger calculation action
+        if (tabIndex === tabNames.length - 1) {
+          isGrossAction ? calculateEmployee() : reverseCentralCalculation();
+        }
+
+        // redirect in page of entity
         router.push(
           tabIndex === tabNames.length - 1
             ? `/${calculatorType}`
             : { query: { ...router.query, tab: tabNames[tabIndex + 1] } }
         );
       }
-    });
+    }
+
+    window.addEventListener("keyup", handleRoute);
+
+    return () => {
+      window.removeEventListener("keyup", handleRoute);
+    };
   }, [tabNames, tabIndex, router, calculatorType]);
 
   const onNext = () => {
     // check if it has one screen which means its employee screen
     if (tabIndex === tabNames.length - 1) {
-      calculateEmployee();
+      isGrossAction ? calculateEmployee() : reverseCentralCalculation();
     } else {
       calculateBusiness();
     }
@@ -115,7 +132,7 @@ const Welcome = () => {
         <Stepper.NavigationButton
           text="Επόμενο"
           background="purple.600"
-          onClick={() => onNext()}
+          onClick={onNext}
         />
         <Hide below="sm">
           <Text color="gray.400" ml={4}>

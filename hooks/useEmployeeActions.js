@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useStore } from "store";
 
 export const useEmployeeActions = () => {
@@ -11,6 +12,11 @@ export const useEmployeeActions = () => {
     taxationYear,
     taxationYearScales,
     finalMonthOrYear,
+    salaryMonthCount,
+    tableResults: { grossIncome, finalIncome },
+    tableResults,
+    dirtyFormState,
+    finalIncomeYearly,
   } = userDetails;
 
   const isGrossMonthly = grossMonthOrYear === "month";
@@ -55,14 +61,18 @@ export const useEmployeeActions = () => {
           ? findYearlyAmount(value, count)
           : findMonthlyAmount(value, count),
       activeInput: "gross",
-      grossIncome: {
-        month: isGrossMonthly
-          ? Math.round(Number(value))
-          : findMonthlyAmount(value, count),
-        year: isGrossMonthly
-          ? findYearlyAmount(value, count)
-          : Math.round(Number(value)),
-      },
+      // grossIncome: {
+      //   month: isGrossMonthly
+      //     ? Math.round(Number(value))
+      //     : findMonthlyAmount(value, count),
+      //   year: isGrossMonthly
+      //     ? findYearlyAmount(value, count)
+      //     : Math.round(Number(value)),
+      // },
+      // dirtyFormState:
+      //   grossIncomeYearly !== grossIncome.year
+      //     ? [...new Set([...dirtyFormState, "grossIncomeYearly"])]
+      //     : dirtyFormState.filter((s) => s !== "grossIncomeYearly"),
     });
 
     setHasError({ entity: "employee", value: false });
@@ -80,12 +90,45 @@ export const useEmployeeActions = () => {
         Number(value)
       ),
       [isFinalMonthly ? "finalIncomeYearly" : "finalIncomeMonthly"]:
-        isGrossMonthly
+        isFinalMonthly
           ? findYearlyAmount(value, count)
           : findMonthlyAmount(value, count),
       activeInput: "final",
     });
+
+    setHasError({ entity: "employee", value: false });
   };
+
+  const spotFormChanges = () => {
+    let dirty = dirtyFormState;
+
+    if (grossIncomeYearly !== grossIncome.year) {
+      dirty = [...new Set([...dirty, "grossIncomeYearly"])];
+    } else {
+      dirty = dirty.filter((s) => s !== "grossIncomeYearly");
+    }
+
+    if (salaryMonthCount !== tableResults.salaryMonthCount) {
+      dirty = [...new Set([...dirty, "salaryMonthCount"])];
+    } else {
+      dirty = dirty.filter((s) => s !== "salaryMonthCount");
+    }
+
+    if (finalIncomeYearly !== finalIncome.year) {
+      dirty = [...new Set([...dirty, "finalIncomeYearly"])];
+    } else {
+      dirty = dirty.filter((s) => s !== "finalIncomeYearly");
+    }
+
+    return dirty;
+  };
+
+  // TODO: find a better way to do ths
+  useEffect(() => {
+    updateEmployee({
+      dirtyFormState: spotFormChanges(),
+    });
+  }, [grossIncomeYearly, salaryMonthCount, finalIncomeYearly]);
 
   const onSelectFinalIncomeMonthOfYear = (e) => {
     updateEmployee({

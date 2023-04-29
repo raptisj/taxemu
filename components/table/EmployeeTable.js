@@ -20,7 +20,8 @@ const EmployeeTable = () => {
     finalIncomeYearly,
     grossIncomeMonthly,
     grossIncomeYearly,
-    finalTax
+    finalTax,
+    tableResults: { grossIncome, finalIncome },
   } = userDetails;
 
   return (
@@ -46,12 +47,12 @@ const EmployeeTable = () => {
             </Td>
             <Td borderBottomWidth={1} borderColor="gray.500">
               <Text fontWeight="600" fontSize="sm">
-                {formatCellValue(finalIncomeMonthly)}
+                {formatCellValue(finalIncome.month)}
               </Text>
             </Td>
             <Td isNumeric borderBottomWidth={1} borderColor="gray.500">
               <Text fontWeight="600" fontSize="sm">
-                {formatCellValue(finalIncomeYearly)}
+                {formatCellValue(finalIncome.year)}
               </Text>
             </Td>
           </Tr>
@@ -63,12 +64,12 @@ const EmployeeTable = () => {
             </Td>
             <Td border="none">
               <Text color="gray.700" fontSize="sm">
-                {formatCellValue(grossIncomeMonthly)}
+                {formatCellValue(grossIncome.month)}
               </Text>
             </Td>
             <Td isNumeric border="none">
               <Text color="gray.700" fontSize="sm">
-                {formatCellValue(grossIncomeYearly)}
+                {formatCellValue(grossIncome.year)}
               </Text>
             </Td>
           </Tr>

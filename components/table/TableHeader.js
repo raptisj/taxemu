@@ -1,4 +1,5 @@
 import { Flex, Button, Heading } from "@chakra-ui/react";
+import { SubmitButtonContent } from "../form";
 
 const TableHeader = ({ onSubmitAction }) => {
   return (
@@ -13,12 +14,8 @@ const TableHeader = ({ onSubmitAction }) => {
         Αποτέλεσμα*
       </Heading>
 
-      <Button
-        height="32px"
-        colorScheme="purple"
-        onClick={onSubmitAction}
-      >
-        Υπολόγισε αποτέλεσμα
+      <Button minW='196px' height="32px" colorScheme="purple" onClick={onSubmitAction}>
+        <SubmitButtonContent />
       </Button>
     </Flex>
   );

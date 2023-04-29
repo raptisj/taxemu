@@ -6,10 +6,12 @@ export const useCalculateEmployee = () => {
   const userDetails = useStore((state) => state.userDetails.employee);
   const hasError = useStore((state) => state.userDetails.employee.hasError);
   const updateEmployee = useStore((state) => state.updateEmployee);
+  const updateEmployeeTable = useStore((state) => state.updateEmployeeTable);
   const setHasError = useStore((state) => state.setHasError);
   const toast = useToast();
 
   const {
+    grossIncomeYearly,
     grossIncomeMonthly,
     salaryMonthCount,
     discountOptions,
@@ -18,9 +20,9 @@ export const useCalculateEmployee = () => {
     numberOfChildren,
     numberOfChildrenScales,
     finalIncomeMonthly,
+    finalIncomeYearly,
     taxScales,
     activeInput,
-    grossIncome,
   } = userDetails;
 
   const SCALE_THRESHOLD = 10000;
@@ -82,16 +84,25 @@ export const useCalculateEmployee = () => {
     return { discount, canApplyDiscount };
   };
 
-  const centralCalculation = (outsideGrossMonth = 0) => {
-    if (activeInput === "gross" && (!grossIncome.year || !grossIncome.month)) {
-      toast({
-        title: "Λείπουν απαιτούμενα πεδία!",
-        position: "top",
-        isClosable: true,
-        status: "warning",
-      });
+  const showError = () => {
+    toast({
+      title: "Λείπουν απαιτούμενα πεδία!",
+      position: "top",
+      isClosable: true,
+      status: "warning",
+    });
 
-      return setHasError({ entity: "employee", value: true });
+    return setHasError({ entity: "employee", value: true });
+  };
+
+  const centralCalculation = (outsideGrossMonth = 0) => {
+    const throwError =
+      (activeInput === "gross" || activeInput === "final") &&
+      (!grossIncomeYearly || !grossIncomeMonthly) &&
+      (!finalIncomeMonthly || !finalIncomeYearly);
+
+    if (throwError) {
+      showError();
     }
 
     // outsideGrossMonth is for the reverse calculation
@@ -145,34 +156,46 @@ export const useCalculateEmployee = () => {
         month: (taxAfterDiscount + insuranceYearly) / salaryMonthCount,
         year: taxAfterDiscount + insuranceYearly,
       },
+      dirtyFormState: [],
     });
 
     // TODO: proper check
+    const res =
+      grossAfterInsuranceMonthly -
+      (canApplyDiscount
+        ? Math.round(Math.ceil(taxBeforeDiscount) - Math.ceil(discount))
+        : 0) /
+        salaryMonthCount;
+
     if (activeInput === "gross") {
-      const res =
-        grossAfterInsuranceMonthly -
-        (canApplyDiscount ? Math.round(taxBeforeDiscount - discount) : 0) /
-          salaryMonthCount;
       updateEmployee({
         finalIncomeMonthly: Number(res.toFixed(0)),
         finalIncomeYearly: Number((res * salaryMonthCount).toFixed(0)),
       });
+
+      updateEmployeeTable({
+        grossIncome: {
+          month: Math.round(grossIncomeYearly / salaryMonthCount),
+          year: grossIncomeYearly,
+        },
+        finalIncome: {
+          month: Number(res.toFixed(0)),
+          year: Number((res * salaryMonthCount).toFixed(0)),
+        },
+        salaryMonthCount,
+      });
     }
 
-    return Number(
-      (
-        grossAfterInsuranceMonthly -
-        (canApplyDiscount ? Math.round(taxBeforeDiscount - discount) : 0) /
-          salaryMonthCount
-      ).toFixed(0)
-    );
+    return {
+      grossResult: Number(res.toFixed(0)),
+    };
   };
 
   const reverseCentralCalculation = () => {
     let reverseResult = 0;
     let i = finalIncomeMonthly * 2;
     for (i; i > 0; i--) {
-      const grossResult = centralCalculation(i);
+      const { grossResult } = centralCalculation(i);
       if (grossResult === finalIncomeMonthly) {
         reverseResult = i;
         break;
@@ -180,13 +203,20 @@ export const useCalculateEmployee = () => {
     }
 
     updateEmployee({
+      // TODO: deprecate these
+      grossIncomeMonthly: Number(reverseResult.toFixed(0)),
+      grossIncomeYearly: Number(reverseResult.toFixed(0)) * salaryMonthCount,
+    });
+
+    updateEmployeeTable({
       grossIncome: {
         month: Number(reverseResult.toFixed(0)),
         year: Number(reverseResult.toFixed(0)) * salaryMonthCount,
       },
-      // TODO: deprecate these
-      grossIncomeMonthly: Number(reverseResult.toFixed(0)),
-      grossIncomeYearly: Number(reverseResult.toFixed(0)) * salaryMonthCount,
+      finalIncome: {
+        month: finalIncomeMonthly,
+        year: finalIncomeYearly,
+      },
     });
   };
 
