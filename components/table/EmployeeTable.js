@@ -22,10 +22,11 @@ const EmployeeTable = () => {
     grossIncomeYearly,
     finalTax,
     tableResults: { grossIncome, finalIncome },
+    insurance,
   } = userDetails;
 
   return (
-    <TableContainer mt={6} background='#ffffff70'>
+    <TableContainer mt={6} background="#ffffff70">
       <Table variant="simple">
         <TableCaption color="gray.500" textAlign="left">
           Οι υπολογισμοί είναι κατά προσέγγιση και δεν αποτελούν λογιστικη
@@ -51,7 +52,7 @@ const EmployeeTable = () => {
               </Text>
             </Td>
             <Td isNumeric borderBottomWidth={1} borderColor="gray.500">
-              <Text fontWeight="600" fontSize="sm">
+              <Text fontWeight="600" fontSize="sm" textAlign="left">
                 {formatCellValue(finalIncome.year)}
               </Text>
             </Td>
@@ -68,15 +69,34 @@ const EmployeeTable = () => {
               </Text>
             </Td>
             <Td isNumeric border="none">
-              <Text color="gray.700" fontSize="sm">
+              <Text color="gray.700" fontSize="sm" textAlign="left">
                 {formatCellValue(grossIncome.year)}
               </Text>
             </Td>
           </Tr>
+
           <Tr>
             <Td border="none">
               <Text color="gray.700" fontWeight="500" fontSize="sm">
-                Φορός
+                Ασφαλιστικές εισφορές
+              </Text>
+            </Td>
+            <Td border="none">
+              <Text color="gray.700" fontSize="sm">
+                {formatCellValue(insurance.month)}
+              </Text>
+            </Td>
+            <Td isNumeric border="none">
+              <Text color="gray.700" fontSize="sm" textAlign="left">
+                {formatCellValue(insurance.year)}
+              </Text>
+            </Td>
+          </Tr>
+
+          <Tr>
+            <Td border="none">
+              <Text color="gray.700" fontWeight="500" fontSize="sm">
+                Φόρος εισοδήματος
               </Text>
             </Td>
             <Td border="none">
@@ -89,7 +109,7 @@ const EmployeeTable = () => {
               </Text>
             </Td>
             <Td isNumeric border="none">
-              <Text color="gray.700" fontSize="sm">
+              <Text color="gray.700" fontSize="sm" textAlign="left">
                 {formatCellValue(
                   grossIncomeYearly > finalTax.year && finalTax.year > 0
                     ? finalTax.year

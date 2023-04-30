@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { META_TITLE, META_DESCRIPTION } from "constants";
+import { META_TITLE, META_DESCRIPTION } from "constants/content";
 
 export const Meta = () => {
   return (

@@ -20,6 +20,7 @@ const MobileEmployeeTable = () => {
     grossIncomeMonthly,
     grossIncomeYearly,
     finalTax,
+    insurance,
   } = userDetails;
 
   return (
@@ -46,8 +47,14 @@ const MobileEmployeeTable = () => {
               <Text fontSize="sm">Μικτό Εισόδημα</Text>
               <Text>{formatCellValue(grossIncomeMonthly)}</Text>
             </Flex>
+
             <Flex padding={3} justifyContent="space-between">
-              <Text fontSize="sm">Φορός</Text>
+              <Text fontSize="sm">Ασφαλιστικές εισφορές</Text>
+              <Text>{formatCellValue(insurance.month)}</Text>
+            </Flex>
+
+            <Flex padding={3} justifyContent="space-between">
+              <Text fontSize="sm">Φόρος εισοδήματος</Text>
               <Text>
                 {formatCellValue(
                   grossIncomeMonthly > finalTax.month && finalTax.month > 0
@@ -69,7 +76,11 @@ const MobileEmployeeTable = () => {
               <Text>{formatCellValue(grossIncomeYearly)}</Text>
             </Flex>
             <Flex padding={3} justifyContent="space-between">
-              <Text fontSize="sm">Φορός</Text>
+              <Text fontSize="sm">Ασφαλιστικές εισφορές</Text>
+              <Text>{formatCellValue(insurance.year)}</Text>
+            </Flex>
+            <Flex padding={3} justifyContent="space-between">
+              <Text fontSize="sm">Φόρος εισοδήματος</Text>
               <Text>
                 {formatCellValue(
                   grossIncomeYearly > finalTax.year && finalTax.year > 0

@@ -139,7 +139,6 @@ export const useCalculateEmployee = () => {
     });
 
     const taxAfterDiscount = Math.ceil(taxBeforeDiscount) - Math.ceil(discount);
-    const insuranceYearly = insuranceMonthly * salaryMonthCount;
 
     updateEmployee({
       initialTax: {
@@ -153,8 +152,8 @@ export const useCalculateEmployee = () => {
         year: insuranceMonthly * salaryMonthCount,
       },
       finalTax: {
-        month: (taxAfterDiscount + insuranceYearly) / salaryMonthCount,
-        year: taxAfterDiscount + insuranceYearly,
+        month: taxAfterDiscount / salaryMonthCount,
+        year: taxAfterDiscount,
       },
       dirtyFormState: [],
     });

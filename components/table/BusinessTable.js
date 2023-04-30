@@ -54,7 +54,7 @@ const BusinessTable = () => {
               </Text>
             </Td>
             <Td isNumeric borderBottomWidth={1} borderColor="gray.500">
-              <Text fontWeight="600" fontSize="sm">
+              <Text fontWeight="600" fontSize="sm" textAlign='left'>
                 {formatCellValue(finalIncome.year, !!finalIncome.year)}
               </Text>
             </Td>
@@ -71,7 +71,7 @@ const BusinessTable = () => {
               </Text>
             </Td>
             <Td isNumeric border="none">
-              <Text color="gray.700" fontSize="sm">
+              <Text color="gray.700" fontSize="sm" textAlign='left'>
                 {formatCellValue(
                   (grossIncomeYearly / 12) * taxYearDuration,
                   !!finalIncome.year
@@ -94,7 +94,7 @@ const BusinessTable = () => {
               </Text>
             </Td>
             <Td isNumeric border="none">
-              <Text color="gray.700" fontSize="sm">
+              <Text color="gray.700" fontSize="sm" textAlign='left'>
                 {formatCellValue(extraBusinessExpenses, !!finalIncome.year)}
               </Text>
             </Td>
@@ -111,7 +111,7 @@ const BusinessTable = () => {
               </Text>
             </Td>
             <Td isNumeric border="none">
-              <Text color="gray.700" fontSize="sm">
+              <Text color="gray.700" fontSize="sm" textAlign='left'>
                 {formatCellValue(insurance.year, !!finalIncome.year)}
               </Text>
             </Td>
@@ -133,7 +133,7 @@ const BusinessTable = () => {
                 </Text>
               </Td>
               <Td isNumeric border="none">
-                <Text color="gray.700" fontSize="sm">
+                <Text color="gray.700" fontSize="sm" textAlign='left'>
                   {formatCellValue(
                     taxInAdvance.year > 0 ? taxInAdvance.year : null,
                     !!finalIncome.year
@@ -154,7 +154,7 @@ const BusinessTable = () => {
               </Text>
             </Td>
             <Td isNumeric border="none">
-              <Text color="gray.700" fontSize="sm">
+              <Text color="gray.700" fontSize="sm" textAlign='left'>
                 {formatCellValue(totalTax.year, !!finalIncome.year)}
               </Text>
             </Td>
