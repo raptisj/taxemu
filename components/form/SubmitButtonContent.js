@@ -7,9 +7,9 @@ export const SubmitButtonContent = () => {
   const hasFormChanged = dirtyFormState.length;
   return (
     <>
-      Υπολόγισε{" "}
+      Υπολόγισε
       {!!hasFormChanged && (
-        <span>
+        <span style={{ marginLeft: "4px" }}>
           {" "}
           {`(${hasFormChanged} ${hasFormChanged > 1 ? "αλλαγές" : "αλλαγή"})`}
         </span>

@@ -9,7 +9,7 @@ const TableHeader = ({ onSubmitAction }) => {
         size="lg"
         noOfLines={1}
         fontWeight="500"
-        color="gray.500"
+        color="gray.700"
       >
         Αποτέλεσμα*
       </Heading>

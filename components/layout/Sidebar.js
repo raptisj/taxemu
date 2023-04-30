@@ -12,8 +12,6 @@ export const Sidebar = ({ children, onSubmitAction, onClear }) => {
         mt="32px"
         p="16px"
         borderTop=" 1px solid #E2E8F0"
-        borderLeft=" 1px solid #E2E8F0"
-        boxShadow="0px -4px 16px -1px rgb(0 0 0 / 5%)"
         width="106%"
         background="#fff"
       >

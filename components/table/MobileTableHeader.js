@@ -8,7 +8,7 @@ const MobileTableHeader = () => {
         size="lg"
         noOfLines={1}
         fontWeight="500"
-        color="gray.500"
+        color="gray.600"
       >
         Υπολογισμός εισοδήματος
       </Heading>
