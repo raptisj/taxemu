@@ -6,7 +6,7 @@ export const Meta = () => {
     <Head>
       <title>{META_TITLE}</title>
       <meta name="description" content={META_DESCRIPTION} />
-      <link rel="icon" href="/favicon.ico" />
+      <link rel="icon" href="/favicon.ico?v=2" />
     </Head>
   );
 };

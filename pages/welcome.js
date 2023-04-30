@@ -1,6 +1,7 @@
 import {
   Flex,
   Text,
+  Box,
   Hide,
   Tabs,
   TabPanel,
@@ -29,6 +30,57 @@ const desktopTabs = {
 const mobileTabs = {
   intro: <MobileIntroCore />,
   later: <MobileBusinessSecondStep />,
+};
+
+const ActionButtons = ({ tabIndex, onClick, onNext, onClickRedirection }) => {
+  return (
+    <>
+      <Flex
+        mt="64px"
+        alignItems="center"
+        width={{ base: "full", sm: "auto" }}
+        flexDirection={{ base: "column-reverse", sm: "row" }}
+      >
+        {tabIndex > 0 && (
+          <Stepper.NavigationButton
+            mt={[2, 0]}
+            text="Προηγούμενο"
+            variant="outline"
+            onClick={onClick}
+          />
+        )}
+        <Stepper.NavigationButton
+          text="Επόμενο"
+          background="purple.600"
+          onClick={onNext}
+        />
+        <Hide below="sm">
+          <Text color="gray.400" ml={4}>
+            ή πάτα Enter
+          </Text>
+        </Hide>
+      </Flex>
+
+      {tabIndex === 0 && (
+        <Stepper.RedirectButton
+          onClick={onClickRedirection}
+          text="Απ’ευθείας στον υπολογιστή φόρου"
+        />
+      )}
+    </>
+  );
+};
+
+const boxStyles = {
+  position: "fixed",
+  bottom: 0,
+  left: 0,
+  width: "100%",
+  p: 3,
+};
+
+const WrapperBox = ({ children, condition }) => {
+  return condition ? <Box {...boxStyles}>{children}</Box> : children;
 };
 
 const Welcome = () => {
@@ -111,42 +163,18 @@ const Welcome = () => {
         </TabPanels>
       </Tabs>
 
-      <Flex
-        mt="64px"
-        alignItems="center"
-        width={{ base: "full", sm: "auto" }}
-        flexDirection={{ base: "column-reverse", sm: "row" }}
-      >
-        {tabIndex > 0 && (
-          <Stepper.NavigationButton
-            mt={[2, 0]}
-            text="Προηγούμενο"
-            variant="outline"
-            onClick={() =>
-              router.push({
-                query: { ...router.query, tab: tabNames[tabIndex - 1] },
-              })
-            }
-          />
-        )}
-        <Stepper.NavigationButton
-          text="Επόμενο"
-          background="purple.600"
-          onClick={onNext}
+      <WrapperBox condition={!isLargerThan30}>
+        <ActionButtons
+          tabIndex={tabIndex}
+          onNext={onNext}
+          onClickRedirection={() => router.push(`/${calculatorType}`)}
+          onClick={() =>
+            router.push({
+              query: { ...router.query, tab: tabNames[tabIndex - 1] },
+            })
+          }
         />
-        <Hide below="sm">
-          <Text color="gray.400" ml={4}>
-            ή πάτα Enter
-          </Text>
-        </Hide>
-      </Flex>
-
-      {tabIndex === 0 && (
-        <Stepper.RedirectButton
-          onClick={() => router.push(`/${calculatorType}`)}
-          text="Απ’ευθείας στον υπολογιστή φόρου"
-        />
-      )}
+      </WrapperBox>
     </Layout>
   );
 };
