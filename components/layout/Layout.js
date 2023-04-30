@@ -3,10 +3,12 @@ import { Meta } from "../meta";
 import bg from "../../assets/bg.png";
 import bgMobile from "../../assets/bg-mobile.png";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 export const Layout = ({ children, ...rest }) => {
   const [isLargerThan30] = useMediaQuery("(min-width: 30em)");
   const isMobile = !isLargerThan30;
+  const router = useRouter();
 
   return (
     <>
@@ -22,7 +24,8 @@ export const Layout = ({ children, ...rest }) => {
         mx="auto"
         {...rest}
       >
-        <Box position="fixed" right="0" top="0">
+        {router.pathname === "/employee" || router.pathname === "/business"}
+        <Box position="fixed" right="0" top="-10px">
           <Image
             src={isMobile ? bgMobile : bg}
             alt=""
