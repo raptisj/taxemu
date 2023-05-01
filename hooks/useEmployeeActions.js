@@ -13,10 +13,10 @@ export const useEmployeeActions = () => {
     taxationYearScales,
     finalMonthOrYear,
     salaryMonthCount,
-    tableResults: { grossIncome, finalIncome },
     tableResults,
     dirtyFormState,
     finalIncomeYearly,
+    numberOfChildren,
   } = userDetails;
 
   const isGrossMonthly = grossMonthOrYear === "month";
@@ -102,7 +102,7 @@ export const useEmployeeActions = () => {
   const spotFormChanges = () => {
     let dirty = dirtyFormState;
 
-    if (grossIncomeYearly !== grossIncome.year) {
+    if (grossIncomeYearly !== tableResults.grossIncome.year) {
       dirty = [...new Set([...dirty, "grossIncomeYearly"])];
     } else {
       dirty = dirty.filter((s) => s !== "grossIncomeYearly");
@@ -114,10 +114,16 @@ export const useEmployeeActions = () => {
       dirty = dirty.filter((s) => s !== "salaryMonthCount");
     }
 
-    if (finalIncomeYearly !== finalIncome.year) {
+    if (finalIncomeYearly !== tableResults.finalIncome.year) {
       dirty = [...new Set([...dirty, "finalIncomeYearly"])];
     } else {
       dirty = dirty.filter((s) => s !== "finalIncomeYearly");
+    }
+
+    if (numberOfChildren !== tableResults.numberOfChildren) {
+      dirty = [...new Set([...dirty, "numberOfChildren"])];
+    } else {
+      dirty = dirty.filter((s) => s !== "numberOfChildren");
     }
 
     return dirty;
@@ -128,7 +134,12 @@ export const useEmployeeActions = () => {
     updateEmployee({
       dirtyFormState: spotFormChanges(),
     });
-  }, [grossIncomeYearly, salaryMonthCount, finalIncomeYearly]);
+  }, [
+    grossIncomeYearly,
+    salaryMonthCount,
+    finalIncomeYearly,
+    numberOfChildren,
+  ]);
 
   const onSelectFinalIncomeMonthOfYear = (e) => {
     updateEmployee({

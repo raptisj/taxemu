@@ -53,23 +53,18 @@ const initialState = {
     numberOfChildrenScales: {
       0: {
         discount: 777,
-        limit: 8.633,
       },
       1: {
         discount: 810,
-        limit: 9.0,
       },
       2: {
         discount: 900,
-        limit: 10.0,
       },
       3: {
         discount: 1120,
-        limit: 11.0,
       },
       4: {
         discount: 1340,
-        limit: 12.0,
       },
       // 5: {
       //   discount: 1560,
@@ -79,9 +74,6 @@ const initialState = {
       // },
       // 7: {
       //   discount: 2000,
-      // },
-      // aboveLimit: {
-      //   discount: 0.2,
       // },
     },
     tableResults: {
@@ -98,6 +90,7 @@ const initialState = {
         year: 0,
       },
       salaryMonthCount: 14,
+      numberOfChildren: 0,
     },
     dirtyFormState: [],
   },
@@ -265,7 +258,10 @@ export const useStore = create((set) => ({
         ...state.userDetails,
         employee: {
           ...state.userDetails.employee,
-          tableResults: { ...state.userDetails.employee.tableResults, ...newState },
+          tableResults: {
+            ...state.userDetails.employee.tableResults,
+            ...newState,
+          },
         },
       },
     })),

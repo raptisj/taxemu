@@ -69,19 +69,18 @@ export const useCalculateEmployee = () => {
     return scales;
   };
 
-  const calculateChildrenDiscount = ({ amount, tax, childDiscountAmount }) => {
+  const calculateChildrenDiscount = ({ amount, childDiscountAmount }) => {
     let discount;
-    let canApplyDiscount = tax > childDiscountAmount;
 
     if (amount > 12000) {
       const aboveThresholdAmount = amount - 12000;
       const result = aboveThresholdAmount * 0.02;
       discount = childDiscountAmount - result;
     } else {
-      discount = amount - childDiscountAmount;
+      discount = childDiscountAmount;
     }
 
-    return { discount, canApplyDiscount };
+    return { discount };
   };
 
   const showError = () => {
@@ -132,13 +131,19 @@ export const useCalculateEmployee = () => {
       .map((scale) => scale.amount)
       .reduce((a, b) => a + b);
 
-    const { discount, canApplyDiscount } = calculateChildrenDiscount({
+    const { discount } = calculateChildrenDiscount({
       amount: grossAfterInsuranceYearly,
-      tax: Math.ceil(taxBeforeDiscount),
       childDiscountAmount: numberOfChildrenScales[numberOfChildren].discount,
     });
 
-    const taxAfterDiscount = Math.ceil(taxBeforeDiscount) - Math.ceil(discount);
+    const canApplyDiscount =
+      Math.ceil(taxBeforeDiscount) >
+      numberOfChildrenScales[numberOfChildren].discount;
+
+    // if discount is greater than taxBeforeDiscount make it 0
+    const taxAfterDiscount = canApplyDiscount
+      ? Math.round(Math.ceil(taxBeforeDiscount) - Math.ceil(discount))
+      : 0;
 
     updateEmployee({
       initialTax: {
@@ -159,17 +164,15 @@ export const useCalculateEmployee = () => {
     });
 
     // TODO: proper check
-    const res =
-      grossAfterInsuranceMonthly -
-      (canApplyDiscount
-        ? Math.round(Math.ceil(taxBeforeDiscount) - Math.ceil(discount))
-        : 0) /
-        salaryMonthCount;
+    const finalMonthlyResult =
+      grossAfterInsuranceMonthly - taxAfterDiscount / salaryMonthCount;
 
     if (activeInput === "gross") {
       updateEmployee({
-        finalIncomeMonthly: Number(res.toFixed(0)),
-        finalIncomeYearly: Number((res * salaryMonthCount).toFixed(0)),
+        finalIncomeMonthly: Number(finalMonthlyResult.toFixed(0)),
+        finalIncomeYearly: Number(
+          (finalMonthlyResult * salaryMonthCount).toFixed(0)
+        ),
       });
 
       updateEmployeeTable({
@@ -178,15 +181,16 @@ export const useCalculateEmployee = () => {
           year: grossIncomeYearly,
         },
         finalIncome: {
-          month: Number(res.toFixed(0)),
-          year: Number((res * salaryMonthCount).toFixed(0)),
+          month: Number(finalMonthlyResult.toFixed(0)),
+          year: Number((finalMonthlyResult * salaryMonthCount).toFixed(0)),
         },
         salaryMonthCount,
+        numberOfChildren,
       });
     }
 
     return {
-      grossResult: Number(res.toFixed(0)),
+      grossResult: Number(finalMonthlyResult.toFixed(0)),
     };
   };
 

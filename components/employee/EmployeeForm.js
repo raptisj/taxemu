@@ -215,7 +215,7 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
                 defaultValue={insuranceCarrier}
                 options={[
                   { value: "efka", text: "ΕΦΚΑ" },
-                  { value: "tsmede", text: "ΤΣΜΕΔΕ" },
+                  // { value: "tsmede", text: "ΤΣΜΕΔΕ" }, TODO: find the formula
                 ]}
               />
             </Box>
