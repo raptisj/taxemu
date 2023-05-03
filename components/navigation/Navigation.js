@@ -25,6 +25,8 @@ import Image from "next/image";
 import githubLogo from "assets/github.svg";
 import calculator from "assets/calculator.svg";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { DownloadIcon } from "@chakra-ui/icons";
 
 const tagStyles = {
   fontSize: "14px",
@@ -54,9 +56,30 @@ export const Navigation = () => {
   } = useDisclosure();
   const [isLargerThan30] = useMediaQuery("(min-width: 30em)");
   const entity = router.pathname.replace("/", "");
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [showInstallButton, seInstallButton] = useState(false);
+
+  useEffect(() => {
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+
+      setDeferredPrompt(e);
+      seInstallButton(true);
+    });
+
+    window.addEventListener("appinstalled", () => {
+      seInstallButton(false);
+      setDeferredPrompt(null);
+    });
+  }, []);
+
+  const onClickInstallApp = async () => {
+    deferredPrompt.prompt();
+    setDeferredPrompt(null);
+  };
 
   return (
-    <Flex justifyContent="space-between" width="100%">
+    <Flex justifyContent="space-between" width="100%" zIndex={1}>
       <Flex flexDirection="column">
         <Image src={logo} alt="Taxemu" />
         <Heading
@@ -74,6 +97,17 @@ export const Navigation = () => {
         {(router.pathname === "/employee" ||
           router.pathname === "/business") && (
           <>
+            {showInstallButton && (
+              <Box onClick={onClickInstallApp}>
+                {isLargerThan30 ? (
+                  <Button fontSize=".8rem" variant="link">
+                    Εγκατάσταση Taxemu app
+                  </Button>
+                ) : (
+                  <DownloadIcon />
+                )}
+              </Box>
+            )}
             {isLargerThan30 ? (
               <Button height="30px" onClick={onOpen} fontSize=".9rem">
                 Πως υπολογίζεται
