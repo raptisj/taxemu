@@ -17,6 +17,7 @@ export const useEmployeeActions = () => {
     dirtyFormState,
     finalIncomeYearly,
     numberOfChildren,
+    discountOptions,
   } = userDetails;
 
   const isGrossMonthly = grossMonthOrYear === "month";
@@ -126,6 +127,15 @@ export const useEmployeeActions = () => {
       dirty = dirty.filter((s) => s !== "numberOfChildren");
     }
 
+    if (
+      discountOptions.returnBaseInland !==
+      tableResults.discountOptions.returnBaseInland
+    ) {
+      dirty = [...new Set([...dirty, "discountOptions"])];
+    } else {
+      dirty = dirty.filter((s) => s !== "discountOptions");
+    }
+
     return dirty;
   };
 
@@ -139,6 +149,7 @@ export const useEmployeeActions = () => {
     salaryMonthCount,
     finalIncomeYearly,
     numberOfChildren,
+    discountOptions,
   ]);
 
   const onSelectFinalIncomeMonthOfYear = (e) => {

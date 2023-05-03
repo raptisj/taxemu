@@ -27,23 +27,17 @@ import calculator from "assets/calculator.svg";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { DownloadIcon } from "@chakra-ui/icons";
+import { WIKI } from "../../constants/content";
+import { WikiContent } from "components/wiki";
+
+const GO_BETA = false;
+const VERSION = GO_BETA ? "Beta" : "Alpha";
 
 const tagStyles = {
   fontSize: "14px",
   marginTop: "6px",
   fontWeight: 400,
   color: "#A0AEC0",
-};
-
-const CONTENT = {
-  employee: {
-    title: "Υπολογισμός μισθωτού",
-    subtitle: "Πως υπολογίζονται κρατήσεις και εισφορές",
-  },
-  business: {
-    title: "Υπολογισμός ελεύθερου επαγγελματία",
-    subtitle: "Πως υπολογίζονται κρατήσεις και εισφορές",
-  },
 };
 
 export const Navigation = () => {
@@ -89,7 +83,7 @@ export const Navigation = () => {
           data-testid="heading"
           display="inherit"
         >
-          <span style={tagStyles}>Alpha Version</span>
+          <span style={tagStyles}>{VERSION} Version</span>
         </Heading>
       </Flex>
 
@@ -141,17 +135,23 @@ export const Navigation = () => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader borderBottomWidth="1px" borderBottomColor="gray.200">
-            {CONTENT[entity]?.title}
+            <h2>{WIKI[entity]?.header?.title}</h2>
             <Text
               fontSize={[".8rem", ".9rem"]}
               fontWeight="normal"
               color="gray.500"
             >
-              {CONTENT[entity]?.subtitle}
+              {WIKI[entity]?.header?.subtitle}
             </Text>
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody minH="400px">{/* <Lorem count={2} /> */}</ModalBody>
+          <ModalBody
+            minH="400px"
+            maxH={{ md: "70vh", xl: "50vh" }}
+            overflow="auto"
+          >
+            <WikiContent />
+          </ModalBody>
         </ModalContent>
       </Modal>
 
@@ -166,17 +166,19 @@ export const Navigation = () => {
           <DrawerCloseButton top="30px" />
           <DrawerHeader borderBottomWidth="1px" borderBottomColor="gray.200">
             <Box maxW="90%">
-              {CONTENT[entity]?.title}
+              {WIKI[entity]?.header?.title}
               <Text
                 fontSize={[".8rem", ".9rem"]}
                 fontWeight="normal"
                 color="gray.500"
               >
-                {CONTENT[entity]?.subtitle}
+                {WIKI[entity]?.header?.subtitle}
               </Text>
             </Box>
           </DrawerHeader>
-          <DrawerBody minH="400px" p={0}></DrawerBody>
+          <DrawerBody minH="400px">
+            <WikiContent />
+          </DrawerBody>
         </DrawerContent>
       </Drawer>
     </Flex>

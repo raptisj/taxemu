@@ -108,17 +108,16 @@ export const useCalculateEmployee = () => {
     const currentGrossMonth =
       activeInput === "gross" ? grossIncomeMonthly : outsideGrossMonth;
 
-    const grossMonthly = discountOptions.returnBaseInland
-      ? currentGrossMonth * RETURN_BASE_INLAND_PERCENTAGE
-      : currentGrossMonth;
+    // const grossMonthly = discountOptions.returnBaseInland
+    //   ? currentGrossMonth * RETURN_BASE_INLAND_PERCENTAGE
+    //   : currentGrossMonth;
 
-      // console.log(discountOptions.returnBaseInland, 'discountOptions.returnBaseInland')
-      // console.log(grossMonthly, 'grossMonthly')
     const insuranceMonthly = Math.round(
       currentGrossMonth * taxationYearScales[taxationYear].insurancePercentage
     );
 
-    const sumToBeTaxed = (grossMonthly - insuranceMonthly) * salaryMonthCount;
+    const sumToBeTaxed =
+      (currentGrossMonth - insuranceMonthly) * salaryMonthCount;
     const grossAfterInsuranceMonthly = currentGrossMonth - insuranceMonthly;
     const grossAfterInsuranceYearly = Math.ceil(
       grossAfterInsuranceMonthly * salaryMonthCount
@@ -126,7 +125,9 @@ export const useCalculateEmployee = () => {
 
     const scales = calculateWithCurrentScales({
       currentScales: taxScales,
-      sumToBeTaxed,
+      sumToBeTaxed: discountOptions.returnBaseInland
+        ? sumToBeTaxed * RETURN_BASE_INLAND_PERCENTAGE
+        : sumToBeTaxed,
     });
 
     const taxBeforeDiscount = scales
@@ -154,6 +155,10 @@ export const useCalculateEmployee = () => {
       },
       taxAfterDiscount,
       currentInsuranceDiscount: Math.ceil(discount),
+      discountOptions: {
+        ...discountOptions,
+        returnBaseInland: discountOptions.returnBaseInland,
+      },
       insurance: {
         month: insuranceMonthly,
         year: insuranceMonthly * salaryMonthCount,
@@ -169,6 +174,7 @@ export const useCalculateEmployee = () => {
     const finalMonthlyResult =
       grossAfterInsuranceMonthly - taxAfterDiscount / salaryMonthCount;
 
+    // console.log(finalMonthlyResult, 'finalMonthlyResult')
     if (activeInput === "gross") {
       updateEmployee({
         finalIncomeMonthly: Number(finalMonthlyResult.toFixed(0)),

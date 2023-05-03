@@ -91,6 +91,9 @@ const initialState = {
       },
       salaryMonthCount: 14,
       numberOfChildren: 0,
+      discountOptions: {
+        returnBaseInland: false,
+      },
     },
     dirtyFormState: [],
   },
