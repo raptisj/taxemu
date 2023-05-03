@@ -73,7 +73,7 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
             onChange={onChange}
             value={calculatorTypeValue}
             options={[
-              { title: "Ελέυθερος επαγγελματίας", key: "business" },
+              { title: "Ελεύθερος επαγγελματίας", key: "business" },
               { title: "Μισθωτός", key: "employee" },
             ]}
           />

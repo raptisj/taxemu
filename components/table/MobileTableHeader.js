@@ -1,8 +1,13 @@
-import { Text, Heading } from "@chakra-ui/react";
+import { Text, Heading, Tag } from "@chakra-ui/react";
 
-const MobileTableHeader = () => {
+const MobileTableHeader = ({ entity = "" }) => {
   return (
     <>
+      {entity && (
+        <Tag fontSize=".7rem" fontWeight="normal" colorScheme="purple">
+          {entity}
+        </Tag>
+      )}
       <Heading
         as="h2"
         size="lg"
@@ -12,7 +17,7 @@ const MobileTableHeader = () => {
       >
         Υπολογισμός εισοδήματος
       </Heading>
-      <Text color="gray.500" fontSize='14px' mt={1}>
+      <Text color="gray.500" fontSize="14px" mt={1}>
         Οι υπολογισμοί είναι κατά προσέγγιση και δεν αποτελούν λογιστική
         συμβουλή*
       </Text>

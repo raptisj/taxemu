@@ -112,6 +112,8 @@ export const useCalculateEmployee = () => {
       ? currentGrossMonth * RETURN_BASE_INLAND_PERCENTAGE
       : currentGrossMonth;
 
+      // console.log(discountOptions.returnBaseInland, 'discountOptions.returnBaseInland')
+      // console.log(grossMonthly, 'grossMonthly')
     const insuranceMonthly = Math.round(
       currentGrossMonth * taxationYearScales[taxationYear].insurancePercentage
     );

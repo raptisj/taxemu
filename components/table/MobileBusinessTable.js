@@ -28,7 +28,7 @@ const MobileBusinessTable = () => {
 
   return (
     <>
-      <MobileTableHeader />
+      <MobileTableHeader entity="Ελεύθερος επαγγελματίας" />
 
       <Tabs isFitted mt={6}>
         <TabList>
