@@ -1,5 +1,5 @@
-import { Box, Grid, GridItem } from "@chakra-ui/react";
-import { Sidebar } from "../components/layout";
+import { Box, Grid, Flex, GridItem } from "@chakra-ui/react";
+import { CreditsFooter, Sidebar } from "../components/layout";
 import Table from "../components/table";
 import { useCalculateBusiness } from "hooks";
 import BusinessForm from "components/business/BusinessForm";
@@ -34,10 +34,20 @@ const BusinessView = () => {
         paddingLeft="40px"
         position="relative"
       >
-        <Box position="sticky" top={8}>
+        <Flex position="sticky" top={8} flexDirection="column" height="100%">
           <Table.Header onSubmitAction={centralCalculation} />
           <Table.Business />
-        </Box>
+
+          <Box
+            textAlign="end"
+            p={4}
+            position="sticky"
+            bottom={2}
+            marginTop="auto"
+          >
+            <CreditsFooter />
+          </Box>
+        </Flex>
       </GridItem>
     </Grid>
   );

@@ -1,6 +1,6 @@
-import { Box, Grid, GridItem } from "@chakra-ui/react";
+import { Box, Grid, Flex, GridItem } from "@chakra-ui/react";
 import { useStore } from "store";
-import { Sidebar } from "components/layout";
+import { CreditsFooter, Sidebar } from "components/layout";
 import Table from "components/table";
 import { useCalculateEmployee } from "hooks";
 import EmployeeForm from "components/employee/EmployeeForm";
@@ -27,7 +27,9 @@ const EmployeeView = () => {
     >
       <GridItem>
         <Sidebar
-          onSubmitAction={isGrossAction ? centralCalculation : reverseCentralCalculation}
+          onSubmitAction={
+            isGrossAction ? centralCalculation : reverseCentralCalculation
+          }
           onClear={removeUserDetails}
         >
           <EmployeeForm />
@@ -40,10 +42,24 @@ const EmployeeView = () => {
         paddingLeft="40px"
         position="relative"
       >
-        <Box position="sticky" top={8}>
-          <Table.Header onSubmitAction={isGrossAction ? centralCalculation : reverseCentralCalculation} />
+        <Flex position="sticky" top={8} flexDirection="column" height="100%">
+          <Table.Header
+            onSubmitAction={
+              isGrossAction ? centralCalculation : reverseCentralCalculation
+            }
+          />
           <Table.Employee />
-        </Box>
+
+          <Box
+            textAlign="end"
+            p={4}
+            position="sticky"
+            bottom={2}
+            marginTop="auto"
+          >
+            <CreditsFooter />
+          </Box>
+        </Flex>
       </GridItem>
     </Grid>
   );
