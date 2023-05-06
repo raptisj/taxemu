@@ -24,6 +24,9 @@ const MobileBusinessTable = () => {
       finalIncome,
       taxInAdvance,
       businessExpenses,
+      withholdingTax,
+      withholdingTaxAmount,
+      previousYearTaxInAdvance,
     },
   } = userDetails;
 
@@ -43,28 +46,33 @@ const MobileBusinessTable = () => {
               <Text fontWeight="600" fontSize="sm">
                 Καθαρό εισόδημα
               </Text>
+
               <Text fontWeight="600">
                 {formatCellValue(finalIncome.month, !!finalIncome.year)}
               </Text>
             </Flex>
+
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Μικτό Εισόδημα</Text>
               <Text>
                 {formatCellValue(grossIncome.month, !!finalIncome.year)}
               </Text>
             </Flex>
+
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Πρόσθετα έξοδα</Text>
               <Text>
                 {formatCellValue(businessExpenses.month, !!finalIncome.year)}
               </Text>
             </Flex>
+
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Ασφάλιση</Text>
               <Text>
                 {formatCellValue(insurance.month, !!finalIncome.year)}
               </Text>
             </Flex>
+
             {prePaidNextYearTax && (
               <Flex padding={3} justifyContent="space-between">
                 <Text fontSize="sm">
@@ -79,6 +87,35 @@ const MobileBusinessTable = () => {
                 </Text>
               </Flex>
             )}
+
+            {!!previousYearTaxInAdvance.year && (
+              <Flex padding={3} justifyContent="space-between">
+                <Text fontSize="sm">Περσινή Προκαταβολή φόρου</Text>
+                <Text>
+                  {formatCellValue(
+                    previousYearTaxInAdvance.month > 0
+                      ? previousYearTaxInAdvance.month
+                      : null,
+                    !!finalIncome.year
+                  )}
+                </Text>
+              </Flex>
+            )}
+
+            {withholdingTax && (
+              <Flex padding={3} justifyContent="space-between">
+                <Text fontSize="sm">Παρακράτηση φόρου(-20%)</Text>
+                <Text>
+                  {formatCellValue(
+                    withholdingTaxAmount.month > 0
+                      ? withholdingTaxAmount.month
+                      : null,
+                    !!finalIncome.year
+                  )}
+                </Text>
+              </Flex>
+            )}
+
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Φορός</Text>
               <Text>{formatCellValue(finalTax.month, !!finalIncome.year)}</Text>
@@ -90,26 +127,31 @@ const MobileBusinessTable = () => {
               <Text fontWeight="600" fontSize="sm">
                 Καθαρό εισόδημα
               </Text>
+
               <Text fontWeight="600">
                 {formatCellValue(finalIncome.year, !!finalIncome.year)}
               </Text>
             </Flex>
+
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Μικτό Εισόδημα</Text>
               <Text>
                 {formatCellValue(grossIncome.year, !!finalIncome.year)}
               </Text>
             </Flex>
+
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Πρόσθετα έξοδα</Text>
               <Text>
                 {formatCellValue(businessExpenses.year, !!finalIncome.year)}
               </Text>
             </Flex>
+
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Ασφάλιση</Text>
               <Text>{formatCellValue(insurance.year, !!finalIncome.year)}</Text>
             </Flex>
+
             {prePaidNextYearTax && (
               <Flex padding={3} justifyContent="space-between">
                 <Text fontSize="sm">
@@ -124,6 +166,35 @@ const MobileBusinessTable = () => {
                 </Text>
               </Flex>
             )}
+
+            {!!previousYearTaxInAdvance.year && (
+              <Flex padding={3} justifyContent="space-between">
+                <Text fontSize="sm">Περσινή Προκαταβολή φόρου</Text>
+                <Text>
+                  {formatCellValue(
+                    previousYearTaxInAdvance.year > 0
+                      ? previousYearTaxInAdvance.year
+                      : null,
+                    !!finalIncome.year
+                  )}
+                </Text>
+              </Flex>
+            )}
+
+            {withholdingTax && (
+              <Flex padding={3} justifyContent="space-between">
+                <Text fontSize="sm">Παρακράτηση φόρου(-20%)</Text>
+                <Text>
+                  {formatCellValue(
+                    withholdingTaxAmount.year > 0
+                      ? withholdingTaxAmount.year
+                      : null,
+                    !!finalIncome.year
+                  )}
+                </Text>
+              </Flex>
+            )}
+
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Φορός</Text>
               <Text>{formatCellValue(finalTax.year, !!finalIncome.year)}</Text>

@@ -7,10 +7,18 @@ import Header from "components/header";
 import Form from "components/form";
 import Image from "next/image";
 import githubLogo from "assets/github-logo.png";
+import { useRouter } from "next/router";
 
 export default function Home() {
   const details = useStore((state) => state.userDetails);
   const addDetail = useStore((state) => state.addDetail);
+  const router = useRouter();
+
+  // useEffect(() => {
+  //   router.replace("/welcome");
+  // }, []);
+
+  // return;
 
   const { discountOptions, taxableIncome, taxScales } = details;
 

@@ -191,6 +191,10 @@ export const IntroCore = () => {
               onChange={(value) =>
                 updateEmployee({
                   activeInput: value,
+                  [value === "final" ? "finalMonthOrYear" : "grossMonthOrYear"]:
+                    value === "final"
+                      ? userDetails.employee.grossMonthOrYear
+                      : userDetails.employee.finalMonthOrYear,
                 })
               }
               name={activeInput}

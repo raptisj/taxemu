@@ -25,6 +25,9 @@ const BusinessTable = () => {
       finalIncome,
       taxInAdvance,
       businessExpenses,
+      withholdingTax,
+      withholdingTaxAmount,
+      previousYearTaxInAdvance,
     },
   } = userDetails;
 
@@ -138,6 +141,67 @@ const BusinessTable = () => {
               </Td>
             </Tr>
           )}
+
+          {!!previousYearTaxInAdvance.year && (
+            <Tr>
+              <Td border="none">
+                <Text color="gray.700" fontWeight="500" fontSize="sm">
+                  Περσινή Προκαταβολή φόρου
+                </Text>
+              </Td>
+              <Td border="none">
+                <Text color="gray.700" fontSize="sm">
+                  {formatCellValue(
+                    previousYearTaxInAdvance.month > 0
+                      ? previousYearTaxInAdvance.month
+                      : null,
+                    !!finalIncome.year
+                  )}
+                </Text>
+              </Td>
+              <Td isNumeric border="none">
+                <Text color="gray.700" fontSize="sm" textAlign="left">
+                  {formatCellValue(
+                    previousYearTaxInAdvance.year > 0
+                      ? previousYearTaxInAdvance.year
+                      : null,
+                    !!finalIncome.year
+                  )}
+                </Text>
+              </Td>
+            </Tr>
+          )}
+
+          {withholdingTax && (
+            <Tr>
+              <Td border="none">
+                <Text color="gray.700" fontWeight="500" fontSize="sm">
+                  Παρακράτηση φόρου(-20%)
+                </Text>
+              </Td>
+              <Td border="none">
+                <Text color="gray.700" fontSize="sm">
+                  {formatCellValue(
+                    withholdingTaxAmount.month > 0
+                      ? withholdingTaxAmount.month
+                      : null,
+                    !!finalIncome.year
+                  )}
+                </Text>
+              </Td>
+              <Td isNumeric border="none">
+                <Text color="gray.700" fontSize="sm" textAlign="left">
+                  {formatCellValue(
+                    withholdingTaxAmount.year > 0
+                      ? withholdingTaxAmount.year
+                      : null,
+                    !!finalIncome.year
+                  )}
+                </Text>
+              </Td>
+            </Tr>
+          )}
+
           <Tr>
             <Td border="none">
               <Text color="gray.700" fontWeight="500" fontSize="sm">

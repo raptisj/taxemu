@@ -1,10 +1,12 @@
 import { useStore } from "store";
 
 export const SubmitButtonContent = () => {
-  const userDetails = useStore((state) => state.userDetails.employee);
+  const userEmployeeDetails = useStore((state) => state.userDetails.employee);
+  const userBusinessDetails = useStore((state) => state.userDetails.business);
 
-  const { dirtyFormState } = userDetails;
-  const hasFormChanged = dirtyFormState.length;
+  const hasFormChanged =
+    userEmployeeDetails.dirtyFormState.length ||
+    userBusinessDetails.dirtyFormState.length;
   return (
     <>
       Υπολόγισε

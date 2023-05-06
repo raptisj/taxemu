@@ -20,9 +20,10 @@ export const useCalculateBusiness = () => {
     businessExpensesMonthOrYear,
     insuranceScaleSelection,
     discountOptions,
-    taxInAdvance,
     prePaidNextYearTax,
+    withholdingTax,
     extraBusinessExpenses,
+    previousYearTaxInAdvance,
   } = userDetails;
   const isGrossMonthly = grossMonthOrYear === "month";
 
@@ -36,6 +37,7 @@ export const useCalculateBusiness = () => {
     return isYear ? taxYearDuration * insurancePerMonth : insurancePerMonth;
   };
 
+  const WITHHOLDING_TAX_PERCENTAGE = 0.2;
   const PRE_PAID_TAX_DISCOUNT = 0.5;
   const PRE_PAID_TAX_PERCENTAGE = 0.55;
   const SCALE_THRESHOLD = 10000;
@@ -165,9 +167,6 @@ export const useCalculateBusiness = () => {
     };
 
     if (prePaidNextYearTax) {
-      console.log(taxInAdvance, "taxInAdvance");
-      console.log(_taxInAdvance, "_taxInAdvance");
-
       updateBusiness({
         taxInAdvance: taxInAdvanceValue,
       });
@@ -199,6 +198,24 @@ export const useCalculateBusiness = () => {
       extraBusinessExpenses -
       insurancePerYear;
 
+    const prePaidTaxAmount = withholdingTax
+      ? grossIncomeMonthly * WITHHOLDING_TAX_PERCENTAGE
+      : 0;
+
+    const finalTaxAmount = {
+      month: withholdingTax
+        ? totalTax / taxYearDuration - Math.round(prePaidTaxAmount)
+        : totalTax / taxYearDuration,
+      year: withholdingTax
+        ? totalTax - Math.round(prePaidTaxAmount) * taxYearDuration
+        : totalTax,
+    };
+
+    const finalTaxAmountWithPrePaid = {
+      month: finalTaxAmount.month - previousYearTaxInAdvance / taxYearDuration,
+      year: finalTaxAmount.year - previousYearTaxInAdvance,
+    };
+
     updateBusinessTable({
       grossIncome: {
         month: grossIncomeMonthly,
@@ -212,14 +229,29 @@ export const useCalculateBusiness = () => {
         month: insurancePerYear / taxYearDuration,
         year: insurancePerYear,
       },
-      finalTax: {
-        month: totalTax / taxYearDuration,
-        year: totalTax,
-      },
+      finalTax: finalTaxAmountWithPrePaid,
       businessExpenses: {
         month: extraBusinessExpenses / taxYearDuration,
         year: extraBusinessExpenses,
       },
+      withholdingTaxAmount: {
+        month: Math.round(prePaidTaxAmount),
+        year: Math.round(prePaidTaxAmount) * taxYearDuration,
+      },
+      withholdingTax,
+      taxationYear,
+      taxYearDuration,
+      grossMonthOrYear,
+      discountOptions: {
+        ...discountOptions,
+      },
+      insuranceScaleSelection,
+      extraBusinessExpenses,
+      previousYearTaxInAdvance: {
+        month: previousYearTaxInAdvance / taxYearDuration,
+        year: previousYearTaxInAdvance,
+      },
+      prePaidNextYearTax,
     });
 
     updateBusiness({
@@ -227,6 +259,7 @@ export const useCalculateBusiness = () => {
         month: final / taxYearDuration,
         year: final,
       },
+      dirtyFormState: [],
     });
   };
 

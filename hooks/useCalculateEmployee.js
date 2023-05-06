@@ -23,6 +23,8 @@ export const useCalculateEmployee = () => {
     finalIncomeYearly,
     taxScales,
     activeInput,
+    grossMonthOrYear,
+    finalMonthOrYear,
   } = userDetails;
 
   const SCALE_THRESHOLD = 10000;
@@ -164,6 +166,10 @@ export const useCalculateEmployee = () => {
         year: taxAfterDiscount,
       },
       dirtyFormState: [],
+      finalMonthOrYear:
+        activeInput === "gross" ? grossMonthOrYear : finalMonthOrYear,
+      grossMonthOrYear:
+        activeInput === "final" ? finalMonthOrYear : grossMonthOrYear,
     });
 
     // TODO: proper check

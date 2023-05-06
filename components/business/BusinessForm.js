@@ -47,6 +47,7 @@ const BusinessForm = ({ showCalculatorType = true }) => {
     withholdingTax,
     extraBusinessExpenses,
     prePaidNextYearTax,
+    insuranceScaleSelection,
   } = userDetails;
 
   const onChange = (value) => {
@@ -200,6 +201,7 @@ const BusinessForm = ({ showCalculatorType = true }) => {
             <NumberInput
               isDisabled={discountOptions.specialInsuranceScale}
               defaultValue={1}
+              value={insuranceScaleSelection}
               max={5}
               min={1}
               clampValueOnBlur={false}
@@ -223,6 +225,9 @@ const BusinessForm = ({ showCalculatorType = true }) => {
                 ...discountOptions,
                 specialInsuranceScale: !discountOptions.specialInsuranceScale,
               },
+              insuranceScaleSelection: !discountOptions.specialInsuranceScale
+                ? 1
+                : insuranceScaleSelection,
             })
           }
         />

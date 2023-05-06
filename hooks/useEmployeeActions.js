@@ -100,6 +100,7 @@ export const useEmployeeActions = () => {
     setHasError({ entity: "employee", value: false });
   };
 
+  // TODO: find a better way to do ths
   const spotFormChanges = () => {
     let dirty = dirtyFormState;
 
