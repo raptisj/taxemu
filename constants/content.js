@@ -1,13 +1,14 @@
-////// Metadata header
-/////
-////
-///
-//
+///////////////////////////////
+///// metadata for head //////
+/////////////////////////////
 export const META_TITLE =
   "Taxemu - Υπολογισμός καθαρού ή μικτού μισθού μισθωτού ή ατομικής επιχείρησης";
 export const META_DESCRIPTION =
   "Το Taxemu είναι ενα open-source εργαλείο για να μπορείς να έχεις μια εικόνα των εξόδων και κρατήσεων της ατομικής σου επιχείρησης";
 
+//////////////////////////////////////////////////////////
+///// wiki explaning how calculation are being made /////
+////////////////////////////////////////////////////////
 export const CONTENT = {
   employee: {
     title: "Υπολογισμός μισθωτού",
@@ -83,6 +84,8 @@ export const EMPLOYEE_WIKI = [
   },
 ];
 
+export const BUSINESS_WIKI = [];
+
 export const WIKI = {
   employee: {
     header: {
@@ -96,6 +99,6 @@ export const WIKI = {
       title: "Υπολογισμός ελεύθερου επαγγελματία",
       subtitle: "Πως υπολογίζονται κρατήσεις και εισφορές",
     },
-    content: [],
+    content: BUSINESS_WIKI,
   },
 };

@@ -2,73 +2,66 @@ import { useStore } from "store";
 
 export const useBusinessActions = () => {
   const userDetails = useStore((state) => state.userDetails.business);
-  const addBusinessDetail = useStore((state) => state.addBusinessDetail);
+  const updateBusiness = useStore((state) => state.updateBusiness);
+  const setHasError = useStore((state) => state.setHasError);
 
   const { grossMonthOrYear } = userDetails;
 
   const isGrossMonthly = grossMonthOrYear === "month";
 
   const onSelectTaxationYear = (e) => {
-    addBusinessDetail({
-      value: Number(e.target.value),
-      field: "taxationYear",
+    updateBusiness({
+      taxationYear: Number(e.target.value),
     });
   };
 
   const onChangeTaxYearDuration = (value) => {
-    addBusinessDetail({
-      value: Number(value),
-      field: "taxYearDuration",
+    updateBusiness({
+      taxYearDuration: Number(value),
     });
   };
 
   const onChangeGrossIncome = (value, count) => {
-    addBusinessDetail({
-      value: Math.round(Number(value)),
-      field: isGrossMonthly ? "grossIncomeMonthly" : "grossIncomeYearly",
+    updateBusiness({
+      [isGrossMonthly ? "grossIncomeMonthly" : "grossIncomeYearly"]: Math.round(
+        Number(value)
+      ),
+      [isGrossMonthly ? "grossIncomeYearly" : "grossIncomeMonthly"]:
+        isGrossMonthly
+          ? Math.round(Number(value) * count)
+          : Math.round(Number(value) / count),
     });
 
-    // to upate the opposite.
-    addBusinessDetail({
-      value: isGrossMonthly
-        ? Math.round(Number(value) * count)
-        : Math.round(Number(value) / count),
-      field: isGrossMonthly ? "grossIncomeYearly" : "grossIncomeMonthly",
-    });
+    setHasError({ entity: "business", value: false });
   };
 
   const onSelectGrossIncomeMonthOfYear = (e) => {
-    addBusinessDetail({
-      value: e.target.value,
-      field: "grossMonthOrYear",
+    updateBusiness({
+      grossMonthOrYear: e.target.value,
     });
   };
 
   const onChangeBusinessExpensesMonthOrYear = (value) => {
-    addBusinessDetail({
-      value,
-      field: "businessExpensesMonthOrYear",
+    updateBusiness({
+      businessExpensesMonthOrYear: value,
     });
   };
 
   const onChangeInsuranceScales = (value) => {
-    addBusinessDetail({
-      value: Number(value),
-      field: "insuranceScaleSelection",
+    updateBusiness({
+      insuranceScaleSelection: Number(value),
     });
   };
 
   const onChangeExtraBusinessExpenses = (value) => {
-    addBusinessDetail({
-      value: Number(value),
-      field: "extraBusinessExpenses",
+    updateBusiness({
+      extraBusinessExpenses: Number(value),
     });
   };
 
   const onChangePreviousYearTaxInAdvance = (value) => {
-    addBusinessDetail({
-      value: Number(value),
-      field: "previousYearTaxInAdvance",
+    updateBusiness({
+      previousYearTaxInAdvance: Number(value),
     });
   };
 

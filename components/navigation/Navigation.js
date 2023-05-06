@@ -1,18 +1,18 @@
 import {
-  Flex,
-  Heading,
   Box,
-  Tooltip,
-  Button,
+  Flex,
   Text,
+  Button,
+  Heading,
+  Tooltip,
+  useMediaQuery,
   useDisclosure,
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
   ModalBody,
+  ModalHeader,
+  ModalContent,
+  ModalOverlay,
   ModalCloseButton,
-  useMediaQuery,
   Drawer,
   DrawerBody,
   DrawerHeader,
@@ -53,6 +53,7 @@ export const Navigation = () => {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showInstallButton, seInstallButton] = useState(false);
 
+  // PWA installtion link and to determine if it should be visible
   useEffect(() => {
     window.addEventListener("beforeinstallprompt", (e) => {
       e.preventDefault();
@@ -131,42 +132,12 @@ export const Navigation = () => {
       </Flex>
 
       {/* TODO: move to separate component */}
-      <Modal onClose={onClose} size="xl" isOpen={isOpen}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader borderBottomWidth="1px" borderBottomColor="gray.200">
-            <h2>{WIKI[entity]?.header?.title}</h2>
-            <Text
-              fontSize={[".8rem", ".9rem"]}
-              fontWeight="normal"
-              color="gray.500"
-            >
-              {WIKI[entity]?.header?.subtitle}
-            </Text>
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody
-            minH="400px"
-            maxH={{ md: "70vh", xl: "50vh" }}
-            overflow="auto"
-          >
-            <WikiContent />
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-
-      <Drawer
-        placement="right"
-        onClose={onCloseDrawer}
-        isOpen={isDrawerOpen}
-        size="full"
-      >
-        <DrawerOverlay />
-        <DrawerContent overflowY="auto" paddingTop="10px" height="100%">
-          <DrawerCloseButton top="30px" />
-          <DrawerHeader borderBottomWidth="1px" borderBottomColor="gray.200">
-            <Box maxW="90%">
-              {WIKI[entity]?.header?.title}
+      {isLargerThan30 && (
+        <Modal onClose={onClose} size="xl" isOpen={isOpen}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader borderBottomWidth="1px" borderBottomColor="gray.200">
+              <h2>{WIKI[entity]?.header?.title}</h2>
               <Text
                 fontSize={[".8rem", ".9rem"]}
                 fontWeight="normal"
@@ -174,13 +145,48 @@ export const Navigation = () => {
               >
                 {WIKI[entity]?.header?.subtitle}
               </Text>
-            </Box>
-          </DrawerHeader>
-          <DrawerBody minH="400px">
-            <WikiContent />
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
+            </ModalHeader>
+            <ModalCloseButton />
+            <ModalBody
+              minH="400px"
+              maxH={{ md: "70vh", xl: "50vh" }}
+              overflow="auto"
+              pb={6}
+            >
+              <WikiContent />
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      )}
+
+      {!isLargerThan30 && (
+        <Drawer
+          placement="right"
+          onClose={onCloseDrawer}
+          isOpen={isDrawerOpen}
+          size="full"
+        >
+          <DrawerOverlay />
+          <DrawerContent overflowY="auto" paddingTop="10px" height="100%">
+            <DrawerCloseButton top="30px" />
+            <DrawerHeader borderBottomWidth="1px" borderBottomColor="gray.200">
+              <Box maxW="90%">
+                {WIKI[entity]?.header?.title}
+                <Text
+                  fontSize={[".8rem", ".9rem"]}
+                  fontWeight="normal"
+                  color="gray.500"
+                >
+                  {WIKI[entity]?.header?.subtitle}
+                </Text>
+              </Box>
+            </DrawerHeader>
+            <DrawerBody minH="400px" pb={6}>
+              <WikiContent />
+            </DrawerBody>
+          </DrawerContent>
+        </Drawer>
+      )}
     </Flex>
   );
 };

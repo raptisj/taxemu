@@ -16,15 +16,16 @@ const BusinessTable = () => {
   const userDetails = useStore((state) => state.userDetails.business);
 
   const {
-    grossIncomeMonthly,
-    grossIncomeYearly,
-    taxInAdvance,
     discountOptions,
-    finalIncome,
-    taxYearDuration,
-    insurance,
-    extraBusinessExpenses,
-    totalTax,
+    prePaidNextYearTax,
+    tableResults: {
+      finalTax,
+      insurance,
+      grossIncome,
+      finalIncome,
+      taxInAdvance,
+      businessExpenses,
+    },
   } = userDetails;
 
   return (
@@ -54,7 +55,7 @@ const BusinessTable = () => {
               </Text>
             </Td>
             <Td isNumeric borderBottomWidth={1} borderColor="gray.500">
-              <Text fontWeight="600" fontSize="sm" textAlign='left'>
+              <Text fontWeight="600" fontSize="sm" textAlign="left">
                 {formatCellValue(finalIncome.year, !!finalIncome.year)}
               </Text>
             </Td>
@@ -67,15 +68,12 @@ const BusinessTable = () => {
             </Td>
             <Td border="none">
               <Text color="gray.700" fontSize="sm">
-                {formatCellValue(grossIncomeMonthly, !!finalIncome.year)}
+                {formatCellValue(grossIncome.month, !!finalIncome.year)}
               </Text>
             </Td>
             <Td isNumeric border="none">
-              <Text color="gray.700" fontSize="sm" textAlign='left'>
-                {formatCellValue(
-                  (grossIncomeYearly / 12) * taxYearDuration,
-                  !!finalIncome.year
-                )}
+              <Text color="gray.700" fontSize="sm" textAlign="left">
+                {formatCellValue(grossIncome.year, !!finalIncome.year)}
               </Text>
             </Td>
           </Tr>
@@ -87,15 +85,12 @@ const BusinessTable = () => {
             </Td>
             <Td border="none">
               <Text color="gray.700" fontSize="sm">
-                {formatCellValue(
-                  extraBusinessExpenses / taxYearDuration,
-                  !!finalIncome.year
-                )}
+                {formatCellValue(businessExpenses.month, !!finalIncome.year)}
               </Text>
             </Td>
             <Td isNumeric border="none">
-              <Text color="gray.700" fontSize="sm" textAlign='left'>
-                {formatCellValue(extraBusinessExpenses, !!finalIncome.year)}
+              <Text color="gray.700" fontSize="sm" textAlign="left">
+                {formatCellValue(businessExpenses.year, !!finalIncome.year)}
               </Text>
             </Td>
           </Tr>
@@ -111,17 +106,18 @@ const BusinessTable = () => {
               </Text>
             </Td>
             <Td isNumeric border="none">
-              <Text color="gray.700" fontSize="sm" textAlign='left'>
+              <Text color="gray.700" fontSize="sm" textAlign="left">
                 {formatCellValue(insurance.year, !!finalIncome.year)}
               </Text>
             </Td>
           </Tr>
 
-          {discountOptions.prePaidNextYearTax && (
+          {prePaidNextYearTax && (
             <Tr>
               <Td border="none">
                 <Text color="gray.700" fontWeight="500" fontSize="sm">
-                  Προκαταβολή φόρου
+                  Προκαταβολή φόρου{" "}
+                  {discountOptions.prePaidTaxDiscount ? "(με έκπτωση)" : ""}
                 </Text>
               </Td>
               <Td border="none">
@@ -133,7 +129,7 @@ const BusinessTable = () => {
                 </Text>
               </Td>
               <Td isNumeric border="none">
-                <Text color="gray.700" fontSize="sm" textAlign='left'>
+                <Text color="gray.700" fontSize="sm" textAlign="left">
                   {formatCellValue(
                     taxInAdvance.year > 0 ? taxInAdvance.year : null,
                     !!finalIncome.year
@@ -150,12 +146,12 @@ const BusinessTable = () => {
             </Td>
             <Td border="none">
               <Text color="gray.700" fontSize="sm">
-                {formatCellValue(totalTax.month, !!finalIncome.year)}
+                {formatCellValue(finalTax.month, !!finalIncome.year)}
               </Text>
             </Td>
             <Td isNumeric border="none">
-              <Text color="gray.700" fontSize="sm" textAlign='left'>
-                {formatCellValue(totalTax.year, !!finalIncome.year)}
+              <Text color="gray.700" fontSize="sm" textAlign="left">
+                {formatCellValue(finalTax.year, !!finalIncome.year)}
               </Text>
             </Td>
           </Tr>

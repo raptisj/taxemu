@@ -1,12 +1,13 @@
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { useStore } from "store";
 import { useToast } from "@chakra-ui/react";
 
 export const useCalculateBusiness = () => {
   const userDetails = useStore((state) => state.userDetails.business);
   const hasError = useStore((state) => state.userDetails.business.hasError);
-  const addBusinessDetail = useStore((state) => state.addBusinessDetail);
-  const setBusinessHasError = useStore((state) => state.setBusinessHasError);
+  const updateBusiness = useStore((state) => state.updateBusiness);
+  const updateBusinessTable = useStore((state) => state.updateBusinessTable);
+  const setHasError = useStore((state) => state.setHasError);
   const toast = useToast();
 
   const {
@@ -20,6 +21,7 @@ export const useCalculateBusiness = () => {
     insuranceScaleSelection,
     discountOptions,
     taxInAdvance,
+    prePaidNextYearTax,
     extraBusinessExpenses,
   } = userDetails;
   const isGrossMonthly = grossMonthOrYear === "month";
@@ -79,23 +81,23 @@ export const useCalculateBusiness = () => {
     [discountOptions.firstScaleDiscount]
   );
 
-  useEffect(() => {
-    if (hasError && (grossIncomeYearly || grossIncomeMonthly)) {
-      return setBusinessHasError({ value: false });
-    }
-  }, [grossIncomeYearly, grossIncomeMonthly, hasError, setBusinessHasError]);
+  const showError = () => {
+    toast({
+      title: "Λείπουν απαιτούμενα πεδία!",
+      position: "top",
+      isClosable: true,
+      status: "warning",
+    });
+
+    return setHasError({ entity: "business", value: true });
+  };
 
   const centralCalculation = () => {
-    // setBusinessHasError({ value: false });
-    // if (!grossIncomeYearly || !grossIncomeMonthly) {
-    //   toast({
-    //     title: "Λείπουν απαιτούμενα πεδία!",
-    //     position: "top",
-    //     isClosable: true,
-    //     status: "warning",
-    //   });
-    //   return setBusinessHasError({ value: true });
-    // }
+    const throwError = !grossIncomeYearly || !grossIncomeMonthly;
+
+    if (throwError) {
+      showError();
+    }
 
     // const findAmountPerYear = (amount, duration) => (amount / 12) * duration;
     // const grossPerYear = findAmountPerYear(grossIncomeYearly, taxYearDuration);
@@ -105,6 +107,7 @@ export const useCalculateBusiness = () => {
       ? grossIncomeMonthly * taxYearDuration
       : grossPerYear;
 
+    // console.log(grossIncome, "grossIncome");
     // const getInsuranceAmount = () => {
     //   const scale = discountOptions.specialInsuranceScale
     //     ? 0 // 0 means special scale
@@ -121,16 +124,6 @@ export const useCalculateBusiness = () => {
         discountOptions.specialInsuranceScale ? 0 : insuranceScaleSelection
       ].amount * taxYearDuration;
 
-    const insuranceValue = {
-      month: insurancePerYear / taxYearDuration,
-      year: insurancePerYear,
-    };
-
-    addBusinessDetail({
-      value: insuranceValue,
-      field: "insurance",
-    });
-
     // const findTaxableIncome = (gross, insurance, expenses) =>
     //   gross - insurance - expenses;
     // const taxableIncome = findTaxableIncome(
@@ -141,21 +134,15 @@ export const useCalculateBusiness = () => {
     const taxableIncome =
       grossIncome - insurancePerYear - extraBusinessExpenses;
 
-    // console.log(      grossIncome, insurancePerYear, extraBusinessExpenses, '      grossIncome - insurancePerYear - extraBusinessExpenses')
     const totalTax = calculateWithCurrentScales({
       toBeTaxed: taxableIncome,
     });
-    // console.log(totalTax, 'totalTax')
-    // console.log(taxableIncome, 'taxableIncome')
 
-    const value = {
-      month: totalTax / taxYearDuration,
-      year: totalTax,
-    };
-
-    addBusinessDetail({
-      value,
-      field: "totalTax",
+    updateBusiness({
+      totalTax: {
+        month: totalTax / taxYearDuration,
+        year: totalTax,
+      },
     });
 
     // const findTaxInAdvance = (tax) => {
@@ -164,35 +151,36 @@ export const useCalculateBusiness = () => {
     //   if (discountOptions.prePaidTaxDiscount) {
     //     t * PRE_PAID_TAX_DISCOUNT;
     //   }
-
     //   return t;
     // };
 
-    // console.log(
-    //   discountOptions.prePaidNextYearTax,
-    //   "discountOptions.prePaidNextYearTax"
-    // );
-    // console.log(totalTax, "totalTax");
-    if (discountOptions.prePaidNextYearTax) {
-      const taxInAdvance =
-        totalTax *
-        PRE_PAID_TAX_PERCENTAGE *
-        (discountOptions.prePaidTaxDiscount ? PRE_PAID_TAX_DISCOUNT : 1);
+    const _taxInAdvance =
+      totalTax *
+      PRE_PAID_TAX_PERCENTAGE *
+      (discountOptions.prePaidTaxDiscount ? PRE_PAID_TAX_DISCOUNT : 1);
 
-      // console.log(taxInAdvance, "taxInAdvance");
-      const taxInAdvanceValue = {
-        month: taxInAdvance / taxYearDuration,
-        year: taxInAdvance,
-      };
+    const taxInAdvanceValue = {
+      month: _taxInAdvance / taxYearDuration,
+      year: _taxInAdvance,
+    };
 
-      addBusinessDetail({
-        value: taxInAdvanceValue,
-        field: "taxInAdvance",
+    if (prePaidNextYearTax) {
+      console.log(taxInAdvance, "taxInAdvance");
+      console.log(_taxInAdvance, "_taxInAdvance");
+
+      updateBusiness({
+        taxInAdvance: taxInAdvanceValue,
+      });
+
+      updateBusinessTable({
+        taxInAdvance: {
+          month: _taxInAdvance / taxYearDuration,
+          year: _taxInAdvance,
+        },
       });
     }
 
     // const findFinal = (arr) => {
-
     // }
     // const final = findFinal([
     //   grossPerYear,
@@ -202,21 +190,43 @@ export const useCalculateBusiness = () => {
     //   insurancePerYear,
     // ]);
 
+    const nextYearTax = prePaidNextYearTax ? taxInAdvanceValue.year : 0;
+
     const final =
       grossPerYear -
       totalTax -
-      taxInAdvance.year -
+      nextYearTax -
       extraBusinessExpenses -
       insurancePerYear;
 
-    const finalValue = {
-      month: final / taxYearDuration,
-      year: final,
-    };
+    updateBusinessTable({
+      grossIncome: {
+        month: grossIncomeMonthly,
+        year: grossPerYear,
+      },
+      finalIncome: {
+        month: final / taxYearDuration,
+        year: final,
+      },
+      insurance: {
+        month: insurancePerYear / taxYearDuration,
+        year: insurancePerYear,
+      },
+      finalTax: {
+        month: totalTax / taxYearDuration,
+        year: totalTax,
+      },
+      businessExpenses: {
+        month: extraBusinessExpenses / taxYearDuration,
+        year: extraBusinessExpenses,
+      },
+    });
 
-    addBusinessDetail({
-      value: finalValue,
-      field: "finalIncome",
+    updateBusiness({
+      finalIncome: {
+        month: final / taxYearDuration,
+        year: final,
+      },
     });
   };
 

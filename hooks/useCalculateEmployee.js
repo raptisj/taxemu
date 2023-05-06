@@ -170,7 +170,6 @@ export const useCalculateEmployee = () => {
     const finalMonthlyResult =
       grossAfterInsuranceMonthly - taxAfterDiscount / salaryMonthCount;
 
-    // console.log(finalMonthlyResult, 'finalMonthlyResult')
     if (activeInput === "gross") {
       updateEmployee({
         finalIncomeMonthly: Number(finalMonthlyResult.toFixed(0)),

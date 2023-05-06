@@ -15,15 +15,16 @@ const MobileBusinessTable = () => {
   const userDetails = useStore((state) => state.userDetails.business);
 
   const {
-    grossIncomeMonthly,
-    grossIncomeYearly,
-    taxInAdvance,
+    prePaidNextYearTax,
     discountOptions,
-    finalIncome,
-    taxYearDuration,
-    insurance,
-    extraBusinessExpenses,
-    totalTax,
+    tableResults: {
+      finalTax,
+      insurance,
+      grossIncome,
+      finalIncome,
+      taxInAdvance,
+      businessExpenses,
+    },
   } = userDetails;
 
   return (
@@ -49,16 +50,13 @@ const MobileBusinessTable = () => {
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Μικτό Εισόδημα</Text>
               <Text>
-                {formatCellValue(grossIncomeMonthly, !!finalIncome.year)}
+                {formatCellValue(grossIncome.month, !!finalIncome.year)}
               </Text>
             </Flex>
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Πρόσθετα έξοδα</Text>
               <Text>
-                {formatCellValue(
-                  extraBusinessExpenses / taxYearDuration,
-                  !!finalIncome.year
-                )}
+                {formatCellValue(businessExpenses.month, !!finalIncome.year)}
               </Text>
             </Flex>
             <Flex padding={3} justifyContent="space-between">
@@ -67,9 +65,12 @@ const MobileBusinessTable = () => {
                 {formatCellValue(insurance.month, !!finalIncome.year)}
               </Text>
             </Flex>
-            {discountOptions.prePaidNextYearTax && (
+            {prePaidNextYearTax && (
               <Flex padding={3} justifyContent="space-between">
-                <Text fontSize="sm">Προκαταβολή φόρου</Text>
+                <Text fontSize="sm">
+                  Προκαταβολή φόρου{" "}
+                  {discountOptions.prePaidTaxDiscount ? "(με έκπτωση)" : ""}
+                </Text>
                 <Text>
                   {formatCellValue(
                     taxInAdvance.month > 0 ? taxInAdvance.month : null,
@@ -80,9 +81,10 @@ const MobileBusinessTable = () => {
             )}
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Φορός</Text>
-              <Text>{formatCellValue(totalTax.month, !!finalIncome.year)}</Text>
+              <Text>{formatCellValue(finalTax.month, !!finalIncome.year)}</Text>
             </Flex>
           </TabPanel>
+
           <TabPanel p={0} pt={4}>
             <Flex padding={3} justifyContent="space-between">
               <Text fontWeight="600" fontSize="sm">
@@ -95,25 +97,25 @@ const MobileBusinessTable = () => {
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Μικτό Εισόδημα</Text>
               <Text>
-                {formatCellValue(
-                  (grossIncomeYearly / 12) * taxYearDuration,
-                  !!finalIncome.year
-                )}
+                {formatCellValue(grossIncome.year, !!finalIncome.year)}
               </Text>
             </Flex>
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Πρόσθετα έξοδα</Text>
               <Text>
-                {formatCellValue(extraBusinessExpenses, !!finalIncome.year)}
+                {formatCellValue(businessExpenses.year, !!finalIncome.year)}
               </Text>
             </Flex>
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Ασφάλιση</Text>
               <Text>{formatCellValue(insurance.year, !!finalIncome.year)}</Text>
             </Flex>
-            {discountOptions.prePaidNextYearTax && (
+            {prePaidNextYearTax && (
               <Flex padding={3} justifyContent="space-between">
-                <Text fontSize="sm">Προκαταβολή φόρου</Text>
+                <Text fontSize="sm">
+                  Προκαταβολή φόρου{" "}
+                  {discountOptions.prePaidTaxDiscount ? "(με έκπτωση)" : ""}
+                </Text>
                 <Text>
                   {formatCellValue(
                     taxInAdvance.year > 0 ? taxInAdvance.year : null,
@@ -124,7 +126,7 @@ const MobileBusinessTable = () => {
             )}
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Φορός</Text>
-              <Text>{formatCellValue(totalTax.year, !!finalIncome.year)}</Text>
+              <Text>{formatCellValue(finalTax.year, !!finalIncome.year)}</Text>
             </Flex>
           </TabPanel>
         </TabPanels>

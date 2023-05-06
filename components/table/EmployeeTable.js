@@ -1,10 +1,10 @@
 import {
-  Table,
-  Thead,
-  Tbody,
   Tr,
   Th,
   Td,
+  Table,
+  Thead,
+  Tbody,
   TableCaption,
   TableContainer,
   Text,
@@ -16,13 +16,11 @@ const EmployeeTable = () => {
   const userDetails = useStore((state) => state.userDetails.employee);
 
   const {
-    finalIncomeMonthly,
-    finalIncomeYearly,
     grossIncomeMonthly,
     grossIncomeYearly,
-    finalTax,
     tableResults: { grossIncome, finalIncome },
-    insurance,
+    finalTax, // TODO: add this in table result
+    insurance, // TODO: add this in table result
   } = userDetails;
 
   return (

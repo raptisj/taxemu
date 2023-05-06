@@ -4,20 +4,15 @@ import { useStore } from "store";
 
 export const BusinessSecondStep = () => {
   const userDetails = useStore((state) => state.userDetails);
-  const addBusinessDetail = useStore((state) => state.addBusinessDetail);
+  const updateBusiness = useStore((state) => state.updateBusiness);
 
   const handleInsurance = (value) => {
-    addBusinessDetail({
-      value: {
+    updateBusiness({
+      discountOptions: {
         ...userDetails.business.discountOptions,
         specialInsuranceScale: value === "0",
       },
-      field: "discountOptions",
-    });
-
-    addBusinessDetail({
-      value: Number(value),
-      field: "insuranceScaleSelection",
+      insuranceScaleSelection: Number(value),
     });
   };
 
@@ -91,9 +86,8 @@ export const BusinessSecondStep = () => {
 
             <Stepper.NumberInput
               onChange={(value) =>
-                addBusinessDetail({
-                  value: Number(value),
-                  field: "extraBusinessExpenses",
+                updateBusiness({
+                  extraBusinessExpenses: Number(value),
                 })
               }
               value={userDetails.business.extraBusinessExpenses}

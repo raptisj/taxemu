@@ -1,5 +1,9 @@
 import create from "zustand";
-import { insuranceScales2021, taxScales2021 } from "./constants";
+import {
+  insuranceScales2021,
+  insuranceScales2023,
+  taxScales2021,
+} from "./constants";
 
 const initialState = {
   calculatorType: "employee",
@@ -97,7 +101,6 @@ const initialState = {
     },
     dirtyFormState: [],
   },
-  ////////
   business: {
     hasError: false,
     grossIncomeYearly: 0,
@@ -106,14 +109,17 @@ const initialState = {
     finalIncomeMonthly: 0,
     grossMonthOrYear: "year",
     businessExpensesMonthOrYear: "month",
-    // accountantFees: 0, // deprecate
-    // healthInsuranceFees: 0, // deprecate
     extraBusinessExpenses: 0,
     totalBusinessExpenses: 0,
     taxableIncome: 0,
     previousYearTaxInAdvance: 0,
     taxationYear: 2022,
     taxationYearScales: {
+      2023: {
+        value: 0,
+        ...insuranceScales2023,
+        ...taxScales2021,
+      },
       2022: {
         value: 0,
         ...insuranceScales2021,
@@ -146,11 +152,42 @@ const initialState = {
     taxYearDuration: 12,
     discountOptions: {
       firstScaleDiscount: false,
-      prePaidNextYearTax: false,
       prePaidTaxDiscount: false,
       specialInsuranceScale: false,
     },
+    prePaidNextYearTax: false,
     withholdingTax: false,
+    tableResults: {
+      finalIncome: {
+        month: 0,
+        year: 0,
+      },
+      grossIncome: {
+        month: 0,
+        year: 0,
+      },
+      finalTax: {
+        month: 0,
+        year: 0,
+      },
+      insurance: {
+        month: 0,
+        year: 0,
+      },
+      businessExpenses: {
+        month: 0,
+        year: 0,
+      },
+      taxInAdvance: {
+        month: 0,
+        year: 0,
+      },
+      withholdingTaxAmount: {
+        month: 0,
+        year: 0,
+      },
+    },
+    dirtyFormState: [],
   },
   ////////////   /////////////   ///////////
   ///// TO BE DEPRECATED AFTER V2 /////////
@@ -203,45 +240,6 @@ export const useStore = create((set) => ({
       userDetails: { ...state.userDetails, [field]: value },
     })),
 
-  // TODO: to be depricated with v2
-  changeCalculatorType: ({ value, field }) =>
-    set((state) => ({
-      userDetails: { ...state.userDetails, [field]: value },
-    })),
-
-  // TODO: to be depricated with v2
-  addEmployeeDetail: ({ value, field }) =>
-    set((state) => ({
-      userDetails: {
-        ...state.userDetails,
-        employee: { ...state.userDetails.employee, [field]: value },
-      },
-    })),
-
-  // TODO: to be depricated with v2
-  addBusinessDetail: ({ value, field }) =>
-    set((state) => ({
-      userDetails: {
-        ...state.userDetails,
-        business: { ...state.userDetails.business, [field]: value },
-      },
-    })),
-
-  // TODO: to be depricated with v2
-  setBusinessHasError: ({ value }) =>
-    set((state) => ({
-      userDetails: { ...state.userDetails.business, hasError: value },
-    })),
-
-  // TODO: to be depricated with v2
-  setEmployeeHasError: ({ value }) =>
-    set((state) => ({
-      userDetails: {
-        ...state.userDetails,
-        employee: { ...state.userDetails.employee, hasError: value },
-      },
-    })),
-
   update: (newState) =>
     set((state) => ({
       userDetails: { ...state.userDetails, ...newState },
@@ -274,6 +272,20 @@ export const useStore = create((set) => ({
       userDetails: {
         ...state.userDetails,
         business: { ...state.userDetails.business, ...newState },
+      },
+    })),
+
+  updateBusinessTable: (newState) =>
+    set((state) => ({
+      userDetails: {
+        ...state.userDetails,
+        business: {
+          ...state.userDetails.business,
+          tableResults: {
+            ...state.userDetails.business.tableResults,
+            ...newState,
+          },
+        },
       },
     })),
 

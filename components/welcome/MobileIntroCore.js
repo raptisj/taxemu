@@ -7,7 +7,7 @@ import { Box, Text, Flex } from "@chakra-ui/react";
 export const MobileIntroCore = () => {
   const calculatorType = useStore((state) => state.userDetails.calculatorType);
   const update = useStore((state) => state.update);
-  const addBusinessDetail = useStore((state) => state.addBusinessDetail);
+  const updateBusiness = useStore((state) => state.updateBusiness);
   const userDetails = useStore((state) => state.userDetails);
   const employeeDetails = useStore((state) => state.userDetails.employee);
   const updateEmployee = useStore((state) => state.updateEmployee);
@@ -67,17 +67,14 @@ export const MobileIntroCore = () => {
   };
 
   const onChangeGrossIncome = (value, count = 12) => {
-    addBusinessDetail({
-      value: Math.round(Number(value)),
-      field: isGrossMonthly ? "grossIncomeMonthly" : "grossIncomeYearly",
-    });
-
-    // to upate the opposite.
-    addBusinessDetail({
-      value: isGrossMonthly
-        ? Math.round(Number(value) * count)
-        : Math.round(Number(value) / count),
-      field: isGrossMonthly ? "grossIncomeYearly" : "grossIncomeMonthly",
+    updateBusiness({
+      [isGrossMonthly ? "grossIncomeMonthly" : "grossIncomeYearly"]: Math.round(
+        Number(value)
+      ),
+      [isGrossMonthly ? "grossIncomeYearly" : "grossIncomeMonthly"]:
+        isGrossMonthly
+          ? Math.round(Number(value) * count)
+          : Math.round(Number(value) / count),
     });
   };
 
@@ -112,9 +109,8 @@ export const MobileIntroCore = () => {
 
               <Stepper.MenuDrawer
                 onChange={(value) =>
-                  addBusinessDetail({
-                    value,
-                    field: "grossMonthOrYear",
+                  updateBusiness({
+                    grossMonthOrYear: value,
                   })
                 }
                 name={userDetails.business.grossMonthOrYear}

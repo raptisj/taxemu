@@ -15,7 +15,7 @@ export const WikiContent = () => {
 
   return (
     <>
-      {WIKI[entity]?.content?.map((info) => (
+      {WIKI[entity]?.content?.map((info, i) => (
         <>
           <Box mt={4} key={info.title}>
             <Heading as="h3" size="sm" mb={2}>
@@ -68,7 +68,7 @@ export const WikiContent = () => {
               </Box>
             )}
           </Box>
-          <Divider my={8} />
+          {WIKI[entity]?.content.length - 1 > i && <Divider my={8} />}
         </>
       ))}
     </>

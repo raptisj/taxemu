@@ -72,10 +72,10 @@ const IncomeTable = () => {
       month: totalBusinessExpenses / taxYearDuration,
       year: totalBusinessExpenses,
     },
-    extraBusinessExpenses: {
-      month: extraBusinessExpenses / 12,
-      year: extraBusinessExpenses,
-    },
+    // extraBusinessExpenses: {
+    //   month: extraBusinessExpenses / 12,
+    //   year: extraBusinessExpenses,
+    // },
   };
 
   const prePaidTaxAmount = withholdingTax

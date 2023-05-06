@@ -20,7 +20,7 @@ import { useCalculateBusiness, useBusinessActions } from "hooks";
 
 const BusinessForm = ({ showCalculatorType = true }) => {
   const userDetails = useStore((state) => state.userDetails.business);
-  const addBusinessDetail = useStore((state) => state.addBusinessDetail);
+  const updateBusiness = useStore((state) => state.updateBusiness);
   const update = useStore((state) => state.update);
   const { push, pathname } = useRouter();
   const { getInsuranceTotal, hasError } = useCalculateBusiness();
@@ -46,6 +46,7 @@ const BusinessForm = ({ showCalculatorType = true }) => {
     discountOptions,
     withholdingTax,
     extraBusinessExpenses,
+    prePaidNextYearTax,
   } = userDetails;
 
   const onChange = (value) => {
@@ -79,6 +80,7 @@ const BusinessForm = ({ showCalculatorType = true }) => {
             onChange={onSelectTaxationYear}
             defaultValue={taxationYear}
             options={[
+              { value: "2023", text: "2023" },
               { value: "2022", text: "2022" },
               { value: "2021", text: "2021" },
             ]}
@@ -159,12 +161,11 @@ const BusinessForm = ({ showCalculatorType = true }) => {
           isChecked={discountOptions.firstScaleDiscount}
           isDisabled={grossIncomeYearly > 10000 || !grossIncomeYearly}
           onChange={() =>
-            addBusinessDetail({
-              value: {
+            updateBusiness({
+              discountOptions: {
                 ...discountOptions,
                 firstScaleDiscount: !discountOptions.firstScaleDiscount,
               },
-              field: "discountOptions",
             })
           }
         />
@@ -217,12 +218,11 @@ const BusinessForm = ({ showCalculatorType = true }) => {
           label="Ειδική (Νέοι ελεύθεροι επαγγελματίες μέχρι 5 έτη)"
           isChecked={discountOptions.specialInsuranceScale}
           onChange={() =>
-            addBusinessDetail({
-              value: {
+            updateBusiness({
+              discountOptions: {
                 ...discountOptions,
                 specialInsuranceScale: !discountOptions.specialInsuranceScale,
               },
-              field: "discountOptions",
             })
           }
         />
@@ -261,15 +261,11 @@ const BusinessForm = ({ showCalculatorType = true }) => {
 
             <FormElements.CheckboxNested
               label=" Προκαταβολή φόρου (55% επί του συνολικού φόρου)"
-              isChecked={discountOptions.prePaidNextYearTax}
-              show={discountOptions.prePaidNextYearTax}
+              isChecked={prePaidNextYearTax}
+              show={prePaidNextYearTax}
               onChange={() =>
-                addBusinessDetail({
-                  value: {
-                    ...discountOptions,
-                    prePaidNextYearTax: !discountOptions.prePaidNextYearTax,
-                  },
-                  field: "discountOptions",
+                updateBusiness({
+                  prePaidNextYearTax: !prePaidNextYearTax,
                 })
               }
             >
@@ -280,12 +276,11 @@ const BusinessForm = ({ showCalculatorType = true }) => {
                     έκπτωση 50%."
                 isChecked={discountOptions.prePaidTaxDiscount}
                 onChange={() =>
-                  addBusinessDetail({
-                    value: {
+                  updateBusiness({
+                    discountOptions: {
                       ...discountOptions,
                       prePaidTaxDiscount: !discountOptions.prePaidTaxDiscount,
                     },
-                    field: "discountOptions",
                   })
                 }
               />
@@ -295,9 +290,8 @@ const BusinessForm = ({ showCalculatorType = true }) => {
               label="Παρακράτηση φόρου"
               isChecked={withholdingTax}
               onChange={() =>
-                addBusinessDetail({
-                  value: !withholdingTax,
-                  field: "withholdingTax",
+                updateBusiness({
+                  withholdingTax: !withholdingTax,
                 })
               }
             />

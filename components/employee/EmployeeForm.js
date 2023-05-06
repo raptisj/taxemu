@@ -23,7 +23,7 @@ import { useEmployeeActions, useCalculateEmployee } from "hooks";
 
 const EmployeeForm = ({ showCalculatorType = true }) => {
   const userDetails = useStore((state) => state.userDetails.employee);
-  const addEmployeeDetail = useStore((state) => state.addEmployeeDetail);
+  const updateEmployee = useStore((state) => state.updateEmployee);
   const update = useStore((state) => state.update);
   const { push, pathname } = useRouter();
   const [showSection, setShowSection] = useState(false);
@@ -251,12 +251,11 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
                 colorScheme="purple"
                 isChecked={discountOptions.returnBaseInland}
                 onChange={() =>
-                  addEmployeeDetail({
-                    value: {
+                  updateEmployee({
+                    discountOptions: {
                       ...discountOptions,
                       returnBaseInland: !discountOptions.returnBaseInland,
                     },
-                    field: "discountOptions",
                   })
                 }
               >
