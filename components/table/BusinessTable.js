@@ -32,7 +32,7 @@ const BusinessTable = () => {
   } = userDetails;
 
   return (
-    <TableContainer mt={6}>
+    <TableContainer mt={6} background="#ffffff70">
       <Table variant="simple">
         <TableCaption color="gray.500" textAlign="left">
           Οι υπολογισμοί είναι κατά προσέγγιση και δεν αποτελούν λογιστικη

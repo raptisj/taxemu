@@ -29,6 +29,7 @@ import { useEffect, useState } from "react";
 import { DownloadIcon } from "@chakra-ui/icons";
 import { WIKI } from "../../constants/content";
 import { WikiContent } from "components/wiki";
+import Link from "next/link";
 
 const GO_BETA = false;
 const VERSION = GO_BETA ? "Beta" : "Alpha";
@@ -75,18 +76,20 @@ export const Navigation = () => {
 
   return (
     <Flex justifyContent="space-between" width="100%" zIndex={1}>
-      <Flex flexDirection="column">
-        <Image src={logo} alt="Taxemu" />
-        <Heading
-          as="h2"
-          size="3xl"
-          position="relative"
-          data-testid="heading"
-          display="inherit"
-        >
-          <span style={tagStyles}>{VERSION} Version</span>
-        </Heading>
-      </Flex>
+      <Link href="/welcome">
+        <Flex flexDirection="column">
+          <Image src={logo} alt="Taxemu" />
+          <Heading
+            as="h2"
+            size="3xl"
+            position="relative"
+            data-testid="heading"
+            display="inherit"
+          >
+            <span style={tagStyles}>{VERSION} Version</span>
+          </Heading>
+        </Flex>
+      </Link>
 
       <Flex gap={4} alignItems="center">
         {(router.pathname === "/employee" ||

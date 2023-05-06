@@ -133,7 +133,6 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
                 { value: "month", text: "Μήνα" },
               ]}
               defaultValue={grossMonthOrYear}
-              value={grossMonthOrYear}
             />
           </GridItem>
         </Grid>
@@ -172,7 +171,6 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
                 { value: "month", text: "Μήνα" },
               ]}
               defaultValue={finalMonthOrYear}
-              value={finalMonthOrYear}
             />
           </GridItem>
         </Grid>
