@@ -101,38 +101,17 @@ export const useCalculateBusiness = () => {
       showError();
     }
 
-    // const findAmountPerYear = (amount, duration) => (amount / 12) * duration;
-    // const grossPerYear = findAmountPerYear(grossIncomeYearly, taxYearDuration);
     const grossPerYear = (grossIncomeYearly / 12) * taxYearDuration;
 
     const grossIncome = isGrossMonthly
       ? grossIncomeMonthly * taxYearDuration
       : grossPerYear;
 
-    // console.log(grossIncome, "grossIncome");
-    // const getInsuranceAmount = () => {
-    //   const scale = discountOptions.specialInsuranceScale
-    //     ? 0 // 0 means special scale
-    //     : insuranceScaleSelection;
-
-    //   return taxationYearScales[taxationYear].insuranceScales[scale].amount;
-    // };
-    // const insurancePerYear = findAmountPerYear(
-    //   getInsuranceAmount(),
-    //   taxYearDuration
-    // );
     const insurancePerYear =
       taxationYearScales[taxationYear].insuranceScales[
         discountOptions.specialInsuranceScale ? 0 : insuranceScaleSelection
       ].amount * taxYearDuration;
 
-    // const findTaxableIncome = (gross, insurance, expenses) =>
-    //   gross - insurance - expenses;
-    // const taxableIncome = findTaxableIncome(
-    //   grossIncome,
-    //   insurancePerYear,
-    //   extraBusinessExpenses
-    // );
     const taxableIncome =
       grossIncome - insurancePerYear - extraBusinessExpenses;
 
@@ -146,15 +125,6 @@ export const useCalculateBusiness = () => {
         year: totalTax,
       },
     });
-
-    // const findTaxInAdvance = (tax) => {
-    //   let t = tax * PRE_PAID_TAX_PERCENTAGE;
-
-    //   if (discountOptions.prePaidTaxDiscount) {
-    //     t * PRE_PAID_TAX_DISCOUNT;
-    //   }
-    //   return t;
-    // };
 
     const _taxInAdvance =
       totalTax *
@@ -178,16 +148,6 @@ export const useCalculateBusiness = () => {
         },
       });
     }
-
-    // const findFinal = (arr) => {
-    // }
-    // const final = findFinal([
-    //   grossPerYear,
-    //   totalTax,
-    //   taxInAdvance.year,
-    //   extraBusinessExpenses,
-    //   insurancePerYear,
-    // ]);
 
     const nextYearTax = prePaidNextYearTax ? taxInAdvanceValue.year : 0;
 
