@@ -1,7 +1,6 @@
 import React from "react";
 import "../styles/globals.css";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
-// import { hotjar } from "react-hotjar";
 import { useRouter } from "next/router";
 import * as gtag from "../config/gtag";
 import Script from "next/script";
@@ -28,13 +27,6 @@ function MyApp({ Component, pageProps }) {
       router.events.off("routeChangeComplete", handleRouteChange);
     };
   }, [router.events]);
-
-  // React.useEffect(() => {
-  //   hotjar.initialize(
-  //     process.env.NEXT_PUBLIC_HJID,
-  //     process.env.NEXT_PUBLIC_HJSV
-  //   );
-  // }, []);
 
   return (
     <>
