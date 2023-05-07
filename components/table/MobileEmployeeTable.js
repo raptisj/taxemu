@@ -25,7 +25,7 @@ const MobileEmployeeTable = () => {
 
   return (
     <>
-      <MobileTableHeader entity='Μισθωτός' />
+      <MobileTableHeader entity='μισθωτού' />
 
       <Tabs isFitted mt={6}>
         <TabList>

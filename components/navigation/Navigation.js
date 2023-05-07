@@ -23,12 +23,13 @@ import {
 import logo from "../../assets/taxemu.svg";
 import Image from "next/image";
 import githubLogo from "assets/github.svg";
-import calculator from "assets/calculator.svg";
+import bookIcon from "assets/book.svg";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { DownloadIcon } from "@chakra-ui/icons";
 import { WIKI } from "../../constants/content";
 import { WikiContent } from "components/wiki";
+import { BookIcon } from "components/icons";
 import Link from "next/link";
 
 const GO_BETA = false;
@@ -107,12 +108,17 @@ export const Navigation = () => {
               </Box>
             )}
             {isLargerThan30 ? (
-              <Button height="30px" onClick={onOpen} fontSize=".9rem">
+              <Button
+                height="30px"
+                onClick={onOpen}
+                fontSize=".9rem"
+                leftIcon={<BookIcon width={26} height={26} />}
+              >
                 Πως υπολογίζεται
               </Button>
             ) : (
               <Box height="30px" onClick={onOpenDrawer}>
-                <Image src={calculator} alt="" width={26} height={26} />
+                <Image src={bookIcon} alt="" width={26} height={26} />
               </Box>
             )}
           </>

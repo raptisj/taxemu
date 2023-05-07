@@ -32,7 +32,7 @@ const MobileBusinessTable = () => {
 
   return (
     <>
-      <MobileTableHeader entity="Ελεύθερος επαγγελματίας" />
+      <MobileTableHeader entity="ελεύθερου επαγγελματία" />
 
       <Tabs isFitted mt={6}>
         <TabList>
