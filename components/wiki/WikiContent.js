@@ -7,6 +7,7 @@ import {
   UnorderedList,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import { Fragment } from "react";
 import { WIKI } from "../../constants/content";
 
 export const WikiContent = () => {
@@ -16,8 +17,8 @@ export const WikiContent = () => {
   return (
     <>
       {WIKI[entity]?.content?.map((info, i) => (
-        <>
-          <Box mt={4} key={info.title}>
+        <Fragment key={info.title}>
+          <Box mt={4}>
             <Heading as="h3" size="sm" mb={2}>
               {info.title}
             </Heading>
@@ -69,7 +70,7 @@ export const WikiContent = () => {
             )}
           </Box>
           {WIKI[entity]?.content.length - 1 > i && <Divider my={8} />}
-        </>
+        </Fragment>
       ))}
     </>
   );

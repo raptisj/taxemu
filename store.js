@@ -7,6 +7,9 @@ import {
 
 const initialState = {
   calculatorType: "employee",
+  // canInstallPWA and deferredPrompt are for PWA installation state
+  canInstallPWA: false,
+  deferredPrompt: null,
   employee: {
     hasError: false,
     grossIncomeYearly: 0,

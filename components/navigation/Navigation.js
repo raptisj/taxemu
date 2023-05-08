@@ -20,6 +20,7 @@ import {
   DrawerContent,
   DrawerCloseButton,
 } from "@chakra-ui/react";
+import { useStore } from "store";
 import logo from "../../assets/taxemu.svg";
 import Image from "next/image";
 import githubLogo from "assets/github.svg";
@@ -52,27 +53,36 @@ export const Navigation = () => {
   } = useDisclosure();
   const [isLargerThan30] = useMediaQuery("(min-width: 30em)");
   const entity = router.pathname.replace("/", "");
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
-  const [showInstallButton, seInstallButton] = useState(false);
+  const update = useStore((state) => state.update);
+  const canInstallPWA = useStore((state) => state.userDetails.canInstallPWA);
+  const deferredPrompt = useStore((state) => state.userDetails.deferredPrompt);
 
   // PWA installtion link and to determine if it should be visible
   useEffect(() => {
     window.addEventListener("beforeinstallprompt", (e) => {
       e.preventDefault();
 
-      setDeferredPrompt(e);
-      seInstallButton(true);
+      update({
+        canInstallPWA: true,
+        deferredPrompt: e,
+      });
     });
 
     window.addEventListener("appinstalled", () => {
-      seInstallButton(false);
-      setDeferredPrompt(null);
+      update({
+        canInstallPWA: false,
+        deferredPrompt: null,
+      });
     });
   }, []);
 
   const onClickInstallApp = async () => {
     deferredPrompt.prompt();
-    setDeferredPrompt(null);
+
+    update({
+      canInstallPWA: false,
+      deferredPrompt: null,
+    });
   };
 
   return (
@@ -93,20 +103,14 @@ export const Navigation = () => {
       </Link>
 
       <Flex gap={4} alignItems="center">
+        {canInstallPWA && (
+          <Box onClick={onClickInstallApp}>
+            {!isLargerThan30 && <DownloadIcon />}
+          </Box>
+        )}
         {(router.pathname === "/employee" ||
           router.pathname === "/business") && (
           <>
-            {showInstallButton && (
-              <Box onClick={onClickInstallApp}>
-                {isLargerThan30 ? (
-                  <Button fontSize=".8rem" variant="link">
-                    Εγκατάσταση Taxemu app
-                  </Button>
-                ) : (
-                  <DownloadIcon />
-                )}
-              </Box>
-            )}
             {isLargerThan30 ? (
               <Button
                 height="30px"
