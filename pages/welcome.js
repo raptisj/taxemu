@@ -137,9 +137,11 @@ const Welcome = () => {
   const onNext = () => {
     // check if it has one screen which means its employee screen
     if (tabIndex === tabNames.length - 1) {
-      isGrossAction ? calculateEmployee() : reverseCentralCalculation();
-    } else {
-      calculateBusiness();
+      if (isBusiness) {
+        calculateBusiness();
+      } else {
+        isGrossAction ? calculateEmployee() : reverseCentralCalculation();
+      }
     }
 
     router.push(
