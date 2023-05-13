@@ -14,7 +14,7 @@ export const CreditsFooter = () => {
       </a>{" "}
       & Design/UX by{" "}
       <a
-        href="https://twitter.com/ThanosDimitrio5"
+        href="https://www.linkedin.com/in/thanos-dimitriou/"
         target="_blank"
         rel="noreferrer"
         style={{ color: "#805ad5" }}
