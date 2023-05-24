@@ -1,6 +1,6 @@
 # 🧮 Taxemu
 
-_This is the **alpha version** of Taxemu. A tool to calculate your tax obligations. Made for one-person business and regular employees._
+_This is the **alpha version** of Taxemu. A tool to calculate your tax obligations. Made for one-person business and permanent employees._
 
 The live project can be found [here](https://www.taxemu.gr/).
 

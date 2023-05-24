@@ -48,11 +48,17 @@ const initialState = {
     },
     insuranceCarrier: "efka", // efka | tsmede
     taxationYearScales: {
+      2023: {
+        insurancePercentage: 0.1387,
+        maxTaxableSalary: 7126.94,
+      },
       2022: {
         insurancePercentage: 0.1387,
+        maxTaxableSalary: 6500,
       },
       2021: {
         insurancePercentage: 0.1412,
+        maxTaxableSalary: 6500,
       },
     },
     servicesFMY: 0,

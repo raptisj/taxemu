@@ -111,7 +111,7 @@ export const useCalculateEmployee = () => {
       activeInput === "gross" ? grossIncomeMonthly : outsideGrossMonth;
 
     const insuranceMonthly = Math.round(
-      currentGrossMonth * taxationYearScales[taxationYear].insurancePercentage
+      Math.min(currentGrossMonth,taxationYearScales[taxationYear].maxTaxableSalary) * taxationYearScales[taxationYear].insurancePercentage
     );
 
     const sumToBeTaxed =
