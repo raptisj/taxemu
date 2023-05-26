@@ -2,7 +2,9 @@
 
 _This is the **alpha version** of Taxemu. A tool to calculate your tax obligations. Made for one-person business and permanent employees._
 
-The live project can be found [here](https://www.taxemu.gr/).
+The live project can be found [here.](https://www.taxemu.gr/)
+
+If you want to contribute to the project, [read the contribution guidelines.](https://github.com/raptisj/taxemu/blob/main/CONTRIBUTING.md)
 
 ## Development
 
