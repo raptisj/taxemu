@@ -1,3 +1,4 @@
-import BussinessNegotiateWidget from "./BussinessNegotiateWidget";
+import BusinessNegotiateWidget from "./businessNegotiateWidget";
+import Wiki from "./wiki";
 
-export { BussinessNegotiateWidget };
+export { BusinessNegotiateWidget, Wiki };

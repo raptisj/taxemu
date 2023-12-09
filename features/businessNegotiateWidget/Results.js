@@ -29,7 +29,7 @@ const Results = ({ monthlyValue }) => {
       </UnorderedList>
       <Text mt={2} fontSize={["14px", "16px"]}>
         Τιμολογείς για <strong>{askFor}€</strong> και παίρνεις μικτά{" "}
-        <strong>{grossAsReadIncome}€</strong> το μήνα
+        <strong>{grossAsReadIncome}€</strong> το μήνα.
       </Text>
     </>
   );

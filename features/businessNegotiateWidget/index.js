@@ -15,7 +15,7 @@ import { useRef } from "react";
 import { Results } from "./Results";
 import { FormFields } from "./FormFields";
 
-const BussinessNegotiateWidget = () => {
+const BusinessNegotiateWidget = () => {
   const inputRef = useRef(null);
   const userDetails = useStore((state) => state.userDetails.business.quickCalc);
 
@@ -60,4 +60,4 @@ const BussinessNegotiateWidget = () => {
   );
 };
 
-export default BussinessNegotiateWidget;
+export default BusinessNegotiateWidget;
