@@ -206,7 +206,9 @@ const BusinessForm = ({ showCalculatorType = true }) => {
             <NumberInput
               isDisabled={discountOptions.specialInsuranceScale}
               defaultValue={1}
-              value={insuranceScaleSelection}
+              value={
+                insuranceScaleSelection === 0 ? 1 : insuranceScaleSelection
+              }
               max={5}
               min={1}
               clampValueOnBlur={false}
