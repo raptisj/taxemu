@@ -17,6 +17,7 @@ import { useStore } from "store";
 import { SidebarSubSection, SidebarSubSectionAccordion } from "../layout";
 import FormElements from "../input";
 import { useCalculateBusiness, useBusinessActions } from "hooks";
+import BussinessNegotiateWidget from "features/BussinessNegotiateWidget";
 
 const BusinessForm = ({ showCalculatorType = true }) => {
   const userDetails = useStore((state) => state.userDetails.business);
@@ -171,6 +172,10 @@ const BusinessForm = ({ showCalculatorType = true }) => {
           }
         />
       </SidebarSubSection>
+
+      <Box mt={6}>
+        <BussinessNegotiateWidget />
+      </Box>
 
       <Divider pt={6} />
 

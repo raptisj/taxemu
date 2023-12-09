@@ -213,6 +213,23 @@ const initialState = {
       prePaidNextYearTax: false,
     },
     dirtyFormState: [],
+    quickCalc: {
+      grossIncomeYearly: 0,
+      currentAdditionalValueTax: 0.24,
+      currentWithholdingTax: 0.20,
+      additionalValueTax: {
+        24: {
+          text: "24%",
+          value: 0.24,
+        },
+      },
+      withholdingTax: {
+        20: {
+          text: "20%",
+          value: 0.20,
+        },
+      },
+    },
   },
 };
 
@@ -251,6 +268,20 @@ export const useStore = create((set) => ({
       userDetails: {
         ...state.userDetails,
         business: { ...state.userDetails.business, ...newState },
+      },
+    })),
+
+  updateBusinessQuickCalc: (newState) =>
+    set((state) => ({
+      userDetails: {
+        ...state.userDetails,
+        business: {
+          ...state.userDetails.business,
+          quickCalc: {
+            ...state.userDetails.business.quickCalc,
+            ...newState,
+          },
+        },
       },
     })),
 
