@@ -18,18 +18,18 @@ const Results = ({ monthlyValue }) => {
     <>
       <UnorderedList fontSize={["14px", "16px"]}>
         <ListItem>
-          Μικτό μηνιαίο: <strong>{monthly}</strong>
+          Μικτό μηνιαίο: <strong>{monthly}€</strong>
         </ListItem>
         <ListItem>
-          ΦΠΑ: <strong>{monthlyTax}</strong>
+          ΦΠΑ: <strong>{monthlyTax}€</strong>
         </ListItem>
         <ListItem>
-          Παρακράτηση: <strong>{monthlyWithholding}</strong>
+          Παρακράτηση: <strong>{monthlyWithholding}€</strong>
         </ListItem>
       </UnorderedList>
       <Text mt={2} fontSize={["14px", "16px"]}>
-        Ζητάς <strong>{askFor}</strong> και παίρνεις μικτό{" "}
-        <strong>{grossAsReadIncome}</strong> το μηνα
+        Τιμολογείς για <strong>{askFor}€</strong> και παίρνεις μικτά{" "}
+        <strong>{grossAsReadIncome}€</strong> το μήνα
       </Text>
     </>
   );
