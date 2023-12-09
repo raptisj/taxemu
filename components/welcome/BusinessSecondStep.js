@@ -5,6 +5,16 @@ import { useStore } from "store";
 export const BusinessSecondStep = () => {
   const userDetails = useStore((state) => state.userDetails);
   const updateBusiness = useStore((state) => state.updateBusiness);
+  const { taxationYear } = userDetails.business;
+
+  const currentInsuranceScales =
+    userDetails.business.taxationYearScales[taxationYear].insuranceScales;
+
+  const currentInsuranceScalesList = Object.keys(currentInsuranceScales).map(
+    (c, i) => {
+      return { value: c, text: currentInsuranceScales[c].amount };
+    }
+  );
 
   const handleInsurance = (value) => {
     updateBusiness({
@@ -52,14 +62,7 @@ export const BusinessSecondStep = () => {
               ].insuranceScales[
                 userDetails.business.insuranceScaleSelection
               ].amount.toString()}
-              options={[
-                { value: "0", text: 136 },
-                { value: "1", text: 220 },
-                { value: "2", text: 262 },
-                { value: "3", text: 312 },
-                { value: "4", text: 373 },
-                { value: "5", text: 445 },
-              ]}
+              options={currentInsuranceScalesList}
               menuTitle="Επίλεξε περίοδο"
               mb={4}
             />

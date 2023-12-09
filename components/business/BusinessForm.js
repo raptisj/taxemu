@@ -17,7 +17,7 @@ import { useStore } from "store";
 import { SidebarSubSection, SidebarSubSectionAccordion } from "../layout";
 import FormElements from "../input";
 import { useCalculateBusiness, useBusinessActions } from "hooks";
-import BussinessNegotiateWidget from "features/BussinessNegotiateWidget";
+import { BussinessNegotiateWidget } from "features";
 
 const BusinessForm = ({ showCalculatorType = true }) => {
   const userDetails = useStore((state) => state.userDetails.business);

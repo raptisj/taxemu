@@ -122,7 +122,7 @@ const initialState = {
     totalBusinessExpenses: 0,
     taxableIncome: 0,
     previousYearTaxInAdvance: 0,
-    taxationYear: 2022,
+    taxationYear: 2023,
     taxationYearScales: {
       2023: {
         value: 0,
@@ -216,7 +216,7 @@ const initialState = {
     quickCalc: {
       grossIncomeYearly: 0,
       currentAdditionalValueTax: 0.24,
-      currentWithholdingTax: 0.20,
+      currentWithholdingTax: 0.2,
       additionalValueTax: {
         24: {
           text: "24%",
@@ -226,7 +226,7 @@ const initialState = {
       withholdingTax: {
         20: {
           text: "20%",
-          value: 0.20,
+          value: 0.2,
         },
       },
     },
