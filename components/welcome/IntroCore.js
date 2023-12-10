@@ -16,8 +16,7 @@ export const IntroCore = () => {
   const isBusiness = calculatorType === "business";
   const name = isBusiness ? "Ελεύθερος επαγγελματίας" : "Μισθωτός";
 
-  const { grossIncomeMonthly, grossIncomeYearly, grossMonthOrYear } =
-    userDetails.business;
+  const { grossIncome, grossMonthOrYear } = userDetails.business;
   const isGrossMonthly = grossMonthOrYear === "month";
 
   const { activeInput } = employeeDetails;
@@ -43,15 +42,16 @@ export const IntroCore = () => {
   };
 
   const onChangeGrossIncome = (value, count = 12) => {
-    updateBusiness({
-      [isGrossMonthly ? "grossIncomeMonthly" : "grossIncomeYearly"]: Math.round(
-        Number(value)
-      ),
-      [isGrossMonthly ? "grossIncomeYearly" : "grossIncomeMonthly"]:
-        isGrossMonthly
-          ? Math.round(Number(value) * count)
-          : Math.round(Number(value) / count),
-    });
+    const grossIncome = {
+      month: isGrossMonthly
+        ? Math.round(Number(value))
+        : Math.round(Number(value) / count),
+      year: isGrossMonthly
+        ? Math.round(Number(value) * count)
+        : Math.round(Number(value)),
+    };
+
+    updateBusiness({ grossIncome });
   };
 
   const onChangeGrossIncomeEmployee = (value, count = 14) => {
@@ -147,8 +147,8 @@ export const IntroCore = () => {
                 onChange={(value) => onChangeGrossIncome(value)}
                 value={
                   grossMonthOrYear === "month"
-                    ? grossIncomeMonthly || ""
-                    : grossIncomeYearly || ""
+                    ? grossIncome.month || ""
+                    : grossIncome.year || ""
                 }
               />
             </Flex>

@@ -38,8 +38,7 @@ const BusinessForm = ({ showCalculatorType = true }) => {
   } = useBusinessActions();
 
   const {
-    grossIncomeYearly,
-    grossIncomeMonthly,
+    grossIncome,
     taxationYear,
     taxYearDuration,
     grossMonthOrYear,
@@ -129,8 +128,8 @@ const BusinessForm = ({ showCalculatorType = true }) => {
                 }
                 value={
                   grossMonthOrYear === "month"
-                    ? grossIncomeMonthly || ""
-                    : grossIncomeYearly || ""
+                    ? grossIncome.month || ""
+                    : grossIncome.year || ""
                 }
               >
                 <NumberInputField />
@@ -161,7 +160,7 @@ const BusinessForm = ({ showCalculatorType = true }) => {
               συντελεστής (9%) μειώνεται κατά 50%, δηλαδή η φορολογία
               είναι με 4,5%"
           isChecked={discountOptions.firstScaleDiscount}
-          isDisabled={grossIncomeYearly > 10000 || !grossIncomeYearly}
+          isDisabled={grossIncome.year > 10000 || !grossIncome.year}
           onChange={() =>
             updateBusiness({
               discountOptions: {

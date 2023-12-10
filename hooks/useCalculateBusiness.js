@@ -12,8 +12,7 @@ export const useCalculateBusiness = () => {
   const toast = useToast();
 
   const {
-    grossIncomeYearly,
-    grossIncomeMonthly,
+    grossIncome,
     taxationYearScales,
     taxationYear,
     taxYearDuration,
@@ -115,21 +114,21 @@ export const useCalculateBusiness = () => {
   const findMonthAmount = (value) => value / taxYearDuration;
 
   const centralCalculation = () => {
-    const throwError = !grossIncomeYearly || !grossIncomeMonthly;
+    const throwError = !grossIncome.year || !grossIncome.month;
 
     if (throwError) {
       showError();
     }
 
-    const grossPerYear = findYearAmount(grossIncomeYearly / 12);
-    const grossIncome = isGrossMonthly
-      ? findYearAmount(grossIncomeMonthly)
+    const grossPerYear = findYearAmount(grossIncome.year / 12);
+    const _grossIncome = isGrossMonthly
+      ? findYearAmount(grossIncome.month)
       : grossPerYear;
 
     const insurancePerYear = getInsuranceTotal("year");
 
     const taxableIncome =
-      grossIncome - insurancePerYear - extraBusinessExpenses;
+      _grossIncome - insurancePerYear - extraBusinessExpenses;
 
     const totalTax = calculateWithCurrentScales({
       toBeTaxed: taxableIncome,
@@ -171,7 +170,7 @@ export const useCalculateBusiness = () => {
       insurancePerYear;
 
     const prePaidTaxAmount = withholdingTax
-      ? grossIncomeMonthly * WITHHOLDING_TAX_PERCENTAGE
+      ? grossIncome.month * WITHHOLDING_TAX_PERCENTAGE
       : 0;
 
     const finalTaxAmount = {
@@ -190,7 +189,7 @@ export const useCalculateBusiness = () => {
 
     updateBusinessTable({
       grossIncome: {
-        month: grossIncomeMonthly,
+        month: grossIncome.month,
         year: grossPerYear,
       },
       finalIncome: {

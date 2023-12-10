@@ -1,15 +1,24 @@
 import create from "zustand";
 import {
   insuranceScales2021,
+  insuranceScales2022,
   insuranceScales2023,
   taxScales2021,
+  taxScales2022,
+  taxScales2023,
 } from "./constants";
 
 const initialState = {
   calculatorType: "employee",
-  // canInstallPWA and deferredPrompt are for PWA installation state
-  canInstallPWA: false,
-  deferredPrompt: null,
+  // canInstallPWA and deferredPrompt are for PWA installation state //
+  canInstallPWA: false, //////////////////////////////////////////////
+  deferredPrompt: null, /////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////
+  //
+  //////////////////////////////////////
+  //////// Employee ///////////////////
+  ////////////////////////////////////
+  //
   employee: {
     hasError: false,
     grossIncomeYearly: 0,
@@ -46,7 +55,7 @@ const initialState = {
       month: 0,
       year: 0,
     },
-    insuranceCarrier: "efka", // efka | tsmede
+    insuranceCarrier: "efka",
     taxationYearScales: {
       2023: {
         insurancePercentage: 0.1387,
@@ -110,10 +119,17 @@ const initialState = {
     },
     dirtyFormState: [],
   },
+  //
+  //////////////////////////////////////
+  //////// Business ///////////////////
+  ////////////////////////////////////
+  //
   business: {
     hasError: false,
-    grossIncomeYearly: 0,
-    grossIncomeMonthly: 0,
+    grossIncome: {
+      month: 0,
+      year: 0,
+    },
     finalIncomeYearly: 0,
     finalIncomeMonthly: 0,
     grossMonthOrYear: "year",
@@ -127,12 +143,12 @@ const initialState = {
       2023: {
         value: 0,
         ...insuranceScales2023,
-        ...taxScales2021,
+        ...taxScales2023,
       },
       2022: {
         value: 0,
-        ...insuranceScales2021,
-        ...taxScales2021,
+        ...insuranceScales2022,
+        ...taxScales2022,
       },
       2021: {
         value: 0,
@@ -166,6 +182,23 @@ const initialState = {
     },
     prePaidNextYearTax: false,
     withholdingTax: false,
+    quickCalc: {
+      grossIncomeYearly: 0,
+      currentAdditionalValueTax: 0.24,
+      currentWithholdingTax: 0.2,
+      additionalValueTax: {
+        24: {
+          text: "24%",
+          value: 0.24,
+        },
+      },
+      withholdingTax: {
+        20: {
+          text: "20%",
+          value: 0.2,
+        },
+      },
+    },
     tableResults: {
       finalIncome: {
         month: 0,
@@ -196,7 +229,7 @@ const initialState = {
         year: 0,
       },
       withholdingTax: false,
-      taxationYear: 2022,
+      taxationYear: 2023,
       taxYearDuration: 12,
       grossMonthOrYear: "year",
       discountOptions: {
@@ -213,23 +246,6 @@ const initialState = {
       prePaidNextYearTax: false,
     },
     dirtyFormState: [],
-    quickCalc: {
-      grossIncomeYearly: 0,
-      currentAdditionalValueTax: 0.24,
-      currentWithholdingTax: 0.2,
-      additionalValueTax: {
-        24: {
-          text: "24%",
-          value: 0.24,
-        },
-      },
-      withholdingTax: {
-        20: {
-          text: "20%",
-          value: 0.2,
-        },
-      },
-    },
   },
 };
 
@@ -263,13 +279,17 @@ export const useStore = create((set) => ({
       },
     })),
 
-  updateBusiness: (newState) =>
+  updateBusiness: (newState) => {
     set((state) => ({
       userDetails: {
         ...state.userDetails,
-        business: { ...state.userDetails.business, ...newState },
+        business: {
+          ...state.userDetails.business,
+          ...newState,
+        },
       },
-    })),
+    }));
+  },
 
   updateBusinessQuickCalc: (newState) =>
     set((state) => ({

@@ -20,6 +20,7 @@ export const insuranceScales2021 = {
     },
   },
 };
+export const insuranceScales2022 = insuranceScales2021;
 
 export const insuranceScales2023 = {
   insuranceScales: {
@@ -71,3 +72,5 @@ export const taxScales2021 = {
     },
   ],
 };
+export const taxScales2022 = taxScales2021;
+export const taxScales2023 = taxScales2021;

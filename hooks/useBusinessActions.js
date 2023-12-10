@@ -8,7 +8,7 @@ export const useBusinessActions = () => {
 
   const {
     grossMonthOrYear,
-    grossIncomeYearly,
+    grossIncome,
     tableResults,
     dirtyFormState,
     taxationYear,
@@ -36,15 +36,16 @@ export const useBusinessActions = () => {
   };
 
   const onChangeGrossIncome = (value, count) => {
-    updateBusiness({
-      [isGrossMonthly ? "grossIncomeMonthly" : "grossIncomeYearly"]: Math.round(
-        Number(value)
-      ),
-      [isGrossMonthly ? "grossIncomeYearly" : "grossIncomeMonthly"]:
-        isGrossMonthly
-          ? Math.round(Number(value) * count)
-          : Math.round(Number(value) / count),
-    });
+    const grossIncome = {
+      month: isGrossMonthly
+        ? Math.round(Number(value))
+        : Math.round(Number(value) / count),
+      year: isGrossMonthly
+        ? Math.round(Number(value) * count)
+        : Math.round(Number(value)),
+    };
+
+    updateBusiness({ grossIncome });
 
     setHasError({ entity: "business", value: false });
   };
@@ -83,10 +84,10 @@ export const useBusinessActions = () => {
   const spotFormChanges = () => {
     let dirty = dirtyFormState;
 
-    if (grossIncomeYearly !== tableResults.grossIncome.year) {
-      dirty = [...new Set([...dirty, "grossIncomeYearly"])];
+    if (grossIncome.year !== tableResults.grossIncome.year) {
+      dirty = [...new Set([...dirty, "grossIncome.year"])];
     } else {
-      dirty = dirty.filter((s) => s !== "grossIncomeYearly");
+      dirty = dirty.filter((s) => s !== "grossIncome.year");
     }
 
     if (taxationYear !== tableResults.taxationYear) {
@@ -177,7 +178,7 @@ export const useBusinessActions = () => {
       dirtyFormState: spotFormChanges(),
     });
   }, [
-    grossIncomeYearly,
+    grossIncome.year,
     taxationYear,
     taxYearDuration,
     grossMonthOrYear,
