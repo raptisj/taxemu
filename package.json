@@ -1,7 +1,7 @@
 {
   "name": "taxemu",
   "version": "0.1.0",
-  "private": true,
+  "description": "A tool to calculate your tax(for Greek taxpayers",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,6 +9,17 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/raptisj/taxemu"
+  },
+  "keywords": ["tax", "taxation", "business", "employee"],
+  "author": "John Raptis",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/raptisj/taxemu/issues"
+  },
+  "homepage": "https://github.com/raptisj/taxemu#readme",
   "dependencies": {
     "@chakra-ui/icons": "^2.0.2",
     "@chakra-ui/react": "^2.4.0",

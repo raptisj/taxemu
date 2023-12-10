@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { Box, Text, Flex } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 

@@ -1,24 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "../styles/globals.css";
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import * as gtag from "../config/gtag";
 import Script from "next/script";
 
-const theme = extendTheme({
-  styles: {
-    global: {
-      body: {
-        // background: "#f0f0f0",
-      },
-    },
-  },
-});
-
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleRouteChange = (url) => {
       gtag.pageview(url);
     };
@@ -101,7 +91,7 @@ function MyApp({ Component, pageProps }) {
         }}
       />
 
-      <ChakraProvider theme={theme}>
+      <ChakraProvider>
         <Component {...pageProps} />
       </ChakraProvider>
     </>

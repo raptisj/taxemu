@@ -7,7 +7,10 @@ export default function Document() {
         <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href="/icon.png"></link>
         <meta name="theme-color" content="#fff" />
-        <meta name="google-site-verification" content="u3IuC047hzSjfcduIVYX_fAaF-J8VzsWe6tTVKNbdFs" />
+        <meta
+          name="google-site-verification"
+          content="u3IuC047hzSjfcduIVYX_fAaF-J8VzsWe6tTVKNbdFs"
+        />
       </Head>
       <body>
         <Main />

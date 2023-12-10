@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { useStore } from "store";
 import { useToast } from "@chakra-ui/react";
+import { roundNumberWithFixed } from "utils";
 
 export const useCalculateBusiness = () => {
   const userDetails = useStore((state) => state.userDetails.business);
@@ -25,20 +26,39 @@ export const useCalculateBusiness = () => {
     extraBusinessExpenses,
     previousYearTaxInAdvance,
   } = userDetails;
+  const { specialInsuranceScale, prePaidTaxDiscount, firstScaleDiscount } =
+    discountOptions;
   const isGrossMonthly = grossMonthOrYear === "month";
 
-  const getInsuranceTotal = () => {
+  const getInsuranceTotal = (type = "month") => {
+    const insuranceScale = specialInsuranceScale ? 0 : insuranceScaleSelection;
     const insurancePerMonth =
-      taxationYearScales[taxationYear].insuranceScales[
-        discountOptions.specialInsuranceScale ? 0 : insuranceScaleSelection
-      ].amount;
-    const isYear = businessExpensesMonthOrYear === "year";
+      taxationYearScales[taxationYear].insuranceScales[insuranceScale].amount;
+    const isYear = businessExpensesMonthOrYear === "year" || type === "year";
 
     return isYear ? taxYearDuration * insurancePerMonth : insurancePerMonth;
   };
 
+  const withPrePaidDiscount = (value) => {
+    if (prePaidTaxDiscount) {
+      return roundNumberWithFixed(value * PRE_PAID_TAX_DISCOUNT);
+    }
+
+    return roundNumberWithFixed(value);
+  };
+
+  const withFirstScaleDiscount = (value) => {
+    if (firstScaleDiscount) {
+      return roundNumberWithFixed(value * FIRST_SCALE_TAX_DISCOUNT);
+    }
+
+    return roundNumberWithFixed(value);
+  };
+
+  // TODO: make these dynamic depending the year
   const WITHHOLDING_TAX_PERCENTAGE = 0.2;
   const PRE_PAID_TAX_DISCOUNT = 0.5;
+  const FIRST_SCALE_TAX_DISCOUNT = 0.5;
   const PRE_PAID_TAX_PERCENTAGE = 0.55;
   const SCALE_THRESHOLD = 10000;
 
@@ -51,10 +71,7 @@ export const useCalculateBusiness = () => {
         amount -= SCALE_THRESHOLD;
         scaleResult = scaleResult + 900;
       } else {
-        return (
-          (amount * 0.09 + scaleResult) *
-          (discountOptions.firstScaleDiscount ? 0.5 : 1)
-        );
+        return withFirstScaleDiscount(amount * 0.09 + scaleResult);
       }
 
       if (amount > SCALE_THRESHOLD) {
@@ -80,7 +97,7 @@ export const useCalculateBusiness = () => {
 
       return amount * 0.44 + scaleResult;
     },
-    [discountOptions.firstScaleDiscount]
+    [firstScaleDiscount]
   );
 
   const showError = () => {
@@ -94,6 +111,9 @@ export const useCalculateBusiness = () => {
     return setHasError({ entity: "business", value: true });
   };
 
+  const findYearAmount = (value) => value * taxYearDuration;
+  const findMonthAmount = (value) => value / taxYearDuration;
+
   const centralCalculation = () => {
     const throwError = !grossIncomeYearly || !grossIncomeMonthly;
 
@@ -101,16 +121,12 @@ export const useCalculateBusiness = () => {
       showError();
     }
 
-    const grossPerYear = (grossIncomeYearly / 12) * taxYearDuration;
-
+    const grossPerYear = findYearAmount(grossIncomeYearly / 12);
     const grossIncome = isGrossMonthly
-      ? grossIncomeMonthly * taxYearDuration
+      ? findYearAmount(grossIncomeMonthly)
       : grossPerYear;
 
-    const insurancePerYear =
-      taxationYearScales[taxationYear].insuranceScales[
-        discountOptions.specialInsuranceScale ? 0 : insuranceScaleSelection
-      ].amount * taxYearDuration;
+    const insurancePerYear = getInsuranceTotal("year");
 
     const taxableIncome =
       grossIncome - insurancePerYear - extraBusinessExpenses;
@@ -121,18 +137,17 @@ export const useCalculateBusiness = () => {
 
     updateBusiness({
       totalTax: {
-        month: totalTax / taxYearDuration,
+        month: findMonthAmount(totalTax),
         year: totalTax,
       },
     });
 
-    const _taxInAdvance =
-      totalTax *
-      PRE_PAID_TAX_PERCENTAGE *
-      (discountOptions.prePaidTaxDiscount ? PRE_PAID_TAX_DISCOUNT : 1);
+    const _taxInAdvance = withPrePaidDiscount(
+      totalTax * PRE_PAID_TAX_PERCENTAGE
+    );
 
     const taxInAdvanceValue = {
-      month: _taxInAdvance / taxYearDuration,
+      month: findMonthAmount(_taxInAdvance),
       year: _taxInAdvance,
     };
 
@@ -142,10 +157,7 @@ export const useCalculateBusiness = () => {
       });
 
       updateBusinessTable({
-        taxInAdvance: {
-          month: _taxInAdvance / taxYearDuration,
-          year: _taxInAdvance,
-        },
+        taxInAdvance: taxInAdvanceValue,
       });
     }
 
@@ -164,15 +176,15 @@ export const useCalculateBusiness = () => {
 
     const finalTaxAmount = {
       month: withholdingTax
-        ? totalTax / taxYearDuration - Math.round(prePaidTaxAmount)
-        : totalTax / taxYearDuration,
+        ? findMonthAmount(totalTax) - Math.round(prePaidTaxAmount)
+        : findMonthAmount(totalTax),
       year: withholdingTax
-        ? totalTax - Math.round(prePaidTaxAmount) * taxYearDuration
+        ? totalTax - findYearAmount(Math.round(prePaidTaxAmount))
         : totalTax,
     };
 
     const finalTaxAmountWithPrePaid = {
-      month: finalTaxAmount.month - previousYearTaxInAdvance / taxYearDuration,
+      month: finalTaxAmount.month - findMonthAmount(previousYearTaxInAdvance),
       year: finalTaxAmount.year - previousYearTaxInAdvance,
     };
 
@@ -182,21 +194,21 @@ export const useCalculateBusiness = () => {
         year: grossPerYear,
       },
       finalIncome: {
-        month: final / taxYearDuration,
+        month: findMonthAmount(final),
         year: final,
       },
       insurance: {
-        month: insurancePerYear / taxYearDuration,
+        month: findMonthAmount(insurancePerYear),
         year: insurancePerYear,
       },
       finalTax: finalTaxAmountWithPrePaid,
       businessExpenses: {
-        month: extraBusinessExpenses / taxYearDuration,
+        month: findMonthAmount(extraBusinessExpenses),
         year: extraBusinessExpenses,
       },
       withholdingTaxAmount: {
         month: Math.round(prePaidTaxAmount),
-        year: Math.round(prePaidTaxAmount) * taxYearDuration,
+        year: findYearAmount(Math.round(prePaidTaxAmount)),
       },
       withholdingTax,
       taxationYear,
@@ -208,7 +220,7 @@ export const useCalculateBusiness = () => {
       insuranceScaleSelection,
       extraBusinessExpenses,
       previousYearTaxInAdvance: {
-        month: previousYearTaxInAdvance / taxYearDuration,
+        month: findMonthAmount(previousYearTaxInAdvance),
         year: previousYearTaxInAdvance,
       },
       prePaidNextYearTax,
@@ -216,7 +228,7 @@ export const useCalculateBusiness = () => {
 
     updateBusiness({
       finalIncome: {
-        month: final / taxYearDuration,
+        month: findMonthAmount(final),
         year: final,
       },
       dirtyFormState: [],
