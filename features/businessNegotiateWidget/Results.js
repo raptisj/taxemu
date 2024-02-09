@@ -2,8 +2,8 @@ import { Text, ListItem, UnorderedList } from "@chakra-ui/react";
 import { useStore } from "store";
 
 const Results = ({ monthlyValue }) => {
-  const userDetails = useStore((state) => state.userDetails.business.quickCalc);
-  const { currentWithholdingTax, currentAdditionalValueTax } = userDetails;
+  const calculateRealGross = useStore((state) => state.userDetails.business.calculateRealGrossWidget);
+  const { currentWithholdingTax, currentAdditionalValueTax } = calculateRealGross;
 
   const monthly = monthlyValue.toFixed(2);
   const monthlyTax = (monthlyValue * currentAdditionalValueTax).toFixed(2);

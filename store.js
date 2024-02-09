@@ -32,7 +32,7 @@ const initialState = {
     grossMonthOrYear: "year",
     finalMonthOrYear: "year",
     salaryMonthCount: 14,
-    taxationYear: 2022,
+    taxationYear: 2023,
     taxableIncome: 0,
     ...taxScales2021,
     activeInput: "gross", // gross | final
@@ -130,6 +130,26 @@ const initialState = {
       month: 0,
       year: 0,
     },
+    finalIncome: {
+      month: 0,
+      year: 0,
+    },
+    insurance: {
+      month: 0,
+      year: 0,
+    },
+    totalTax: {
+      month: 0,
+      year: 0,
+    },
+    finalIncome: {
+      month: 0,
+      year: 0,
+    },
+    taxInAdvance: {
+      month: 0,
+      year: 0,
+    },
     finalIncomeYearly: 0,
     finalIncomeMonthly: 0,
     grossMonthOrYear: "year",
@@ -157,23 +177,6 @@ const initialState = {
       },
     },
     insuranceScaleSelection: 1,
-    insurance: {
-      month: 0,
-      year: 0,
-    },
-    totalTax: {
-      month: 0,
-      year: 0,
-    },
-    finalIncome: {
-      month: 0,
-      year: 0,
-    },
-    taxInAdvance: {
-      month: 0,
-      year: 0,
-    },
-    isFullYear: true,
     taxYearDuration: 12,
     discountOptions: {
       firstScaleDiscount: false,
@@ -182,7 +185,7 @@ const initialState = {
     },
     prePaidNextYearTax: false,
     withholdingTax: false,
-    quickCalc: {
+    calculateRealGrossWidget: {
       grossIncomeYearly: 0,
       currentAdditionalValueTax: 0.24,
       currentWithholdingTax: 0.2,
@@ -200,11 +203,11 @@ const initialState = {
       },
     },
     tableResults: {
-      finalIncome: {
+      grossIncome: {
         month: 0,
         year: 0,
       },
-      grossIncome: {
+      finalIncome: {
         month: 0,
         year: 0,
       },
@@ -246,6 +249,7 @@ const initialState = {
       prePaidNextYearTax: false,
     },
     dirtyFormState: [],
+    query: "",
   },
 };
 
@@ -297,8 +301,8 @@ export const useStore = create((set) => ({
         ...state.userDetails,
         business: {
           ...state.userDetails.business,
-          quickCalc: {
-            ...state.userDetails.business.quickCalc,
+          calculateRealGrossWidget: {
+            ...state.userDetails.business.calculateRealGrossWidget,
             ...newState,
           },
         },

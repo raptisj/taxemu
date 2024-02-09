@@ -204,6 +204,7 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
                 onChange={onSelectTaxationYear}
                 defaultValue={taxationYear}
                 options={[
+                  { value: "2023", text: "2023" },
                   { value: "2022", text: "2022" },
                   { value: "2021", text: "2021" },
                 ]}

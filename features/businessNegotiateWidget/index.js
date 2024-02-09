@@ -17,9 +17,9 @@ import { FormFields } from "./FormFields";
 
 const BusinessNegotiateWidget = () => {
   const inputRef = useRef(null);
-  const userDetails = useStore((state) => state.userDetails.business.quickCalc);
+  const calculateRealGross = useStore((state) => state.userDetails.business.calculateRealGrossWidget);
 
-  const monthlyValue = userDetails.grossIncomeYearly / 12 || 0;
+  const monthlyValue = calculateRealGross.grossIncomeYearly / 12 || 0;
 
   return (
     <Popover
@@ -49,7 +49,7 @@ const BusinessNegotiateWidget = () => {
           Υπολόγισε γρήγορα τι πρέπει να ζητήσεις όταν διαπραγματεύεσαι
         </PopoverHeader>
         <PopoverBody>
-          <FormFields ref={inputRef} />
+          <FormFields />
 
           <Box mt={3} p={2}>
             <Results monthlyValue={monthlyValue} />

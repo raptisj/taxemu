@@ -9,8 +9,8 @@ import {
 import { useStore } from "store";
 import FormElements from "components/input";
 
-const FormFields = ({ ref }) => {
-  const userDetails = useStore((state) => state.userDetails.business.quickCalc);
+const FormFields = () => {
+  const calculateRealGross = useStore((state) => state.userDetails.business.calculateRealGrossWidget);
   const updateBusinessQuickCalc = useStore(
     (state) => state.updateBusinessQuickCalc
   );
@@ -42,10 +42,9 @@ const FormFields = ({ ref }) => {
         <FormControl>
           <NumberInput
             autoFocus
-            ref={ref}
             mt={2}
             onChange={(value) => onChangeGrossIncome(value)}
-            value={userDetails.grossIncomeYearly || 0}
+            value={calculateRealGross.grossIncomeYearly || 0}
           >
             <NumberInputField />
           </NumberInput>

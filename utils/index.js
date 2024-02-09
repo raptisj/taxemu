@@ -9,9 +9,6 @@ export const calcFinal = (obj, type) => {
     .reduce((pre, cur) => (cur = pre - cur));
 };
 
-export const finalIncome = (amount, type) =>
-  calcFinal(amount, type) > 0 ? calcFinal(amount, type) : "------";
-
 export const sortByMultiplier = (a, b) => {
   if (a.multiplier < b.multiplier) {
     return -1;
