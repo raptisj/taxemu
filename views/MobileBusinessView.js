@@ -1,12 +1,32 @@
-import { Box, Button, useDisclosure } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 import Table from "components/table";
 import BusinessForm from "components/business/BusinessForm";
 import MobileDrawerForm from "components/layout/MobileDrawerForm";
 import { useCalculateBusiness } from "hooks";
+import { useRouter } from "next/router";
 
 const MobileBusinessView = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const { centralCalculation, hasError } = useCalculateBusiness();
+  const router = useRouter();
+  const { centralCalculation } = useCalculateBusiness();
+
+  const currentParams = new URLSearchParams(router.query);
+  const isDrawerOpen = currentParams.get("drawer-form");
+
+  const handleOpen = () => {
+    currentParams.set("drawer-form", "open");
+    router.push({
+      pathname: router.pathname,
+      query: currentParams.toString(),
+    });
+  };
+
+  const handleClose = () => {
+    currentParams.delete("drawer-form");
+    router.push({
+      pathname: router.pathname,
+      query: currentParams.toString(),
+    });
+  };
 
   return (
     <>
@@ -22,15 +42,15 @@ const MobileBusinessView = () => {
           width="100%"
           p={3}
         >
-          <Button variant="outline" onClick={onOpen} width="full">
+          <Button variant="outline" onClick={handleOpen} width="full">
             Αλλαγή παραμέτρων
           </Button>
         </Box>
       </Box>
 
       <MobileDrawerForm
-        isOpen={isOpen}
-        onClose={onClose}
+        isOpen={isDrawerOpen}
+        onClose={handleClose}
         onCalculate={centralCalculation}
       >
         <Box padding={4}>

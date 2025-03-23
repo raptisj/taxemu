@@ -34,7 +34,7 @@ const MobileBusinessTable = () => {
     <>
       <MobileTableHeader entity="ελεύθερου επαγγελματία" />
 
-      <Tabs isFitted mt={6}>
+      <Tabs isFitted mt={2}>
         <TabList>
           <Tab _focus={{ outline: 0 }}>Ανά μήνα</Tab>
           <Tab _focus={{ outline: 0 }}>Ανά έτος</Tab>

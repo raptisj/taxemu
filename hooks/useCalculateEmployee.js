@@ -25,6 +25,7 @@ export const useCalculateEmployee = () => {
     activeInput,
     grossMonthOrYear,
     finalMonthOrYear,
+    employerPercentages,
   } = userDetails;
 
   const SCALE_THRESHOLD = 10000;
@@ -96,6 +97,20 @@ export const useCalculateEmployee = () => {
     return setHasError({ entity: "employee", value: true });
   };
 
+  const omitDiscountIfNegative = (_taxBefore, _discount) => {
+    if (_discount < 0) {
+      return Math.ceil(_taxBefore);
+    }
+    return Math.round(Math.ceil(_taxBefore) - Math.ceil(_discount));
+  };
+
+  const applyIfReturnBaseInland = (_sumToBeTaxed) => {
+    if (discountOptions.returnBaseInland) {
+      return _sumToBeTaxed * RETURN_BASE_INLAND_PERCENTAGE;
+    }
+    return _sumToBeTaxed;
+  };
+
   const centralCalculation = (outsideGrossMonth = 0) => {
     const throwError =
       (activeInput === "gross" || activeInput === "final") &&
@@ -111,7 +126,14 @@ export const useCalculateEmployee = () => {
       activeInput === "gross" ? grossIncomeMonthly : outsideGrossMonth;
 
     const insuranceMonthly = Math.round(
-      Math.min(currentGrossMonth,taxationYearScales[taxationYear].maxTaxableSalary) * taxationYearScales[taxationYear].insurancePercentage
+      Math.min(
+        currentGrossMonth,
+        taxationYearScales[taxationYear].maxTaxableSalary
+      ) * taxationYearScales[taxationYear].insurancePercentage
+    );
+
+    const employerMonthlyDues = Math.round(
+      currentGrossMonth * employerPercentages[taxationYear].value
     );
 
     const sumToBeTaxed =
@@ -123,9 +145,7 @@ export const useCalculateEmployee = () => {
 
     const scales = calculateWithCurrentScales({
       currentScales: taxScales,
-      sumToBeTaxed: discountOptions.returnBaseInland
-        ? sumToBeTaxed * RETURN_BASE_INLAND_PERCENTAGE
-        : sumToBeTaxed,
+      sumToBeTaxed: applyIfReturnBaseInland(sumToBeTaxed),
     });
 
     const taxBeforeDiscount = scales
@@ -134,22 +154,37 @@ export const useCalculateEmployee = () => {
 
     const { discount } = calculateChildrenDiscount({
       amount: grossAfterInsuranceYearly,
-      childDiscountAmount: numberOfChildrenScales[numberOfChildren].discount,
+      childDiscountAmount:
+        numberOfChildrenScales[taxationYear][numberOfChildren].discount,
     });
 
     const canApplyDiscount =
       Math.ceil(taxBeforeDiscount) >
-      numberOfChildrenScales[numberOfChildren].discount;
+      numberOfChildrenScales[taxationYear][numberOfChildren].discount;
 
     // if discount is greater than taxBeforeDiscount make it 0
     const taxAfterDiscount = canApplyDiscount
-      ? Math.round(Math.ceil(taxBeforeDiscount) - Math.ceil(discount))
+      ? omitDiscountIfNegative(taxBeforeDiscount, discount)
       : 0;
 
     updateEmployee({
       initialTax: {
         month: Math.ceil(taxBeforeDiscount) / salaryMonthCount,
         year: Math.ceil(taxBeforeDiscount),
+      },
+      employerObligations: {
+        month: employerMonthlyDues,
+        year: employerMonthlyDues * salaryMonthCount,
+      },
+      childrenDiscountAmount: {
+        month: 0,
+        year: discount,
+      },
+      taxableIncome: {
+        month: Math.ceil(
+          applyIfReturnBaseInland(sumToBeTaxed) / salaryMonthCount
+        ),
+        year: applyIfReturnBaseInland(sumToBeTaxed),
       },
       taxAfterDiscount,
       currentInsuranceDiscount: Math.ceil(discount),
@@ -195,6 +230,9 @@ export const useCalculateEmployee = () => {
         },
         salaryMonthCount,
         numberOfChildren,
+        discountOptions: {
+          returnBaseInland: discountOptions.returnBaseInland,
+        },
       });
     }
 

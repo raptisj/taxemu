@@ -32,8 +32,11 @@ const initialState = {
     grossMonthOrYear: "year",
     finalMonthOrYear: "year",
     salaryMonthCount: 14,
-    taxationYear: 2023,
-    taxableIncome: 0,
+    taxationYear: 2025,
+    taxableIncome: {
+      month: 0,
+      year: 0,
+    },
     ...taxScales2021,
     activeInput: "gross", // gross | final
     taxAfterDiscount: 0,
@@ -55,8 +58,37 @@ const initialState = {
       month: 0,
       year: 0,
     },
+    employerPercentages: {
+      2025: {
+        value: 0.2179,
+      },
+      2024: {
+        value: 0.2229,
+      },
+      2023: {
+        value: 0.2229,
+      },
+      2022: {
+        value: 0.2229,
+      },
+      2021: {
+        value: 0.2229,
+      },
+    },
+    employerObligations: {
+      month: 0,
+      year: 0,
+    },
     insuranceCarrier: "efka",
     taxationYearScales: {
+      2025: {
+        insurancePercentage: 0.1337,
+        maxTaxableSalary: 7126.94,
+      },
+      2024: {
+        insurancePercentage: 0.1387,
+        maxTaxableSalary: 7126.94,
+      },
       2023: {
         insurancePercentage: 0.1387,
         maxTaxableSalary: 7126.94,
@@ -72,31 +104,96 @@ const initialState = {
     },
     servicesFMY: 0,
     numberOfChildren: 0,
+    childrenDiscountAmount: {
+      month: 0,
+      year: 0,
+    },
     numberOfChildrenScales: {
-      0: {
-        discount: 777,
+      2025: {
+        0: {
+          discount: 777,
+        },
+        1: {
+          discount: 900,
+        },
+        2: {
+          discount: 1120,
+        },
+        3: {
+          discount: 1340,
+        },
+        4: {
+          discount: 1560,
+        },
       },
-      1: {
-        discount: 810,
+      2024: {
+        0: {
+          discount: 777,
+        },
+        1: {
+          discount: 900,
+        },
+        2: {
+          discount: 1120,
+        },
+        3: {
+          discount: 1340,
+        },
+        4: {
+          discount: 1560,
+        },
       },
-      2: {
-        discount: 900,
+      2023: {
+        0: {
+          discount: 777,
+        },
+        1: {
+          discount: 810,
+        },
+        2: {
+          discount: 900,
+        },
+        3: {
+          discount: 1120,
+        },
+        4: {
+          discount: 1340,
+        },
       },
-      3: {
-        discount: 1120,
+      2022: {
+        0: {
+          discount: 777,
+        },
+        1: {
+          discount: 810,
+        },
+        2: {
+          discount: 900,
+        },
+        3: {
+          discount: 1120,
+        },
+        4: {
+          discount: 1340,
+        },
       },
-      4: {
-        discount: 1340,
+      2021: {
+        0: {
+          discount: 777,
+        },
+        1: {
+          discount: 810,
+        },
+        2: {
+          discount: 900,
+        },
+        3: {
+          discount: 1120,
+        },
+        4: {
+          discount: 1340,
+        },
       },
-      // 5: {
-      //   discount: 1560,
-      // },
-      // 6: {
-      //   discount: 1780,
-      // },
-      // 7: {
-      //   discount: 2000,
-      // },
     },
     tableResults: {
       finalIncome: {

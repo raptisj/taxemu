@@ -29,11 +29,33 @@ const Wiki = () => {
   const [isLargerThan30] = useMediaQuery("(min-width: 30em)");
   const entity = router.pathname.replace("/", "");
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const {
-    isOpen: isDrawerOpen,
-    onOpen: onOpenDrawer,
-    onClose: onCloseDrawer,
-  } = useDisclosure();
+
+  const currentParams = new URLSearchParams(router.query);
+  const isDrawerOpen = currentParams.get("drawer-wiki");
+
+  const handleOpen = () => {
+    if (isLargerThan30) {
+      onOpen();
+    } else {
+      currentParams.set("drawer-wiki", "open");
+      router.push({
+        pathname: router.pathname,
+        query: currentParams.toString(),
+      });
+    }
+  };
+
+  const handleClose = () => {
+    if (isLargerThan30) {
+      onClose();
+    } else {
+      currentParams.delete("drawer-wiki");
+      router.push({
+        pathname: router.pathname,
+        query: currentParams.toString(),
+      });
+    }
+  };
 
   return (
     <>
@@ -42,21 +64,21 @@ const Wiki = () => {
           {isLargerThan30 ? (
             <Button
               height="30px"
-              onClick={onOpen}
+              onClick={handleOpen}
               fontSize=".9rem"
               leftIcon={<BookIcon width={26} height={26} />}
             >
               Πως υπολογίζεται
             </Button>
           ) : (
-            <Box height="30px" onClick={onOpenDrawer}>
+            <Box height="30px" onClick={handleOpen}>
               <Image src={bookIcon} alt="" width={26} height={26} />
             </Box>
           )}
         </>
       )}
       {isLargerThan30 && (
-        <Modal onClose={onClose} size="xl" isOpen={isOpen}>
+        <Modal onClose={handleClose} size="xl" isOpen={isOpen}>
           <ModalOverlay />
           <ModalContent>
             <ModalHeader borderBottomWidth="1px" borderBottomColor="gray.200">
@@ -85,7 +107,7 @@ const Wiki = () => {
       {!isLargerThan30 && (
         <Drawer
           placement="right"
-          onClose={onCloseDrawer}
+          onClose={handleClose}
           isOpen={isDrawerOpen}
           size="full"
         >

@@ -1,5 +1,5 @@
 import { Box, Grid, Flex, GridItem } from "@chakra-ui/react";
-import { CreditsFooter, Sidebar } from "../components/layout";
+import { Sidebar } from "../components/layout";
 import Table from "../components/table";
 import { useCalculateBusiness } from "hooks";
 import BusinessForm from "components/business/BusinessForm";
@@ -15,16 +15,18 @@ const BusinessView = () => {
       templateColumns={["1fr", "386px 1fr"]}
       gap={6}
       maxW="1200px"
-      mt={[10, 16]}
+      mt={[8, 16]}
       px={[0, 4]}
       pt={[0, 4]}
     >
-      <GridItem>
+      <GridItem minHeight="calc(100vh - 135px)">
         <Sidebar
           onSubmitAction={centralCalculation}
           onClear={removeUserDetails}
         >
-          <BusinessForm />
+          <Box pb={6}>
+            <BusinessForm />
+          </Box>
         </Sidebar>
       </GridItem>
 
@@ -37,16 +39,6 @@ const BusinessView = () => {
         <Flex position="sticky" top={8} flexDirection="column" height="100%">
           <Table.Header onSubmitAction={centralCalculation} />
           <Table.Business />
-
-          <Box
-            textAlign="end"
-            p={4}
-            position="sticky"
-            bottom={2}
-            marginTop="auto"
-          >
-            <CreditsFooter />
-          </Box>
         </Flex>
       </GridItem>
     </Grid>

@@ -52,6 +52,7 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
     finalIncomeYearly,
     finalIncomeMonthly,
     finalMonthOrYear,
+    taxationYearScales,
   } = userDetails;
 
   const calculatorTypeValue = pathname?.split("/")[1];
@@ -63,6 +64,10 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
 
     push(`/${value}`);
   };
+
+  const insuranceTaxationYearList = Object.keys(taxationYearScales)
+    .reverse()
+    .map((t) => ({ value: t, text: t }));
 
   return (
     <>
@@ -203,11 +208,7 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
                 label="Φορολογικό έτος"
                 onChange={onSelectTaxationYear}
                 defaultValue={taxationYear}
-                options={[
-                  { value: "2023", text: "2023" },
-                  { value: "2022", text: "2022" },
-                  { value: "2021", text: "2021" },
-                ]}
+                options={[...insuranceTaxationYearList]}
               />
             </Box>
 
@@ -216,10 +217,8 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
                 label="Ασφαλιστικός φορέας"
                 onChange={onSelectInsuranceCarrier}
                 defaultValue={insuranceCarrier}
-                options={[
-                  { value: "efka", text: "ΕΦΚΑ" },
-                  // { value: "tsmede", text: "ΤΣΜΕΔΕ" }, TODO: find the formula
-                ]}
+                options={[{ value: "efka", text: "ΕΦΚΑ" }]}
+                disabled
               />
             </Box>
 

@@ -21,13 +21,16 @@ const MobileEmployeeTable = () => {
     grossIncomeYearly,
     finalTax,
     insurance,
+    employerObligations,
+    childrenDiscountAmount,
+    taxableIncome,
   } = userDetails;
 
   return (
     <>
-      <MobileTableHeader entity='μισθωτού' />
+      <MobileTableHeader entity="μισθωτού" />
 
-      <Tabs isFitted mt={6}>
+      <Tabs isFitted mt={2}>
         <TabList>
           <Tab _focus={{ outline: 0 }}>Ανά μήνα</Tab>
           <Tab _focus={{ outline: 0 }}>Ανά έτος</Tab>
@@ -54,6 +57,11 @@ const MobileEmployeeTable = () => {
             </Flex>
 
             <Flex padding={3} justifyContent="space-between">
+              <Text fontSize="sm">Φορολογητέο Εισόδημα</Text>
+              <Text>{formatCellValue(taxableIncome.month)}</Text>
+            </Flex>
+
+            <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Φόρος εισοδήματος</Text>
               <Text>
                 {formatCellValue(
@@ -62,6 +70,16 @@ const MobileEmployeeTable = () => {
                     : null
                 )}
               </Text>
+            </Flex>
+
+            <Flex padding={3} justifyContent="space-between">
+              <Text fontSize="sm">Έκπτωση τέκνων</Text>
+              <Text>{formatCellValue(childrenDiscountAmount.month)}</Text>
+            </Flex>
+
+            <Flex padding={3} justifyContent="space-between">
+              <Text fontSize="sm">Εργοδοτικές Εισφορές</Text>
+              <Text>{formatCellValue(employerObligations.month)}</Text>
             </Flex>
           </TabPanel>
           <TabPanel p={0} pt={4}>
@@ -79,6 +97,12 @@ const MobileEmployeeTable = () => {
               <Text fontSize="sm">Ασφαλιστικές εισφορές</Text>
               <Text>{formatCellValue(insurance.year)}</Text>
             </Flex>
+
+            <Flex padding={3} justifyContent="space-between">
+              <Text fontSize="sm">Φορολογητέο Εισόδημα</Text>
+              <Text>{formatCellValue(taxableIncome.year)}</Text>
+            </Flex>
+
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Φόρος εισοδήματος</Text>
               <Text>
@@ -88,6 +112,16 @@ const MobileEmployeeTable = () => {
                     : null
                 )}
               </Text>
+            </Flex>
+
+            <Flex padding={3} justifyContent="space-between">
+              <Text fontSize="sm">Έκπτωση τέκνων</Text>
+              <Text>{formatCellValue(childrenDiscountAmount.year)}</Text>
+            </Flex>
+
+            <Flex padding={3} justifyContent="space-between">
+              <Text fontSize="sm">Εργοδοτικές Εισφορές</Text>
+              <Text>{formatCellValue(employerObligations.year)}</Text>
             </Flex>
           </TabPanel>
         </TabPanels>

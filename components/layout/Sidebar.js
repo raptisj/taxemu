@@ -5,14 +5,13 @@ import { SubmitButtonContent } from "../form";
 export const Sidebar = ({ children, onSubmitAction, onClear }) => {
   return (
     <>
-      <Box minHeight="calc(100vh - 258px)">
-        {children}
-      </Box>
+      <Box minHeight="calc(100vh - 258px)">{children}</Box>
       <Flex
         position="sticky"
         bottom={0}
-        mt="32px"
-        p="16px"
+        mt="auto"
+        py={4}
+        pr={4}
         borderTop=" 1px solid #E2E8F0"
         width="106%"
         background="#fff"

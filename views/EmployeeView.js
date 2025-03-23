@@ -1,9 +1,11 @@
 import { Box, Grid, Flex, GridItem } from "@chakra-ui/react";
 import { useStore } from "store";
-import { CreditsFooter, Sidebar } from "components/layout";
+import { Sidebar } from "components/layout";
 import Table from "components/table";
 import { useCalculateEmployee } from "hooks";
 import EmployeeForm from "components/employee/EmployeeForm";
+import { WageComparisonChart } from "features/wageComparisonChart";
+import { InflationDesktopWidget } from "features/inflationDesktopWidget";
 
 const EmployeeView = () => {
   const { centralCalculation, reverseCentralCalculation } =
@@ -25,15 +27,19 @@ const EmployeeView = () => {
       px={[0, 4]}
       pt={[0, 4]}
     >
-      <GridItem>
-        <Sidebar
-          onSubmitAction={
-            isGrossAction ? centralCalculation : reverseCentralCalculation
-          }
-          onClear={removeUserDetails}
-        >
-          <EmployeeForm />
-        </Sidebar>
+      <GridItem minHeight="calc(100vh - 135px)">
+        <Flex direction="column" height="100%">
+          <Sidebar
+            onClear={removeUserDetails}
+            onSubmitAction={
+              isGrossAction ? centralCalculation : reverseCentralCalculation
+            }
+          >
+            <Box pb={6}>
+              <EmployeeForm />
+            </Box>
+          </Sidebar>
+        </Flex>
       </GridItem>
 
       <GridItem
@@ -42,7 +48,13 @@ const EmployeeView = () => {
         paddingLeft="40px"
         position="relative"
       >
-        <Flex position="sticky" top={8} flexDirection="column" height="100%">
+        <Flex
+          position="sticky"
+          top={8}
+          flexDirection="column"
+          height="100%"
+          pb={20}
+        >
           <Table.Header
             onSubmitAction={
               isGrossAction ? centralCalculation : reverseCentralCalculation
@@ -50,14 +62,10 @@ const EmployeeView = () => {
           />
           <Table.Employee />
 
-          <Box
-            textAlign="end"
-            p={4}
-            position="sticky"
-            bottom={2}
-            marginTop="auto"
-          >
-            <CreditsFooter />
+          <WageComparisonChart />
+
+          <Box pr={4} mt={4}>
+            <InflationDesktopWidget />
           </Box>
         </Flex>
       </GridItem>

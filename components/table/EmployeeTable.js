@@ -21,13 +21,16 @@ const EmployeeTable = () => {
     tableResults: { grossIncome, finalIncome },
     finalTax, // TODO: add this in table result
     insurance, // TODO: add this in table result
+    employerObligations,
+    childrenDiscountAmount,
+    taxableIncome,
   } = userDetails;
 
   return (
     <TableContainer mt={6} background="#ffffff70">
       <Table variant="simple">
         <TableCaption color="gray.500" textAlign="left">
-          Οι υπολογισμοί είναι κατά προσέγγιση και δεν αποτελούν λογιστικη
+          Οι υπολογισμοί είναι κατά προσέγγιση και δεν αποτελούν λογιστική
           συμβουλή*
         </TableCaption>
         <Thead>
@@ -94,6 +97,24 @@ const EmployeeTable = () => {
           <Tr>
             <Td border="none">
               <Text color="gray.700" fontWeight="500" fontSize="sm">
+                Φορολογητέο Εισόδημα
+              </Text>
+            </Td>
+            <Td border="none">
+              <Text color="gray.700" fontSize="sm">
+                {formatCellValue(taxableIncome.month)}
+              </Text>
+            </Td>
+            <Td isNumeric border="none">
+              <Text color="gray.700" fontSize="sm" textAlign="left">
+                {formatCellValue(taxableIncome.year)}
+              </Text>
+            </Td>
+          </Tr>
+
+          <Tr>
+            <Td border="none">
+              <Text color="gray.700" fontWeight="500" fontSize="sm">
                 Φόρος εισοδήματος
               </Text>
             </Td>
@@ -113,6 +134,42 @@ const EmployeeTable = () => {
                     ? finalTax.year
                     : null
                 )}
+              </Text>
+            </Td>
+          </Tr>
+
+          <Tr>
+            <Td border="none">
+              <Text color="gray.700" fontWeight="500" fontSize="sm">
+                Έκπτωση τέκνων
+              </Text>
+            </Td>
+            <Td border="none">
+              <Text color="gray.700" fontSize="sm">
+                {formatCellValue(childrenDiscountAmount.month)}
+              </Text>
+            </Td>
+            <Td isNumeric border="none">
+              <Text color="gray.700" fontSize="sm" textAlign="left">
+                {formatCellValue(childrenDiscountAmount.year)}
+              </Text>
+            </Td>
+          </Tr>
+
+          <Tr>
+            <Td border="none">
+              <Text color="gray.700" fontWeight="500" fontSize="sm">
+                Εργοδοτικές Εισφορές
+              </Text>
+            </Td>
+            <Td border="none">
+              <Text color="gray.700" fontSize="sm">
+                {formatCellValue(employerObligations.month)}
+              </Text>
+            </Td>
+            <Td isNumeric border="none">
+              <Text color="gray.700" fontSize="sm" textAlign="left">
+                {formatCellValue(employerObligations.year)}
               </Text>
             </Td>
           </Tr>
