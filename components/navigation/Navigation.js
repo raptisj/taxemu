@@ -43,11 +43,14 @@ export const Navigation = () => {
 
   return (
     <Flex justifyContent="space-between" width="100%" zIndex={1}>
-      <Link href="/welcome">
-        <Flex flexDirection="column">
-          <Image src={logo} alt="Taxemu" />
-        </Flex>
-      </Link>
+      <Flex gap={6} alignItems="flex-end">
+        <Link href="/welcome">
+          <Flex flexDirection="column">
+            <Image src={logo} alt="Taxemu" />
+          </Flex>
+        </Link>
+        {/* <Link href={""}>Blog</Link> */}
+      </Flex>
 
       <Flex gap={4} alignItems="center">
         {canInstallPWA && (
