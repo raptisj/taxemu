@@ -1,4 +1,4 @@
-import { useMediaQuery } from "@chakra-ui/react";
+import { useMediaQuery, Box } from "@chakra-ui/react";
 import { Navigation } from "components/navigation";
 import { Layout } from "components/layout";
 import MobileBusinessView from "views/MobileBusinessView";
@@ -11,7 +11,14 @@ const Business = () => {
   return (
     <Layout>
       <Navigation />
-      {isMobile ? <MobileBusinessView /> : <BusinessView />}
+      <Box
+        px={{ base: "1rem", md: "5rem" }}
+        maxWidth="1366px"
+        mx="auto"
+        width="100%"
+      >
+        {isMobile ? <MobileBusinessView /> : <BusinessView />}
+      </Box>
     </Layout>
   );
 };

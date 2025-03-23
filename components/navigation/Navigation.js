@@ -1,10 +1,13 @@
 import { Box, Flex, useMediaQuery } from "@chakra-ui/react";
 import { useStore } from "store";
 import logo from "../../assets/taxemu.svg";
+import ebookDesktop from "../../assets/ebook-nav-desktop.png";
+import ebookMobile from "../../assets/ebook-nav-mobile.png";
 import Image from "next/image";
 import { useEffect } from "react";
 import { DownloadIcon } from "@chakra-ui/icons";
 import Link from "next/link";
+import { ENABLE_EBOOK } from "../../constants";
 import { Wiki } from "../../features";
 
 export const Navigation = () => {
@@ -42,25 +45,46 @@ export const Navigation = () => {
   };
 
   return (
-    <Flex justifyContent="space-between" width="100%" zIndex={1}>
-      <Flex gap={6} alignItems="flex-end">
-        <Link href="/welcome">
-          <Flex flexDirection="column">
-            <Image src={logo} alt="Taxemu" />
-          </Flex>
-        </Link>
-        {/* <Link href={""}>Blog</Link> */}
-      </Flex>
+    <>
+      <Flex
+        justifyContent="space-between"
+        alignItems="center"
+        width="100%"
+        zIndex={1}
+        px={{ base: "1rem", md: "5rem" }}
+        maxWidth="1366px"
+        mx="auto"
+      >
+        <Flex gap={6} alignItems="flex-end">
+          <Link href="/welcome">
+            <Flex flexDirection="column">
+              <Image src={logo} alt="Taxemu" />
+            </Flex>
+          </Link>
+          {/* <Link href={""}>Blog</Link> */}
+        </Flex>
 
-      <Flex gap={4} alignItems="center">
-        {canInstallPWA && (
-          <Box onClick={onClickInstallApp}>
-            {!isLargerThan30 && <DownloadIcon />}
-          </Box>
-        )}
+        <Flex gap={4} alignItems="center">
+          {canInstallPWA && (
+            <Box onClick={onClickInstallApp}>
+              {!isLargerThan30 && <DownloadIcon />}
+            </Box>
+          )}
 
-        <Wiki />
+          <Wiki />
+
+          {isLargerThan30 && ENABLE_EBOOK && (
+            <Box cursor="pointer">
+              <Image src={ebookDesktop} alt="" style={{ width: "240px" }} />
+            </Box>
+          )}
+        </Flex>
       </Flex>
-    </Flex>
+      {!isLargerThan30 && ENABLE_EBOOK && (
+        <Box cursor="pointer" mt={4}>
+          <Image src={ebookMobile} alt="" />
+        </Box>
+      )}
+    </>
   );
 };

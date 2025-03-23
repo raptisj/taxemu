@@ -40,7 +40,7 @@ const MobileEmployeeView = () => {
 
   return (
     <>
-      <Box position="relative" height="calc(100vh - 150px)" mt={[8, 16]}>
+      <Box position="relative" height="calc(100vh - 150px)" mt={[6, 16]}>
         <Box pb={20}>
           <Table.MobileEmployeeTable />
 
