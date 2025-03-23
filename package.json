@@ -1,7 +1,7 @@
 {
   "name": "taxemu",
   "version": "0.1.0",
-  "description": "A tool to calculate your tax(for Greek taxpayers",
+  "description": "A tool to calculate your tax(for Greek taxpayers)",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -31,10 +31,10 @@
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "framer-motion": "^6.3.10",
-    "next": "12.1.6",
     "next-pwa": "^5.5.4",
-    "react": "18.1.0",
-    "react-dom": "18.1.0",
+    "next": "14.2.11",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
     "recharts": "^2.15.1",
     "zustand": "^4.0.0-rc.1"
   },

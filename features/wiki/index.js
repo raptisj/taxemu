@@ -71,7 +71,7 @@ const Wiki = () => {
               Πως υπολογίζεται
             </Button>
           ) : (
-            <Box height="30px" onClick={handleOpen}>
+            <Box onClick={handleOpen}>
               <Image src={bookIcon} alt="" width={26} height={26} />
             </Box>
           )}
