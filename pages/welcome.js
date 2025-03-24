@@ -38,8 +38,11 @@ const ActionButtons = ({ tabIndex, onClick, onNext, onClickRedirection }) => {
       <Flex
         mt="64px"
         alignItems="center"
-        width={{ base: "full", sm: "auto" }}
         flexDirection={{ base: "column-reverse", sm: "row" }}
+        px={{ base: "1rem", md: "5rem" }}
+        maxWidth="1366px"
+        width="100%"
+        mx="auto"
       >
         {tabIndex > 0 && (
           <Stepper.NavigationButton
@@ -62,10 +65,18 @@ const ActionButtons = ({ tabIndex, onClick, onNext, onClickRedirection }) => {
       </Flex>
 
       {tabIndex === 0 && (
-        <Stepper.RedirectButton
-          onClick={onClickRedirection}
-          text="Απ’ευθείας στον υπολογιστή φόρου"
-        />
+        <Box
+          px={{ base: "1rem", md: "5rem" }}
+          maxWidth="1366px"
+          width="100%"
+          mt="auto"
+          mx="auto"
+        >
+          <Stepper.RedirectButton
+            onClick={onClickRedirection}
+            text="Απ’ευθείας στον υπολογιστή φόρου"
+          />
+        </Box>
       )}
     </>
   );
@@ -76,7 +87,7 @@ const boxStyles = {
   bottom: 0,
   left: 0,
   width: "100%",
-  p: 3,
+  // p: 3,
 };
 
 const WrapperBox = ({ children, condition }) => {
@@ -155,15 +166,22 @@ const Welcome = () => {
     <Layout pb={8}>
       <Navigation />
 
-      <Tabs index={tabIndex}>
-        <TabPanels>
-          {tabComponents.map((component) => (
-            <TabPanel key={component.type} p={0}>
-              {component}
-            </TabPanel>
-          ))}
-        </TabPanels>
-      </Tabs>
+      <Box
+        px={{ base: "1rem", md: "5rem" }}
+        maxWidth="1366px"
+        mx="auto"
+        width="100%"
+      >
+        <Tabs index={tabIndex}>
+          <TabPanels>
+            {tabComponents.map((component) => (
+              <TabPanel key={component.type} p={0}>
+                {component}
+              </TabPanel>
+            ))}
+          </TabPanels>
+        </Tabs>
+      </Box>
 
       <WrapperBox condition={!isLargerThan30}>
         <ActionButtons
