@@ -3,14 +3,16 @@ import { Meta } from "../meta";
 import bg from "../../assets/bg.png";
 import bgMobile from "../../assets/bg-mobile.png";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 export const Layout = ({ children, ...rest }) => {
   const [isLargerThan30] = useMediaQuery("(min-width: 30em)");
   const isMobile = !isLargerThan30;
+  const router = useRouter();
 
   return (
     <>
-      <Meta />
+      {!router.pathname.includes("/blog") && <Meta />}
 
       <Flex
         minH="100vh"
