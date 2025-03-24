@@ -85,9 +85,10 @@ article li {
 }
 
 article a {
-  color: #0070f3;
+  color: #805ad5;
   text-decoration: none;
   transition: color 0.2s ease;
+  font-weight: 600;
 }
 
 article a:hover {
