@@ -7,6 +7,14 @@ import {
   TabPanel,
   TabPanels,
   useMediaQuery,
+  Grid,
+  GridItem,
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Heading,
+  Button,
 } from "@chakra-ui/react";
 import {
   IntroCore,
@@ -14,6 +22,7 @@ import {
   MobileIntroCore,
   MobileBusinessSecondStep,
 } from "../components/welcome";
+import welcomeEbook from "../assets/welcome-ebook.png";
 import { useStore } from "store";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
@@ -21,6 +30,7 @@ import Stepper from "components/stepper";
 import { Layout } from "../components/layout";
 import { Navigation } from "../components/navigation";
 import { useCalculateBusiness, useCalculateEmployee } from "hooks";
+import Image from "next/image";
 
 const desktopTabs = {
   intro: <IntroCore />,
@@ -39,8 +49,6 @@ const ActionButtons = ({ tabIndex, onClick, onNext, onClickRedirection }) => {
         mt="64px"
         alignItems="center"
         flexDirection={{ base: "column-reverse", sm: "row" }}
-        px={{ base: "1rem", md: "5rem" }}
-        maxWidth="1366px"
         width="100%"
         mx="auto"
       >
@@ -65,13 +73,7 @@ const ActionButtons = ({ tabIndex, onClick, onNext, onClickRedirection }) => {
       </Flex>
 
       {tabIndex === 0 && (
-        <Box
-          px={{ base: "1rem", md: "5rem" }}
-          maxWidth="1366px"
-          width="100%"
-          mt="auto"
-          mx="auto"
-        >
+        <Box width="100%" mt="auto" mx="auto">
           <Stepper.RedirectButton
             onClick={onClickRedirection}
             text="Απ’ευθείας στον υπολογιστή φόρου"
@@ -87,7 +89,7 @@ const boxStyles = {
   bottom: 0,
   left: 0,
   width: "100%",
-  // p: 3,
+  p: 3,
 };
 
 const WrapperBox = ({ children, condition }) => {
@@ -162,39 +164,87 @@ const Welcome = () => {
     );
   };
 
+  const trackEbookButtonClick = (deviceType = "desktop") => {
+    if (typeof window !== "undefined") {
+      window.gtag("event", "click_ebook", {
+        event_category: "Ebook",
+        event_label: "Clicked to buy ebook",
+        device_type: deviceType,
+      });
+    }
+  };
+
+  const onClickLink = (deviceType = "desktop") => {
+    // trackEbookButtonClick(deviceType);
+    window.open("https://taxemu.gumroad.com/l/uiyfzl", "_blank");
+  };
+
   return (
     <Layout pb={8}>
       <Navigation />
-
-      <Box
+      <Grid
+        gap={2}
         px={{ base: "1rem", md: "5rem" }}
-        maxWidth="1366px"
-        mx="auto"
+        gridTemplateColumns={["1fr", "minmax(500px, 710px) 1fr"]}
         width="100%"
+        maxWidth="1366px"
+        margin="0 auto"
+        height="calc(100vh - 88px)"
       >
-        <Tabs index={tabIndex}>
-          <TabPanels>
-            {tabComponents.map((component) => (
-              <TabPanel key={component.type} p={0}>
-                {component}
-              </TabPanel>
-            ))}
-          </TabPanels>
-        </Tabs>
-      </Box>
+        <GridItem display="flex" flexDirection="column">
+          <Box maxWidth="1366px" mx="auto" width="100%" mt={[0, 20]}>
+            <Tabs index={tabIndex}>
+              <TabPanels>
+                {tabComponents.map((component) => (
+                  <TabPanel key={component.type} p={0}>
+                    {component}
+                  </TabPanel>
+                ))}
+              </TabPanels>
+            </Tabs>
+          </Box>
+          <WrapperBox condition={!isLargerThan30}>
+            <ActionButtons
+              tabIndex={tabIndex}
+              onNext={onNext}
+              onClickRedirection={() => router.push(`/${calculatorType}`)}
+              onClick={() =>
+                router.push({
+                  query: { ...router.query, tab: tabNames[tabIndex - 1] },
+                })
+              }
+            />
+          </WrapperBox>
+        </GridItem>
 
-      <WrapperBox condition={!isLargerThan30}>
-        <ActionButtons
-          tabIndex={tabIndex}
-          onNext={onNext}
-          onClickRedirection={() => router.push(`/${calculatorType}`)}
-          onClick={() =>
-            router.push({
-              query: { ...router.query, tab: tabNames[tabIndex - 1] },
-            })
-          }
-        />
-      </WrapperBox>
+        {/* <GridItem
+          display={["none", "flex"]}
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Card maxW="370px" minW="350px">
+            <CardHeader>
+              <Image src={welcomeEbook} alt="" style={{ margin: "0 auto" }} />
+              <Heading fontSize="1.1rem" textAlign="center" fontWeight={600}>
+                {" "}
+                Πρώτη φορά διαπραγματεύεστε το μισθό σας;
+              </Heading>
+            </CardHeader>
+            <CardBody py={0}>
+              <Text textAlign="center" color="gray.700" fontSize=".9rem">
+                Ο εξειδικευμένος οδηγός μας μπορεί να σας βοηθήσει να
+                μεγιστοποιήσετε την προσφορά σας.
+              </Text>
+            </CardBody>
+            <CardFooter>
+              <Button width="full" variant="outline" onClick={onClickLink}>
+                Δείτε πως
+              </Button>
+            </CardFooter>
+          </Card>
+        </GridItem> */}
+      </Grid>
     </Layout>
   );
 };
