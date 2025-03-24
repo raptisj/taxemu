@@ -98,4 +98,4 @@ export const inflationRatesMap = {
   2025: 0.024,
 };
 
-export const ENABLE_EBOOK = false;
+export const ENABLE_EBOOK = true;
