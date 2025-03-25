@@ -1,7 +1,7 @@
 import { Box, Flex, useMediaQuery, Text } from "@chakra-ui/react";
 import { useStore } from "store";
 import logo from "../../assets/taxemu.svg";
-import ebookDesktop from "../../assets/ebook-nav-desktop.png";
+import ebookDesktop from "../../assets/ebook-nav-desktop.svg";
 import ebookMobile from "../../assets/ebook-nav-mobile.png";
 import Image from "next/image";
 import { useEffect } from "react";
