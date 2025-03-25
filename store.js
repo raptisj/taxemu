@@ -3,6 +3,8 @@ import {
   insuranceScales2021,
   insuranceScales2022,
   insuranceScales2023,
+  insuranceScales2024,
+  insuranceScales2025,
   taxScales2021,
   taxScales2022,
   taxScales2023,
@@ -255,8 +257,18 @@ const initialState = {
     totalBusinessExpenses: 0,
     taxableIncome: 0,
     previousYearTaxInAdvance: 0,
-    taxationYear: 2023,
+    taxationYear: 2025,
     taxationYearScales: {
+      2025: {
+        value: 0,
+        ...insuranceScales2025,
+        ...taxScales2023,
+      },
+      2024: {
+        value: 0,
+        ...insuranceScales2024,
+        ...taxScales2023,
+      },
       2023: {
         value: 0,
         ...insuranceScales2023,

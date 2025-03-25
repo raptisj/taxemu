@@ -25,25 +25,77 @@ export const insuranceScales2022 = insuranceScales2021;
 export const insuranceScales2023 = {
   insuranceScales: {
     0: {
-      amount: 148,
+      amount: 136,
     },
     1: {
-      amount: 240,
+      amount: 230,
     },
     2: {
-      amount: 286,
+      amount: 276,
     },
     3: {
-      amount: 341,
+      amount: 350,
     },
     4: {
-      amount: 408,
+      amount: 442,
     },
     5: {
-      amount: 487,
+      amount: 550,
     },
     6: {
-      amount: 620,
+      amount: 746,
+    },
+  },
+};
+
+export const insuranceScales2024 = {
+  insuranceScales: {
+    0: {
+      amount: 142,
+    },
+    1: {
+      amount: 239,
+    },
+    2: {
+      amount: 287,
+    },
+    3: {
+      amount: 364,
+    },
+    4: {
+      amount: 459,
+    },
+    5: {
+      amount: 572,
+    },
+    6: {
+      amount: 776,
+    },
+  },
+};
+
+export const insuranceScales2025 = {
+  insuranceScales: {
+    0: {
+      amount: 147,
+    },
+    1: {
+      amount: 247,
+    },
+    2: {
+      amount: 297,
+    },
+    3: {
+      amount: 377,
+    },
+    4: {
+      amount: 476,
+    },
+    5: {
+      amount: 592,
+    },
+    6: {
+      amount: 804,
     },
   },
 };

@@ -164,7 +164,7 @@ export const useCalculateBusiness = () => {
 
     const final =
       grossPerYear -
-      totalTax -
+      (totalTax - previousYearTaxInAdvance) -
       nextYearTax -
       extraBusinessExpenses -
       insurancePerYear;
