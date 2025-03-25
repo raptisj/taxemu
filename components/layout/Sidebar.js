@@ -31,19 +31,24 @@ export const Sidebar = ({ children, onSubmitAction, onClear }) => {
   const hasSeenUpsaleModal =
     window !== "undefined" ? localStorage.getItem("hasSeenUpsaleModal") : null;
 
-  const trackEbookButtonClick = (deviceType = "desktop") => {
+  const trackEbookButtonClick = (deviceType = "desktop", eventLabel) => {
     if (typeof window !== "undefined") {
       window.gtag("event", "click_ebook", {
         event_category: "Ebook",
-        event_label: "Clicked to buy ebook from upsell modal",
+        event_label: eventLabel,
         device_type: deviceType,
       });
     }
   };
 
   const onClickLink = (deviceType = "desktop") => {
-    // trackEbookButtonClick(deviceType);
+    trackEbookButtonClick(deviceType, "Clicked to learn more about the ebook");
     window.open("https://taxemu.gumroad.com/l/uiyfzl", "_blank");
+  };
+
+  const onClickBuyLink = (deviceType = "desktop") => {
+    trackEbookButtonClick(deviceType, "Clicked to buy ebook from upsell modal");
+    window.open("https://gumroad.com/checkout", "_blank");
   };
 
   const handleClose = () => {
@@ -71,7 +76,6 @@ export const Sidebar = ({ children, onSubmitAction, onClear }) => {
           onClick={() => {
             setTimeout(() => {
               if (!hasSeenUpsaleModal && ENABLE_EBOOK) {
-                console.log("open====");
                 onOpen();
               }
             }, 4000);
@@ -94,6 +98,7 @@ export const Sidebar = ({ children, onSubmitAction, onClear }) => {
         </Button>
       </Flex>
 
+      {/* Upsale ebook modal */}
       <Modal
         onClose={handleClose}
         size="3xl"
@@ -172,9 +177,9 @@ export const Sidebar = ({ children, onSubmitAction, onClear }) => {
               <Button
                 colorScheme="purple"
                 background="purple.700"
-                onClick={trackEbookButtonClick}
+                onClick={onClickBuyLink}
               >
-                Αποκτήστε τον οδηγό - Μόνο €12,90{" "}
+                Αποκτήστε τον οδηγό - Μόνο €17,90{" "}
               </Button>
             </ModalFooter>
           </ModalBody>

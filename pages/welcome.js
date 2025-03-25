@@ -168,7 +168,8 @@ const Welcome = () => {
     if (typeof window !== "undefined") {
       window.gtag("event", "click_ebook", {
         event_category: "Ebook",
-        event_label: "Clicked to buy ebook",
+        event_label:
+          "Clicked to learn more about the ebook - from welcome card",
         device_type: deviceType,
       });
     }

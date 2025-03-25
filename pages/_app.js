@@ -55,12 +55,13 @@ function MyApp({ Component, pageProps }) {
         }}
       />
 
-      <Script
-        id="structured-data"
-        key="structured-data"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: `
+      {!router.pathname.includes("/blog") && (
+        <Script
+          id="structured-data"
+          key="structured-data"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: `
           {
             "@context": "https://schema.org",
             "@type": "FAQPage",
@@ -88,8 +89,9 @@ function MyApp({ Component, pageProps }) {
           }]
           }
           `,
-        }}
-      />
+          }}
+        />
+      )}
 
       <ChakraProvider>
         <Component {...pageProps} />

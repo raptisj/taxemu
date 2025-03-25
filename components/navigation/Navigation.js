@@ -1,4 +1,4 @@
-import { Box, Flex, useMediaQuery } from "@chakra-ui/react";
+import { Box, Flex, useMediaQuery, Text } from "@chakra-ui/react";
 import { useStore } from "store";
 import logo from "../../assets/taxemu.svg";
 import ebookDesktop from "../../assets/ebook-nav-desktop.png";
@@ -52,7 +52,7 @@ export const Navigation = () => {
     if (typeof window !== "undefined") {
       window.gtag("event", "click_ebook", {
         event_category: "Ebook",
-        event_label: "Clicked to buy ebook",
+        event_label: "Clicked to learn more about the ebook - from nav",
         device_type: deviceType,
       });
     }
@@ -80,7 +80,13 @@ export const Navigation = () => {
               <Image src={logo} alt="Taxemu" />
             </Flex>
           </Link>
-          {/* <Link href={""}>Blog</Link> */}
+          {!router.pathname.includes("/welcome") && (
+            <Link href="/blog">
+              <Text color="gray.500" _hover={{ color: "gray.600" }}>
+                Blog
+              </Text>
+            </Link>
+          )}
         </Flex>
 
         <Flex gap={4} alignItems="center">

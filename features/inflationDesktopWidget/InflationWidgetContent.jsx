@@ -54,8 +54,8 @@ export const InflationWidgetContent = ({
             <UnorderedList mt={4}>
               <ListItem>
                 Ξεκινάμε με μικτό ετήσιο εισόδημα{" "}
-                {formatEuroCurrency(grossIncomeYearly)} το 2022(μεχρι και
-                σημερα)
+                {formatEuroCurrency(grossIncomeYearly)} το 2022(μέχρι και
+                σήμερα)
               </ListItem>
               <ListItem>
                 Ο πληθωρισμός εφαρμόζεται διαδοχικά κάθε χρόνο, με τους εξής
