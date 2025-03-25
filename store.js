@@ -341,7 +341,7 @@ const initialState = {
         year: 0,
       },
       withholdingTax: false,
-      taxationYear: 2023,
+      taxationYear: 2025,
       taxYearDuration: 12,
       grossMonthOrYear: "year",
       discountOptions: {
