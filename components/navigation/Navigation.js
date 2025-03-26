@@ -11,14 +11,12 @@ import { Wiki } from "../../features";
 import { useRouter } from "next/router";
 
 export const Navigation = () => {
+  const router = useRouter();
+
   const [isLargerThan30] = useMediaQuery("(min-width: 30em)");
   const update = useStore((state) => state.update);
   const canInstallPWA = useStore((state) => state.userDetails.canInstallPWA);
   const deferredPrompt = useStore((state) => state.userDetails.deferredPrompt);
-
-  const router = useRouter();
-  const currentParams = new URLSearchParams(router.query);
-  const ENABLE_EBOOK = currentParams.get("enable_ebook");
 
   // PWA installtion link and to determine if it should be visible
   useEffect(() => {
@@ -59,7 +57,7 @@ export const Navigation = () => {
   };
 
   const onClickLink = (deviceType = "desktop") => {
-    // trackEbookButtonClick(deviceType);
+    trackEbookButtonClick(deviceType);
     window.open("https://taxemu.gumroad.com/l/uiyfzl", "_blank");
   };
 
@@ -69,7 +67,7 @@ export const Navigation = () => {
         justifyContent="space-between"
         alignItems="center"
         width="100%"
-        zIndex={1}
+        zIndex={2}
         px={{ base: "1rem", md: "5rem" }}
         maxWidth="1366px"
         mx="auto"
@@ -98,15 +96,21 @@ export const Navigation = () => {
 
           <Wiki />
 
-          {isLargerThan30 && ENABLE_EBOOK && (
+          {isLargerThan30 && (
             <Box cursor="pointer" onClick={() => onClickLink("desktop")}>
               <Image src={ebookDesktop} alt="" style={{ width: "240px" }} />
             </Box>
           )}
         </Flex>
       </Flex>
-      {!isLargerThan30 && ENABLE_EBOOK && (
-        <Box cursor="pointer" mt={4} onClick={() => onClickLink("mobile")}>
+      {!isLargerThan30 && (
+        <Box
+          cursor="pointer"
+          mt={4}
+          onClick={() => onClickLink("mobile")}
+          position="relative"
+          zIndex={2}
+        >
           <Image src={ebookMobile} alt="" />
         </Box>
       )}

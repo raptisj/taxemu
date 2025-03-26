@@ -20,13 +20,9 @@ import { CloseIcon } from "@chakra-ui/icons";
 import { SubmitButtonContent } from "../form";
 import Image from "next/image";
 import upsaleEbook from "../../assets/upsale-ebook.png";
-import { useRouter } from "next/router";
 
 export const Sidebar = ({ children, onSubmitAction, onClear }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const router = useRouter();
-  const currentParams = new URLSearchParams(router.query);
-  const ENABLE_EBOOK = currentParams.get("enable_ebook");
 
   const hasSeenUpsaleModal =
     window !== "undefined" ? localStorage.getItem("hasSeenUpsaleModal") : null;
@@ -48,7 +44,7 @@ export const Sidebar = ({ children, onSubmitAction, onClear }) => {
 
   const onClickBuyLink = (deviceType = "desktop") => {
     trackEbookButtonClick(deviceType, "Clicked to buy ebook from upsell modal");
-    window.open("https://gumroad.com/checkout", "_blank");
+    window.open("https://taxemu.gumroad.com/l/uiyfzl?wanted=true", "_blank");
   };
 
   const handleClose = () => {
@@ -75,7 +71,7 @@ export const Sidebar = ({ children, onSubmitAction, onClear }) => {
           mr={{ base: 0, sm: 3 }}
           onClick={() => {
             setTimeout(() => {
-              if (!hasSeenUpsaleModal && ENABLE_EBOOK) {
+              if (!hasSeenUpsaleModal) {
                 onOpen();
               }
             }, 4000);
@@ -102,7 +98,7 @@ export const Sidebar = ({ children, onSubmitAction, onClear }) => {
       <Modal
         onClose={handleClose}
         size="3xl"
-        isOpen={!hasSeenUpsaleModal && isOpen && ENABLE_EBOOK}
+        isOpen={!hasSeenUpsaleModal && isOpen}
       >
         <ModalOverlay />
         <ModalContent>

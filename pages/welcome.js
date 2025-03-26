@@ -176,7 +176,7 @@ const Welcome = () => {
   };
 
   const onClickLink = (deviceType = "desktop") => {
-    // trackEbookButtonClick(deviceType);
+    trackEbookButtonClick(deviceType);
     window.open("https://taxemu.gumroad.com/l/uiyfzl", "_blank");
   };
 
@@ -218,7 +218,7 @@ const Welcome = () => {
           </WrapperBox>
         </GridItem>
 
-        {/* <GridItem
+        <GridItem
           display={["none", "flex"]}
           flexDirection="column"
           justifyContent="center"
@@ -244,7 +244,7 @@ const Welcome = () => {
               </Button>
             </CardFooter>
           </Card>
-        </GridItem> */}
+        </GridItem>
       </Grid>
     </Layout>
   );
