@@ -72,7 +72,7 @@ export default function BlogPage({ posts }) {
           position="relative"
           zIndex={1}
         >
-          <Flex flexDirection="column" gap={[3, 5]}>
+          <Flex flexDirection="column" gap={[3, 5]} pb={6}>
             {posts.map((post) => (
               <Link key={post.slug} href={`/blog/${post.slug}`}>
                 <Box

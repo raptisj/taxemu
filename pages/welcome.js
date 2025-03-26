@@ -190,7 +190,7 @@ const Welcome = () => {
         width="100%"
         maxWidth="1366px"
         margin="0 auto"
-        height="calc(100vh - 88px)"
+        height={["calc(100vh - 190px)", "calc(100vh - 122px)"]}
       >
         <GridItem display="flex" flexDirection="column">
           <Box maxWidth="1366px" mx="auto" width="100%" mt={[0, 20]}>
