@@ -49,7 +49,7 @@ const BusinessTable = () => {
           <Tr>
             <Td borderBottomWidth={1} borderColor="gray.500">
               <Text fontWeight="700" fontSize="sm">
-                Καθαρό Εισόδημα
+                Καθαρό εισόδημα
               </Text>
             </Td>
             <Td borderBottomWidth={1} borderColor="gray.500">
@@ -66,7 +66,7 @@ const BusinessTable = () => {
           <Tr>
             <Td border="none">
               <Text color="gray.700" fontWeight="500" fontSize="sm">
-                Μικτό Εισόδημα
+                Μικτό εισόδημα
               </Text>
             </Td>
             <Td border="none">
@@ -146,7 +146,7 @@ const BusinessTable = () => {
             <Tr>
               <Td border="none">
                 <Text color="gray.700" fontWeight="500" fontSize="sm">
-                  Περσινή Προκαταβολή φόρου
+                  Περσινή προκαταβολή φόρου
                 </Text>
               </Td>
               <Td border="none">

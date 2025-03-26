@@ -97,7 +97,7 @@ const EmployeeTable = () => {
           <Tr>
             <Td border="none">
               <Text color="gray.700" fontWeight="500" fontSize="sm">
-                Φορολογητέο Εισόδημα
+                Φορολογητέο εισόδημα
               </Text>
             </Td>
             <Td border="none">
@@ -159,7 +159,7 @@ const EmployeeTable = () => {
           <Tr>
             <Td border="none">
               <Text color="gray.700" fontWeight="500" fontSize="sm">
-                Εργοδοτικές Εισφορές
+                Εργοδοτικές εισφορές
               </Text>
             </Td>
             <Td border="none">

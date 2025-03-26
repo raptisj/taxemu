@@ -53,7 +53,7 @@ const MobileBusinessTable = () => {
             </Flex>
 
             <Flex padding={3} justifyContent="space-between">
-              <Text fontSize="sm">Μικτό Εισόδημα</Text>
+              <Text fontSize="sm">Μικτό εισόδημα</Text>
               <Text>
                 {formatCellValue(grossIncome.month, !!finalIncome.year)}
               </Text>
@@ -90,7 +90,7 @@ const MobileBusinessTable = () => {
 
             {!!previousYearTaxInAdvance.year && (
               <Flex padding={3} justifyContent="space-between">
-                <Text fontSize="sm">Περσινή Προκαταβολή φόρου</Text>
+                <Text fontSize="sm">Περσινή προκαταβολή φόρου</Text>
                 <Text>
                   {formatCellValue(
                     previousYearTaxInAdvance.month > 0
@@ -134,7 +134,7 @@ const MobileBusinessTable = () => {
             </Flex>
 
             <Flex padding={3} justifyContent="space-between">
-              <Text fontSize="sm">Μικτό Εισόδημα</Text>
+              <Text fontSize="sm">Μικτό εισόδημα</Text>
               <Text>
                 {formatCellValue(grossIncome.year, !!finalIncome.year)}
               </Text>
@@ -169,7 +169,7 @@ const MobileBusinessTable = () => {
 
             {!!previousYearTaxInAdvance.year && (
               <Flex padding={3} justifyContent="space-between">
-                <Text fontSize="sm">Περσινή Προκαταβολή φόρου</Text>
+                <Text fontSize="sm">Περσινή προκαταβολή φόρου</Text>
                 <Text>
                   {formatCellValue(
                     previousYearTaxInAdvance.year > 0

@@ -47,7 +47,7 @@ const MobileEmployeeTable = () => {
               </Text>
             </Flex>
             <Flex padding={3} justifyContent="space-between">
-              <Text fontSize="sm">Μικτό Εισόδημα</Text>
+              <Text fontSize="sm">Μικτό εισόδημα</Text>
               <Text>{formatCellValue(grossIncomeMonthly)}</Text>
             </Flex>
 
@@ -57,7 +57,7 @@ const MobileEmployeeTable = () => {
             </Flex>
 
             <Flex padding={3} justifyContent="space-between">
-              <Text fontSize="sm">Φορολογητέο Εισόδημα</Text>
+              <Text fontSize="sm">Φορολογητέο εισόδημα</Text>
               <Text>{formatCellValue(taxableIncome.month)}</Text>
             </Flex>
 
@@ -78,7 +78,7 @@ const MobileEmployeeTable = () => {
             </Flex>
 
             <Flex padding={3} justifyContent="space-between">
-              <Text fontSize="sm">Εργοδοτικές Εισφορές</Text>
+              <Text fontSize="sm">Εργοδοτικές εισφορές</Text>
               <Text>{formatCellValue(employerObligations.month)}</Text>
             </Flex>
           </TabPanel>
@@ -90,7 +90,7 @@ const MobileEmployeeTable = () => {
               <Text fontWeight="600">{formatCellValue(finalIncomeYearly)}</Text>
             </Flex>
             <Flex padding={3} justifyContent="space-between">
-              <Text fontSize="sm">Μικτό Εισόδημα</Text>
+              <Text fontSize="sm">Μικτό εισόδημα</Text>
               <Text>{formatCellValue(grossIncomeYearly)}</Text>
             </Flex>
             <Flex padding={3} justifyContent="space-between">
@@ -99,7 +99,7 @@ const MobileEmployeeTable = () => {
             </Flex>
 
             <Flex padding={3} justifyContent="space-between">
-              <Text fontSize="sm">Φορολογητέο Εισόδημα</Text>
+              <Text fontSize="sm">Φορολογητέο εισόδημα</Text>
               <Text>{formatCellValue(taxableIncome.year)}</Text>
             </Flex>
 
@@ -120,7 +120,7 @@ const MobileEmployeeTable = () => {
             </Flex>
 
             <Flex padding={3} justifyContent="space-between">
-              <Text fontSize="sm">Εργοδοτικές Εισφορές</Text>
+              <Text fontSize="sm">Εργοδοτικές εισφορές</Text>
               <Text>{formatCellValue(employerObligations.year)}</Text>
             </Flex>
           </TabPanel>
