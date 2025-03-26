@@ -39,12 +39,15 @@ export const Sidebar = ({ children, onSubmitAction, onClear }) => {
 
   const onClickLink = (deviceType = "desktop") => {
     trackEbookButtonClick(deviceType, "Clicked to learn more about the ebook");
-    window.open("https://taxemu.gumroad.com/l/uiyfzl", "_blank");
+    window.open("https://taxemu.gumroad.com/l/odigos2025", "_blank");
   };
 
   const onClickBuyLink = (deviceType = "desktop") => {
     trackEbookButtonClick(deviceType, "Clicked to buy ebook from upsell modal");
-    window.open("https://taxemu.gumroad.com/l/uiyfzl?wanted=true", "_blank");
+    window.open(
+      "https://taxemu.gumroad.com/l/odigos2025?wanted=true",
+      "_blank"
+    );
   };
 
   const handleClose = () => {

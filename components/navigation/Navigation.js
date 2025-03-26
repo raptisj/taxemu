@@ -58,7 +58,7 @@ export const Navigation = () => {
 
   const onClickLink = (deviceType = "desktop") => {
     trackEbookButtonClick(deviceType);
-    window.open("https://taxemu.gumroad.com/l/uiyfzl", "_blank");
+    window.open("https://taxemu.gumroad.com/l/odigos2025", "_blank");
   };
 
   return (
