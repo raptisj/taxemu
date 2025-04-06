@@ -178,7 +178,7 @@ export const Sidebar = ({ children, onSubmitAction, onClear }) => {
                 background="purple.700"
                 onClick={onClickBuyLink}
               >
-                Αποκτήστε τον οδηγό - Μόνο €17,90{" "}
+                Αποκτήστε τον οδηγό - Μόνο €11,90{" "}
               </Button>
             </ModalFooter>
           </ModalBody>
