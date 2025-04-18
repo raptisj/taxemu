@@ -117,7 +117,7 @@ export const Sidebar = ({ children, onSubmitAction, onClear }) => {
           <ModalBody minH="400px" overflow="auto" pb={6}>
             <Grid gridTemplateColumns="1fr 1fr">
               <GridItem>
-                <Image src={upsaleEbook} alt="" />
+                <Image src={upsaleEbook.src} alt="" />
               </GridItem>
               <GridItem>
                 <Heading as="h3" size="sm" mt={6}>
@@ -178,7 +178,7 @@ export const Sidebar = ({ children, onSubmitAction, onClear }) => {
                 background="purple.700"
                 onClick={onClickBuyLink}
               >
-                Αποκτήστε τον οδηγό - Μόνο €11,90{" "}
+                Αποκτήστε τον οδηγό - Μόνο €4,90{" "}
               </Button>
             </ModalFooter>
           </ModalBody>
