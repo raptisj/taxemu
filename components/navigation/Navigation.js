@@ -1,8 +1,6 @@
 import { Box, Flex, useMediaQuery, Text } from "@chakra-ui/react";
 import { useStore } from "store";
 import logo from "../../assets/taxemu.svg";
-import ebookDesktop from "../../assets/ebook-nav-desktop.svg";
-import ebookMobile from "../../assets/ebook-nav-mobile.png";
 import Image from "next/image";
 import { useEffect } from "react";
 import { DownloadIcon } from "@chakra-ui/icons";
@@ -46,21 +44,6 @@ export const Navigation = () => {
     });
   };
 
-  const trackEbookButtonClick = (deviceType = "desktop") => {
-    if (typeof window !== "undefined") {
-      window.gtag("event", "click_ebook", {
-        event_category: "Ebook",
-        event_label: "Clicked to learn more about the ebook - from nav",
-        device_type: deviceType,
-      });
-    }
-  };
-
-  const onClickLink = (deviceType = "desktop") => {
-    trackEbookButtonClick(deviceType);
-    window.open("https://taxemu.gumroad.com/l/odigos2025", "_blank");
-  };
-
   return (
     <>
       <Flex
@@ -95,25 +78,8 @@ export const Navigation = () => {
           )}
 
           <Wiki />
-
-          {isLargerThan30 && (
-            <Box cursor="pointer" onClick={() => onClickLink("desktop")}>
-              <Image src={ebookDesktop} alt="" style={{ width: "240px" }} />
-            </Box>
-          )}
         </Flex>
       </Flex>
-      {!isLargerThan30 && (
-        <Box
-          cursor="pointer"
-          mt={4}
-          onClick={() => onClickLink("mobile")}
-          position="relative"
-          zIndex={2}
-        >
-          <Image src={ebookMobile} alt="" />
-        </Box>
-      )}
     </>
   );
 };

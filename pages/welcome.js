@@ -9,12 +9,6 @@ import {
   useMediaQuery,
   Grid,
   GridItem,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Heading,
-  Button,
 } from "@chakra-ui/react";
 import {
   IntroCore,
@@ -22,7 +16,6 @@ import {
   MobileIntroCore,
   MobileBusinessSecondStep,
 } from "../components/welcome";
-import welcomeEbook from "../assets/welcome-ebook.png";
 import { useStore } from "store";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
@@ -30,7 +23,6 @@ import Stepper from "components/stepper";
 import { Layout } from "../components/layout";
 import { Navigation } from "../components/navigation";
 import { useCalculateBusiness, useCalculateEmployee } from "hooks";
-import Image from "next/image";
 
 const desktopTabs = {
   intro: <IntroCore />,
@@ -164,22 +156,6 @@ const Welcome = () => {
     );
   };
 
-  const trackEbookButtonClick = (deviceType = "desktop") => {
-    if (typeof window !== "undefined") {
-      window.gtag("event", "click_ebook", {
-        event_category: "Ebook",
-        event_label:
-          "Clicked to learn more about the ebook - from welcome card",
-        device_type: deviceType,
-      });
-    }
-  };
-
-  const onClickLink = (deviceType = "desktop") => {
-    trackEbookButtonClick(deviceType);
-    window.open("https://taxemu.gumroad.com/l/odigos2025", "_blank");
-  };
-
   return (
     <Layout pb={8}>
       <Navigation />
@@ -216,34 +192,6 @@ const Welcome = () => {
               }
             />
           </WrapperBox>
-        </GridItem>
-
-        <GridItem
-          display={["none", "flex"]}
-          flexDirection="column"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Card maxW="370px" minW="350px">
-            <CardHeader>
-              <Image src={welcomeEbook} alt="" style={{ margin: "0 auto" }} />
-              <Heading fontSize="1.1rem" textAlign="center" fontWeight={600}>
-                {" "}
-                Πρώτη φορά διαπραγματεύεστε το μισθό σας;
-              </Heading>
-            </CardHeader>
-            <CardBody py={0}>
-              <Text textAlign="center" color="gray.700" fontSize=".9rem">
-                Ο εξειδικευμένος οδηγός μας μπορεί να σας βοηθήσει να
-                μεγιστοποιήσετε την προσφορά σας.
-              </Text>
-            </CardBody>
-            <CardFooter>
-              <Button width="full" variant="outline" onClick={onClickLink}>
-                Δείτε πως
-              </Button>
-            </CardFooter>
-          </Card>
         </GridItem>
       </Grid>
     </Layout>
