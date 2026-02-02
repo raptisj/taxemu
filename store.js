@@ -5,9 +5,11 @@ import {
   insuranceScales2023,
   insuranceScales2024,
   insuranceScales2025,
+  insuranceScales2026,
   taxScales2021,
   taxScales2022,
   taxScales2023,
+  taxScales2026,
 } from "./constants";
 
 const initialState = {
@@ -34,12 +36,11 @@ const initialState = {
     grossMonthOrYear: "year",
     finalMonthOrYear: "year",
     salaryMonthCount: 14,
-    taxationYear: 2025,
+    taxationYear: 2026,
     taxableIncome: {
       month: 0,
       year: 0,
     },
-    ...taxScales2021,
     activeInput: "gross", // gross | final
     taxAfterDiscount: 0,
     discountOptions: {
@@ -61,6 +62,9 @@ const initialState = {
       year: 0,
     },
     employerPercentages: {
+      2026: {
+        value: 0.2179,
+      },
       2025: {
         value: 0.2179,
       },
@@ -83,6 +87,10 @@ const initialState = {
     },
     insuranceCarrier: "efka",
     taxationYearScales: {
+      2026: {
+        insurancePercentage: 0.1333,
+        maxTaxableSalary: 7761.94,
+      },
       2025: {
         insurancePercentage: 0.1337,
         maxTaxableSalary: 7126.94,
@@ -111,6 +119,23 @@ const initialState = {
       year: 0,
     },
     numberOfChildrenScales: {
+      2026: {
+        0: {
+          discount: 777,
+        },
+        1: {
+          discount: 900,
+        },
+        2: {
+          discount: 1120,
+        },
+        3: {
+          discount: 1340,
+        },
+        4: {
+          discount: 1560,
+        },
+      },
       2025: {
         0: {
           discount: 777,
@@ -197,6 +222,7 @@ const initialState = {
         },
       },
     },
+    ageGroup: "A30P",
     tableResults: {
       finalIncome: {
         month: 0,
@@ -257,8 +283,13 @@ const initialState = {
     totalBusinessExpenses: 0,
     taxableIncome: 0,
     previousYearTaxInAdvance: 0,
-    taxationYear: 2025,
+    taxationYear: 2026,
     taxationYearScales: {
+      2026: {
+        value: 0,
+        ...insuranceScales2026,
+        ...taxScales2026,
+      },
       2025: {
         value: 0,
         ...insuranceScales2025,
@@ -287,6 +318,8 @@ const initialState = {
     },
     insuranceScaleSelection: 1,
     taxYearDuration: 12,
+    numberOfChildren: 0,
+    ageGroup: "A30P",
     discountOptions: {
       firstScaleDiscount: false,
       prePaidTaxDiscount: false,

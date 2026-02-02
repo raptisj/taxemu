@@ -22,14 +22,14 @@ export const InflationWidgetContent = ({
       <Text>
         Για να διατηρήσετε την αγοραστική σας δύναμη, είναι σημαντικό ο μισθός
         σας να αυξάνεται σύμφωνα με το συσσωρευμένο ποσοστό πληθωρισμού από το{" "}
-        <strong>2022</strong> έως το <strong>2025</strong>.
+        <strong>2022</strong> έως το <strong>2026</strong>.
       </Text>
       <br />
 
       <Text>
         Αν το μικτό ετήσιο εισόδημά σας ήταν{" "}
         <strong>{formatEuroCurrency(grossIncomeYearly)}</strong> το 2022(μεχρι
-        και σημερα), λόγω του συσσωρευμένου πληθωρισμού μέχρι το 2025, θα πρέπει
+        και σημερα), λόγω του συσσωρευμένου πληθωρισμού μέχρι το 2026, θα πρέπει
         να αυξηθεί περίπου κατά{" "}
         <strong>{totalResultDetails.increasePercentage}%</strong>(ή{" "}
         <strong>{formatEuroCurrency(totalResultDetails.increaseAmount)}</strong>
@@ -97,10 +97,18 @@ export const InflationWidgetContent = ({
               </Box>
 
               <Box>
-                <Text>Εφαρμόζουμε τον πληθωρισμό του 2025(2,4%):</Text>
+                <Text>Εφαρμόζουμε τον πληθωρισμό του 2025(2,8%):</Text>
                 <Text>
-                  {formatEuroCurrency(totalResultDetails.amounts[3])} × 1,024 ={" "}
+                  {formatEuroCurrency(totalResultDetails.amounts[3])} × 1,028 ={" "}
                   {formatEuroCurrency(totalResultDetails.amounts[4])}{" "}
+                </Text>
+              </Box>
+
+              <Box>
+                <Text>Εφαρμόζουμε τον πληθωρισμό του 2026(2,3%):</Text>
+                <Text>
+                  {formatEuroCurrency(totalResultDetails.amounts[4])} × 1,023 ={" "}
+                  {formatEuroCurrency(totalResultDetails.amounts[5])}{" "}
                 </Text>
               </Box>
             </Flex>

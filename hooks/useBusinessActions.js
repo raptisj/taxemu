@@ -80,6 +80,18 @@ export const useBusinessActions = () => {
     });
   };
 
+  const onChangeNumberOfChildren = (value) => {
+    updateBusiness({
+      numberOfChildren: Number(value),
+    });
+  };
+
+  const onSelectAgeGroup = (e) => {
+    updateBusiness({
+      ageGroup: e.target.value,
+    });
+  };
+
   // TODO: find a better way to do ths
   const spotFormChanges = () => {
     let dirty = dirtyFormState;
@@ -130,7 +142,7 @@ export const useBusinessActions = () => {
       dirty = [...new Set([...dirty, "discountOptions.specialInsuranceScale"])];
     } else {
       dirty = dirty.filter(
-        (s) => s !== "discountOptions.specialInsuranceScale"
+        (s) => s !== "discountOptions.specialInsuranceScale",
       );
     }
 
@@ -201,5 +213,7 @@ export const useBusinessActions = () => {
     onChangeInsuranceScales,
     onChangeExtraBusinessExpenses,
     onChangePreviousYearTaxInAdvance,
+    onChangeNumberOfChildren,
+    onSelectAgeGroup,
   };
 };

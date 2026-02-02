@@ -93,3 +93,10 @@ export const formatEuroCurrency = (value) => {
     }).format(value) + "€"
   );
 };
+
+// Re-export tax utility functions
+export {
+  assertFiniteNonNegative,
+  getBrackets,
+  calcProgressiveTax,
+} from "./employee";

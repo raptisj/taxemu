@@ -45,7 +45,7 @@ export const useEmployeeActions = () => {
       insurancePerMonth: findInsurancePerMonth(
         grossIncomeYearly,
         value,
-        taxationYearScales[taxationYear].insurancePercentage
+        taxationYearScales[taxationYear].insurancePercentage,
       ),
     });
   };
@@ -55,7 +55,7 @@ export const useEmployeeActions = () => {
     // TODO: deprecate the first two
     updateEmployee({
       [isGrossMonthly ? "grossIncomeMonthly" : "grossIncomeYearly"]: Math.round(
-        Number(value)
+        Number(value),
       ),
       [isGrossMonthly ? "grossIncomeYearly" : "grossIncomeMonthly"]:
         isGrossMonthly
@@ -88,7 +88,7 @@ export const useEmployeeActions = () => {
   const onChangeFinalIncome = (value, count) => {
     updateEmployee({
       [isFinalMonthly ? "finalIncomeMonthly" : "finalIncomeYearly"]: Math.round(
-        Number(value)
+        Number(value),
       ),
       [isFinalMonthly ? "finalIncomeYearly" : "finalIncomeMonthly"]:
         isFinalMonthly
@@ -177,6 +177,13 @@ export const useEmployeeActions = () => {
     });
   };
 
+  const onSelectAgeGroup = (e) => {
+    const value = e.target.value;
+    updateEmployee({
+      ageGroup: value,
+    });
+  };
+
   return {
     onSelectSalaryMonthCount,
     onChangeGrossIncome,
@@ -186,5 +193,6 @@ export const useEmployeeActions = () => {
     onSelectTaxationYear,
     onSelectInsuranceCarrier,
     onChangeNumberOfChildren,
+    onSelectAgeGroup,
   };
 };

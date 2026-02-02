@@ -35,6 +35,8 @@ const BusinessForm = ({ showCalculatorType = true }) => {
     onChangeInsuranceScales,
     onChangeExtraBusinessExpenses,
     onChangePreviousYearTaxInAdvance,
+    onChangeNumberOfChildren,
+    onSelectAgeGroup,
   } = useBusinessActions();
 
   const {
@@ -48,6 +50,8 @@ const BusinessForm = ({ showCalculatorType = true }) => {
     extraBusinessExpenses,
     prePaidNextYearTax,
     insuranceScaleSelection,
+    numberOfChildren,
+    ageGroup,
   } = userDetails;
 
   const onChange = (value) => {
@@ -81,6 +85,7 @@ const BusinessForm = ({ showCalculatorType = true }) => {
             onChange={onSelectTaxationYear}
             defaultValue={taxationYear}
             options={[
+              { value: "2026", text: "2026" },
               { value: "2025", text: "2025" },
               { value: "2024", text: "2024" },
               { value: "2023", text: "2023" },
@@ -113,6 +118,42 @@ const BusinessForm = ({ showCalculatorType = true }) => {
         <Text color="gray.500" fontSize="14px" mt={2}>
           Επίλεξε τους μήνες για τους οποίους θα γίνει ο υπολογισμός
         </Text>
+
+        <Box mt={4}>
+          <Text fontWeight="500" color="gray.700">
+            Αριθμός τέκνων
+          </Text>
+          <NumberInput
+            mt={2}
+            defaultValue={0}
+            max={4}
+            min={0}
+            clampValueOnBlur={false}
+            onChange={onChangeNumberOfChildren}
+            value={numberOfChildren}
+          >
+            <NumberInputField readOnly />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+        </Box>
+
+        {taxationYear >= 2026 && (
+          <Box mt={4}>
+            <FormElements.Select
+              label="Ηλικιακή ομάδα"
+              onChange={onSelectAgeGroup}
+              defaultValue={ageGroup}
+              options={[
+                { value: "U25", text: "Έως 25" },
+                { value: "A26_30", text: "26 έως 30" },
+                { value: "A30P", text: "Άνω των 30" },
+              ]}
+            />
+          </Box>
+        )}
       </Box>
 
       <Divider pt={6} />

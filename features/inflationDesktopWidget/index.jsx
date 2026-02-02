@@ -22,7 +22,7 @@ export const InflationDesktopWidget = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const userDetails = useStore((state) => state.userDetails.employee);
 
-  const { finalIncomeMonthly, grossIncomeYearly } = userDetails;
+  const { finalIncomeMonthly, grossIncomeYearly, taxationYear } = userDetails;
 
   const totalResultDetails = calculateInflationDetails(
     grossIncomeYearly,
@@ -38,11 +38,11 @@ export const InflationDesktopWidget = () => {
       <Flex justifyContent="space-between" alignItems="center">
         <Flex gap={3} alignItems="center">
           <Heading as="h3" fontSize="1.25rem" fontWeight={700}>
-            {(inflationRatesMap[2025] * 100).toFixed(1)}%
+            {(inflationRatesMap[taxationYear] * 100).toFixed(1)}%
           </Heading>
           <Box>
             <Text fontSize=".8rem" fontWeight={600}>
-              Ετήσιος πληθωρισμός για το 2025
+              Ετήσιος πληθωρισμός για το {taxationYear}
             </Text>
             <Link
               textDecoration="underline"

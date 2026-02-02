@@ -38,6 +38,7 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
     onSelectTaxationYear,
     onSelectInsuranceCarrier,
     onChangeNumberOfChildren,
+    onSelectAgeGroup,
   } = useEmployeeActions();
 
   const {
@@ -53,6 +54,7 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
     finalIncomeMonthly,
     finalMonthOrYear,
     taxationYearScales,
+    ageGroup,
   } = userDetails;
 
   const calculatorTypeValue = pathname?.split("/")[1];
@@ -160,8 +162,8 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
                     ? finalIncomeMonthly
                     : ""
                   : finalIncomeYearly > 0
-                  ? finalIncomeYearly
-                  : ""
+                    ? finalIncomeYearly
+                    : ""
               }
             >
               <NumberInputField placeholder="π.χ. €10000" />
@@ -242,6 +244,21 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
                 </NumberInputStepper>
               </NumberInput>
             </Box>
+
+            {taxationYear >= 2026 && (
+              <Box mt={4}>
+                <FormElements.Select
+                  label="Ηλικιακή ομάδα"
+                  onChange={onSelectAgeGroup}
+                  defaultValue={ageGroup}
+                  options={[
+                    { value: "U25", text: "Έως 25" },
+                    { value: "A26_30", text: "26 έως 30" },
+                    { value: "A30P", text: "Άνω των 30" },
+                  ]}
+                />
+              </Box>
+            )}
 
             <Box mt={4}>
               <Text fontWeight="500" color="gray.700">
