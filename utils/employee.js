@@ -71,3 +71,117 @@ export function calcProgressiveTax(income, brackets) {
   }
   return tax;
 }
+
+const roundTo2 = (value) => Math.round(value * 100) / 100;
+
+export const roundMoney = (value) => Math.round(value);
+export const ceilMoney = (value) => Math.ceil(value);
+export const toFixedNumber = (value, digits = 0) =>
+  Number(value.toFixed(digits));
+
+/**
+ * Calculates income tax using a progressive bracket system.
+ * @param {Object} params
+ * @param {number} params.taxableIncome
+ * @param {string} params.ageGroup
+ * @param {number} params.children
+ * @param {Object} params.scalesByAgeGroup
+ * @returns {{taxableIncome:number, ageGroup:string, children:number, grossTax:number}}
+ */
+export function calculateIncomeTax({
+  taxableIncome,
+  ageGroup,
+  children = 0,
+  scalesByAgeGroup,
+}) {
+  assertFiniteNonNegative(taxableIncome, "taxableIncome");
+  if (!Number.isInteger(children) || children < 0) {
+    throw new Error("children must be a non-negative integer");
+  }
+
+  const brackets = getBrackets(scalesByAgeGroup, ageGroup, children);
+  const grossTax = calcProgressiveTax(taxableIncome, brackets);
+
+  return {
+    taxableIncome,
+    ageGroup,
+    children,
+    grossTax: roundTo2(grossTax),
+  };
+}
+
+/**
+ * Calculates tax using fixed scales.
+ * @param {Object} params
+ * @param {Array} params.currentScales
+ * @param {number} params.sumToBeTaxed
+ * @param {number} params.threshold
+ * @returns {number}
+ */
+export function calculateEmployeeScalesTax({
+  currentScales,
+  sumToBeTaxed,
+  threshold = 10000,
+}) {
+  const initial = { remaining: sumToBeTaxed, totalTax: 0 };
+
+  const result = currentScales.reduce((acc, scale, index) => {
+    const taxableAmount =
+      acc.remaining <= 0
+        ? 0
+        : index < 4
+          ? Math.min(acc.remaining, threshold)
+          : acc.remaining;
+
+    return {
+      remaining: Math.max(0, acc.remaining - taxableAmount),
+      totalTax: acc.totalTax + taxableAmount * scale.multiplier,
+    };
+  }, initial);
+
+  return result.totalTax;
+}
+
+/**
+ * Calculates the child discount, with a reduction above a threshold.
+ * @param {Object} params
+ * @param {number} params.amount
+ * @param {number} params.childDiscountAmount
+ * @returns {{discount:number}}
+ */
+export function calculateChildrenDiscount({ amount, childDiscountAmount }) {
+  if (amount > 12000) {
+    const aboveThresholdAmount = amount - 12000;
+    const result = aboveThresholdAmount * 0.02;
+    return { discount: childDiscountAmount - result };
+  }
+  return { discount: childDiscountAmount };
+}
+
+/**
+ * Applies a conditional base reduction for inland return.
+ * @param {number} sumToBeTaxed
+ * @param {boolean} returnBaseInland
+ * @param {number} percentage
+ * @returns {number}
+ */
+export function applyReturnBaseInland(
+  sumToBeTaxed,
+  returnBaseInland,
+  percentage = 0.5,
+) {
+  return returnBaseInland ? sumToBeTaxed * percentage : sumToBeTaxed;
+}
+
+/**
+ * Omits a discount if it results in a negative tax.
+ * @param {number} taxBefore
+ * @param {number} discount
+ * @returns {number}
+ */
+export function omitDiscountIfNegative(taxBefore, discount) {
+  if (discount < 0) {
+    return Math.ceil(taxBefore);
+  }
+  return Math.round(Math.ceil(taxBefore) - Math.ceil(discount));
+}

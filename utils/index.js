@@ -99,4 +99,20 @@ export {
   assertFiniteNonNegative,
   getBrackets,
   calcProgressiveTax,
+  calculateIncomeTax,
+  calculateEmployeeScalesTax,
+  calculateChildrenDiscount,
+  applyReturnBaseInland,
+  omitDiscountIfNegative,
+  roundMoney,
+  ceilMoney,
+  toFixedNumber,
 } from "./employee";
+
+export {
+  calculateTax2026Entrepreneur,
+  getInsuranceTotal,
+  applyPrePaidDiscount,
+  applyFirstScaleDiscount,
+  calculateBusinessScalesTax,
+} from "./business";

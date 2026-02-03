@@ -1,9 +1,14 @@
 import { useStore } from "store";
 import { useToast } from "@chakra-ui/react";
 import {
-  assertFiniteNonNegative,
-  getBrackets,
-  calcProgressiveTax,
+  calculateIncomeTax,
+  calculateEmployeeScalesTax,
+  calculateChildrenDiscount,
+  applyReturnBaseInland,
+  omitDiscountIfNegative,
+  roundMoney,
+  ceilMoney,
+  toFixedNumber,
 } from "../utils";
 import { taxScales2021, SCALES_BY_AGE_GROUP } from "../constants";
 
@@ -33,82 +38,6 @@ export const useCalculateEmployee = () => {
     ageGroup,
   } = userDetails;
 
-  function calculateIncomeTax({
-    taxableIncome,
-    ageGroup,
-    children = 0,
-    scalesByAgeGroup,
-  }) {
-    assertFiniteNonNegative(taxableIncome, "taxableIncome");
-    if (!Number.isInteger(children) || children < 0) {
-      throw new Error("children must be a non-negative integer");
-    }
-
-    const brackets = getBrackets(scalesByAgeGroup, ageGroup, children);
-
-    const grossTax = calcProgressiveTax(taxableIncome, brackets);
-
-    return {
-      taxableIncome,
-      ageGroup,
-      children,
-      grossTax: Math.round(grossTax * 100) / 100,
-    };
-  }
-
-  const SCALE_THRESHOLD = 10000;
-  const RETURN_BASE_INLAND_PERCENTAGE = 0.5;
-
-  const calculateWithCurrentScalesV2 = ({ currentScales, sumToBeTaxed }) => {
-    let remainingAmount = sumToBeTaxed;
-    let totalTax = 0;
-    const processedScales = [];
-
-    // Process each scale in order
-    for (let index = 0; index < currentScales.length; index++) {
-      const scale = currentScales[index];
-      let taxableAmountForThisScale = 0;
-
-      if (remainingAmount <= 0) {
-        // No remaining amount, set scale amount to 0
-        taxableAmountForThisScale = 0;
-      } else if (index < 4) {
-        // For the first 4 scales, use threshold-based calculation
-        taxableAmountForThisScale = Math.min(remainingAmount, SCALE_THRESHOLD);
-        remainingAmount -= taxableAmountForThisScale;
-      } else {
-        // For the last scale (index 4+), use all remaining amount
-        taxableAmountForThisScale = remainingAmount;
-        remainingAmount = 0;
-      }
-
-      const scaleAmount = taxableAmountForThisScale * scale.multiplier;
-      totalTax += scaleAmount;
-
-      // Create the processed scale with the calculated amount
-      processedScales.push({
-        multiplier: scale.multiplier,
-        amount: scaleAmount,
-      });
-    }
-
-    return totalTax;
-  };
-
-  const calculateChildrenDiscount = ({ amount, childDiscountAmount }) => {
-    let discount;
-
-    if (amount > 12000) {
-      const aboveThresholdAmount = amount - 12000;
-      const result = aboveThresholdAmount * 0.02;
-      discount = childDiscountAmount - result;
-    } else {
-      discount = childDiscountAmount;
-    }
-
-    return { discount };
-  };
-
   const showError = () => {
     toast({
       title: "Λείπουν απαιτούμενα πεδία!",
@@ -118,20 +47,6 @@ export const useCalculateEmployee = () => {
     });
 
     return setHasError({ entity: "employee", value: true });
-  };
-
-  const omitDiscountIfNegative = (_taxBefore, _discount) => {
-    if (_discount < 0) {
-      return Math.ceil(_taxBefore);
-    }
-    return Math.round(Math.ceil(_taxBefore) - Math.ceil(_discount));
-  };
-
-  const applyIfReturnBaseInland = (_sumToBeTaxed) => {
-    if (discountOptions.returnBaseInland) {
-      return _sumToBeTaxed * RETURN_BASE_INLAND_PERCENTAGE;
-    }
-    return _sumToBeTaxed;
   };
 
   const centralCalculation = (outsideGrossMonth = 0) => {
@@ -148,62 +63,54 @@ export const useCalculateEmployee = () => {
     const currentGrossMonth =
       activeInput === "gross" ? grossIncomeMonthly : outsideGrossMonth;
 
-    const insuranceMonthly = Math.round(
+    const insuranceMonthly = roundMoney(
       Math.min(
         currentGrossMonth,
         taxationYearScales[taxationYear].maxTaxableSalary,
       ) * taxationYearScales[taxationYear].insurancePercentage,
     );
 
-    const employerMonthlyDues = Math.round(
+    const employerMonthlyDues = roundMoney(
       currentGrossMonth * employerPercentages[taxationYear].value,
     );
 
     const sumToBeTaxed =
       (currentGrossMonth - insuranceMonthly) * salaryMonthCount;
     const grossAfterInsuranceMonthly = currentGrossMonth - insuranceMonthly;
-    const grossAfterInsuranceYearly = Math.ceil(
+    const grossAfterInsuranceYearly = ceilMoney(
       grossAfterInsuranceMonthly * salaryMonthCount,
     );
 
-    const scalesResult = calculateWithCurrentScalesV2({
+    const taxableSum = applyReturnBaseInland(
+      sumToBeTaxed,
+      discountOptions.returnBaseInland,
+    );
+
+    const scalesResult = calculateEmployeeScalesTax({
       currentScales: taxScales2021.taxScales,
-      sumToBeTaxed: applyIfReturnBaseInland(sumToBeTaxed),
+      sumToBeTaxed: taxableSum,
     });
 
-    let taxBeforeDiscount;
-
-    switch (taxationYear) {
-      case 2021:
-      case 2022:
-      case 2023:
-      case 2024:
-      case 2025:
-        taxBeforeDiscount = scalesResult;
-        break;
-
-      case 2026:
-        const progressiveTaxResult = calculateIncomeTax({
-          taxableIncome: applyIfReturnBaseInland(sumToBeTaxed),
+    const taxByYear = {
+      2021: () => scalesResult,
+      2022: () => scalesResult,
+      2023: () => scalesResult,
+      2024: () => scalesResult,
+      2025: () => scalesResult,
+      2026: () =>
+        calculateIncomeTax({
+          taxableIncome: taxableSum,
           ageGroup: ageGroup,
           children: numberOfChildren,
           scalesByAgeGroup: SCALES_BY_AGE_GROUP,
-        });
-        taxBeforeDiscount = progressiveTaxResult.grossTax;
-        break;
+        }).grossTax,
+    };
 
-      // Future years can be easily added:
-      // case 2027:
-      //   // Handle 2027's specific calculation
-      //   break;
-      // case 2028:
-      //   // Handle 2028's specific calculation
-      //   break;
-
-      default:
-        throw new Error(
-          `Unsupported taxation year: ${taxationYear}. Please add configuration for this year.`,
-        );
+    const taxBeforeDiscount = taxByYear[taxationYear]?.();
+    if (taxBeforeDiscount === undefined) {
+      throw new Error(
+        `Unsupported taxation year: ${taxationYear}. Please add configuration for this year.`,
+      );
     }
 
     const { discount } = calculateChildrenDiscount({
@@ -213,7 +120,7 @@ export const useCalculateEmployee = () => {
     });
 
     const canApplyDiscount =
-      Math.ceil(taxBeforeDiscount) >
+      ceilMoney(taxBeforeDiscount) >
       numberOfChildrenScales[taxationYear][numberOfChildren].discount;
 
     // if discount is greater than taxBeforeDiscount make it 0
@@ -221,10 +128,10 @@ export const useCalculateEmployee = () => {
       ? omitDiscountIfNegative(taxBeforeDiscount, discount)
       : 0;
 
-    updateEmployee({
+    const nextEmployeeState = {
       initialTax: {
-        month: Math.ceil(taxBeforeDiscount) / salaryMonthCount,
-        year: Math.ceil(taxBeforeDiscount),
+        month: ceilMoney(taxBeforeDiscount) / salaryMonthCount,
+        year: ceilMoney(taxBeforeDiscount),
       },
       employerObligations: {
         month: employerMonthlyDues,
@@ -235,13 +142,11 @@ export const useCalculateEmployee = () => {
         year: discount,
       },
       taxableIncome: {
-        month: Math.ceil(
-          applyIfReturnBaseInland(sumToBeTaxed) / salaryMonthCount,
-        ),
-        year: applyIfReturnBaseInland(sumToBeTaxed),
+        month: ceilMoney(taxableSum / salaryMonthCount),
+        year: taxableSum,
       },
       taxAfterDiscount,
-      currentInsuranceDiscount: Math.ceil(discount),
+      currentInsuranceDiscount: ceilMoney(discount),
       discountOptions: {
         ...discountOptions,
         returnBaseInland: discountOptions.returnBaseInland,
@@ -259,7 +164,9 @@ export const useCalculateEmployee = () => {
         activeInput === "gross" ? grossMonthOrYear : finalMonthOrYear,
       grossMonthOrYear:
         activeInput === "final" ? finalMonthOrYear : grossMonthOrYear,
-    });
+    };
+
+    updateEmployee(nextEmployeeState);
 
     // TODO: proper check
     const finalMonthlyResult =
@@ -267,20 +174,21 @@ export const useCalculateEmployee = () => {
 
     if (activeInput === "gross") {
       updateEmployee({
-        finalIncomeMonthly: Number(finalMonthlyResult.toFixed(0)),
-        finalIncomeYearly: Number(
-          (finalMonthlyResult * salaryMonthCount).toFixed(0),
+        finalIncomeMonthly: toFixedNumber(finalMonthlyResult, 0),
+        finalIncomeYearly: toFixedNumber(
+          finalMonthlyResult * salaryMonthCount,
+          0,
         ),
       });
 
       updateEmployeeTable({
         grossIncome: {
-          month: Math.round(grossIncomeYearly / salaryMonthCount),
+          month: roundMoney(grossIncomeYearly / salaryMonthCount),
           year: grossIncomeYearly,
         },
         finalIncome: {
-          month: Number(finalMonthlyResult.toFixed(0)),
-          year: Number((finalMonthlyResult * salaryMonthCount).toFixed(0)),
+          month: toFixedNumber(finalMonthlyResult, 0),
+          year: toFixedNumber(finalMonthlyResult * salaryMonthCount, 0),
         },
         salaryMonthCount,
         numberOfChildren,
@@ -291,7 +199,7 @@ export const useCalculateEmployee = () => {
     }
 
     return {
-      grossResult: Number(finalMonthlyResult.toFixed(0)),
+      grossResult: toFixedNumber(finalMonthlyResult, 0),
     };
   };
 
