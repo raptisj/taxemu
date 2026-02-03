@@ -1,6 +1,5 @@
-<div style="width:100px;height:100px;margin-bottom:16px">
-  <img src="./public/icon-256x256.png" alt="Taxemu" style="width:100%;height:100%" />
-</div>
+
+<img src="./public/icon-256x256.png" alt="Taxemu" style="width:100px;height:100px" />
 
 # Taxemu
 
