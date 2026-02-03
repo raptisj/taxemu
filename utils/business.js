@@ -1,5 +1,5 @@
 import { AGE_GROUPS } from "../constants";
-import { toFixedNumber } from "./employee";
+import { roundMoney, toFixedNumber } from "./employee";
 
 const PRE_PAID_TAX_DISCOUNT = 0.5;
 const FIRST_SCALE_TAX_DISCOUNT = 0.5;
@@ -220,4 +220,184 @@ export const calculateBusinessScalesTax = ({
   }
 
   return amount * 0.44 + scaleResult;
+};
+
+export const calculateBusinessResults = ({
+  userDetails,
+  prePaidTaxPercentage = 0.55,
+  withholdingTaxPercentage = 0.2,
+}) => {
+  const {
+    grossIncome,
+    taxationYearScales,
+    taxationYear,
+    taxYearDuration,
+    grossMonthOrYear,
+    businessExpensesMonthOrYear,
+    insuranceScaleSelection,
+    discountOptions,
+    prePaidNextYearTax,
+    withholdingTax,
+    extraBusinessExpenses,
+    previousYearTaxInAdvance,
+    numberOfChildren,
+    ageGroup,
+  } = userDetails;
+
+  const { specialInsuranceScale, prePaidTaxDiscount, firstScaleDiscount } =
+    discountOptions;
+  const isGrossMonthly = grossMonthOrYear === "month";
+
+  const findYearAmount = (value) => value * taxYearDuration;
+  const findMonthAmount = (value) => value / taxYearDuration;
+
+  const grossPerYear = findYearAmount(grossIncome.year / 12);
+  const _grossIncome = isGrossMonthly
+    ? findYearAmount(grossIncome.month)
+    : grossPerYear;
+
+  const insurancePerYear = getInsuranceTotal({
+    taxationYearScales,
+    taxationYear,
+    taxYearDuration,
+    businessExpensesMonthOrYear,
+    insuranceScaleSelection,
+    specialInsuranceScale,
+    type: "year",
+  });
+
+  const taxableIncome = _grossIncome - insurancePerYear - extraBusinessExpenses;
+
+  const taxByYear = {
+    2021: () =>
+      calculateBusinessScalesTax({
+        toBeTaxed: taxableIncome,
+        firstScaleDiscount,
+      }),
+    2022: () =>
+      calculateBusinessScalesTax({
+        toBeTaxed: taxableIncome,
+        firstScaleDiscount,
+      }),
+    2023: () =>
+      calculateBusinessScalesTax({
+        toBeTaxed: taxableIncome,
+        firstScaleDiscount,
+      }),
+    2024: () =>
+      calculateBusinessScalesTax({
+        toBeTaxed: taxableIncome,
+        firstScaleDiscount,
+      }),
+    2025: () =>
+      calculateBusinessScalesTax({
+        toBeTaxed: taxableIncome,
+        firstScaleDiscount,
+      }),
+    2026: () =>
+      calculateTax2026Entrepreneur({
+        taxableIncome: taxableIncome,
+        ageGroup: ageGroup,
+        children: numberOfChildren,
+      }).tax,
+  };
+
+  const totalTax = taxByYear[taxationYear]?.();
+  if (totalTax === undefined) {
+    throw new Error(
+      `Unsupported taxation year: ${taxationYear}. Please add configuration for this year.`,
+    );
+  }
+
+  const totalTaxValue = {
+    month: findMonthAmount(totalTax),
+    year: totalTax,
+  };
+
+  const _taxInAdvance = applyPrePaidDiscount(
+    totalTax * prePaidTaxPercentage,
+    prePaidTaxDiscount,
+  );
+
+  const taxInAdvanceValue = {
+    month: findMonthAmount(_taxInAdvance),
+    year: _taxInAdvance,
+  };
+
+  const nextYearTax = prePaidNextYearTax ? taxInAdvanceValue.year : 0;
+
+  const final =
+    grossPerYear -
+    (totalTax - previousYearTaxInAdvance) -
+    nextYearTax -
+    extraBusinessExpenses -
+    insurancePerYear;
+
+  const prePaidTaxAmount = withholdingTax
+    ? grossIncome.month * withholdingTaxPercentage
+    : 0;
+
+  const roundedPrePaidTaxAmount = roundMoney(prePaidTaxAmount);
+
+  const finalTaxAmount = {
+    month: withholdingTax
+      ? findMonthAmount(totalTax) - roundedPrePaidTaxAmount
+      : findMonthAmount(totalTax),
+    year: withholdingTax
+      ? totalTax - findYearAmount(roundedPrePaidTaxAmount)
+      : totalTax,
+  };
+
+  const finalTaxAmountWithPrePaid = {
+    month: finalTaxAmount.month - findMonthAmount(previousYearTaxInAdvance),
+    year: finalTaxAmount.year - previousYearTaxInAdvance,
+  };
+
+  const nextBusinessTable = {
+    grossIncome: {
+      month: grossIncome.month,
+      year: grossPerYear,
+    },
+    finalIncome: {
+      month: findMonthAmount(final),
+      year: final,
+    },
+    insurance: {
+      month: findMonthAmount(insurancePerYear),
+      year: insurancePerYear,
+    },
+    finalTax: finalTaxAmountWithPrePaid,
+    businessExpenses: {
+      month: findMonthAmount(extraBusinessExpenses),
+      year: extraBusinessExpenses,
+    },
+    withholdingTaxAmount: {
+      month: roundedPrePaidTaxAmount,
+      year: findYearAmount(roundedPrePaidTaxAmount),
+    },
+    withholdingTax,
+    taxationYear,
+    taxYearDuration,
+    grossMonthOrYear,
+    discountOptions: {
+      ...discountOptions,
+    },
+    insuranceScaleSelection,
+    extraBusinessExpenses,
+    previousYearTaxInAdvance: {
+      month: findMonthAmount(previousYearTaxInAdvance),
+      year: previousYearTaxInAdvance,
+    },
+    prePaidNextYearTax,
+  };
+
+  return {
+    totalTax: totalTaxValue,
+    taxInAdvanceValue,
+    finalIncome: {
+      month: findMonthAmount(final),
+      year: final,
+    },
+    nextBusinessTable,
+  };
 };

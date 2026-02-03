@@ -115,4 +115,5 @@ export {
   applyPrePaidDiscount,
   applyFirstScaleDiscount,
   calculateBusinessScalesTax,
+  calculateBusinessResults,
 } from "./business";
