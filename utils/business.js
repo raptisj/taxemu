@@ -22,6 +22,52 @@ const thirdBracketRate = (children) => {
   return Math.max(0, 0.18 - 0.02 * (children - 4));
 };
 
+const applyChildrenRules = (rates, children) => {
+  if (children >= 4) {
+    return {
+      ...rates,
+      r1: 0.0,
+      r2: 0.0,
+      r3: Math.min(rates.r3, thirdBracketRate(children)),
+    };
+  }
+
+  if (!(children in SECOND_BRACKET_BY_CHILDREN)) {
+    return {
+      ...rates,
+      r3: Math.min(rates.r3, thirdBracketRate(children)),
+    };
+  }
+
+  return {
+    ...rates,
+    r2: Math.min(rates.r2, SECOND_BRACKET_BY_CHILDREN[children]),
+    r3: Math.min(rates.r3, thirdBracketRate(children)),
+  };
+};
+
+const applyAgeRules = (rates, taxableIncome, ageGroup) => {
+  if (taxableIncome > 20_000) return rates;
+
+  if (ageGroup === AGE_GROUPS.U25) {
+    return {
+      ...rates,
+      r1: Math.min(rates.r1, 0.0),
+      r2: Math.min(rates.r2, 0.0),
+    };
+  }
+
+  if (ageGroup === AGE_GROUPS.A26_30) {
+    return {
+      ...rates,
+      r1: Math.min(rates.r1, 0.09),
+      r2: Math.min(rates.r2, 0.09),
+    };
+  }
+
+  return rates;
+};
+
 const assertInputs = (income, ageGroup, children) => {
   if (!Number.isFinite(income) || income < 0) {
     throw new Error("taxableIncome must be non-negative");
@@ -49,30 +95,11 @@ export const calculateTax2026Entrepreneur = ({
   assertInputs(taxableIncome, ageGroup, children);
 
   // Base rates (first 3 brackets affected by rules)
-  let r1 = 0.09; // 0–10k
-  let r2 = 0.2; // 10–20k
-  let r3 = 0.26; // 20–30k
+  const baseRates = { r1: 0.09, r2: 0.2, r3: 0.26 };
 
-  // ---- Children rules ----
-  if (children >= 4) {
-    r1 = 0.0;
-    r2 = 0.0;
-  } else if (children in SECOND_BRACKET_BY_CHILDREN) {
-    r2 = Math.min(r2, SECOND_BRACKET_BY_CHILDREN[children]);
-  }
-  r3 = Math.min(r3, thirdBracketRate(children));
+  const childrenRates = applyChildrenRules(baseRates, children);
 
-  // ---- Age rules (STRICT on the 20k mark) ----
-  if (taxableIncome <= 20_000) {
-    if (ageGroup === AGE_GROUPS.U25) {
-      r1 = Math.min(r1, 0.0);
-      r2 = Math.min(r2, 0.0);
-    } else if (ageGroup === AGE_GROUPS.A26_30) {
-      r1 = Math.min(r1, 0.09);
-      r2 = Math.min(r2, 0.09);
-    }
-    // A30P: no reduction
-  }
+  const { r1, r2, r3 } = applyAgeRules(childrenRates, taxableIncome, ageGroup);
 
   const brackets = [
     { from: 0, to: 10_000, rate: r1 },
@@ -83,15 +110,14 @@ export const calculateTax2026Entrepreneur = ({
     { from: 60_000, to: Infinity, rate: 0.44 },
   ];
 
-  let tax = 0;
   const breakdown = [];
 
-  for (const b of brackets) {
-    if (taxableIncome <= b.from) break;
+  const tax = brackets.reduce((total, b) => {
+    if (taxableIncome <= b.from) return total;
+
     const upper = Math.min(taxableIncome, b.to);
     const amount = Math.max(0, upper - b.from);
     const t = amount * b.rate;
-    tax += t;
 
     if (amount > 0) {
       breakdown.push({
@@ -102,7 +128,9 @@ export const calculateTax2026Entrepreneur = ({
         tax: toFixedNumber(t, 2),
       });
     }
-  }
+
+    return total + t;
+  }, 0);
 
   return {
     taxableIncome,
