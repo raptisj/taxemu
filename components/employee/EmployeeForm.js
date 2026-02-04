@@ -14,6 +14,7 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
 } from "@chakra-ui/react";
+import Link from "next/link";
 import { useState } from "react";
 import { useStore } from "store";
 import { useRouter } from "next/router";
@@ -181,6 +182,14 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
             />
           </GridItem>
         </Grid>
+      </Box>
+
+      <Box mt={3}>
+        <Link href="/blog/forologia-misthoton-2026">
+          <Text color="blue.600" fontSize="sm" textDecoration="underline">
+            Δες τι έχει αλλάξει για το 2026
+          </Text>
+        </Link>
       </Box>
 
       <Divider pt={6} />

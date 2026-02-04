@@ -12,6 +12,7 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
 } from "@chakra-ui/react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useStore } from "store";
 import { SidebarSubSection, SidebarSubSectionAccordion } from "../layout";
@@ -153,6 +154,13 @@ const BusinessForm = ({ showCalculatorType = true }) => {
                   { value: "A30P", text: "Άνω των 30" },
                 ]}
               />
+            </Box>
+            <Box mt={3}>
+              <Link href="/blog/forologia-atomikis-epixirisis-2026">
+                <Text color="blue.600" fontSize="sm" textDecoration="underline">
+                  Δες τι έχει αλλάξει για το 2026
+                </Text>
+              </Link>
             </Box>
           </>
         )}
