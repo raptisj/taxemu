@@ -1,4 +1,5 @@
 import { useStore } from "store";
+import { getEmployeeRules, getTaxRules } from "../rules";
 
 export const useEmployeeActions = () => {
   const userDetails = useStore((state) => state.userDetails.employee);
@@ -9,7 +10,6 @@ export const useEmployeeActions = () => {
     grossIncomeYearly,
     grossMonthOrYear,
     taxationYear,
-    taxationYearScales,
     finalMonthOrYear,
   } = userDetails;
 
@@ -24,13 +24,14 @@ export const useEmployeeActions = () => {
 
   const onSelectSalaryMonthCount = (e) => {
     const value = Number(e.target.value);
+    const rules = getEmployeeRules(taxationYear);
     updateEmployee({
       salaryMonthCount: value,
       grossIncomeMonthly: findMonthlyAmount(grossIncomeYearly, value),
       insurancePerMonth: findInsurancePerMonth(
         grossIncomeYearly,
         value,
-        taxationYearScales[taxationYear].insurancePercentage,
+        rules.insurance.employeeRate,
       ),
     });
   };
@@ -68,8 +69,17 @@ export const useEmployeeActions = () => {
 
   const onSelectFinalIncomeMonthOfYear = (e) =>
     updateEmployee({ finalMonthOrYear: e.target.value });
-  const onSelectTaxationYear = (e) =>
-    updateEmployee({ taxationYear: Number(e.target.value) });
+  const onSelectTaxationYear = (e) => {
+    const taxationYear = Number(e.target.value);
+    const rules = getTaxRules(taxationYear);
+    updateEmployee({
+      taxationYear,
+      numberOfChildren: Math.min(
+        userDetails.numberOfChildren,
+        rules.ui.employee.maximumChildren,
+      ),
+    });
+  };
   const onSelectInsuranceCarrier = (e) =>
     updateEmployee({ insuranceCarrier: e.target.value });
   const onChangeNumberOfChildren = (value) =>

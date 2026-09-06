@@ -149,10 +149,15 @@ export function calculateEmployeeScalesTax({
  * @param {number} params.childDiscountAmount
  * @returns {{discount:number}}
  */
-export function calculateChildrenDiscount({ amount, childDiscountAmount }) {
-  if (amount > 12000) {
-    const aboveThresholdAmount = amount - 12000;
-    const result = aboveThresholdAmount * 0.02;
+export function calculateChildrenDiscount({
+  amount,
+  childDiscountAmount,
+  reductionStartsAbove = 12000,
+  reductionRate = 0.02,
+}) {
+  if (amount > reductionStartsAbove) {
+    const aboveThresholdAmount = amount - reductionStartsAbove;
+    const result = aboveThresholdAmount * reductionRate;
     return { discount: childDiscountAmount - result };
   }
   return { discount: childDiscountAmount };
@@ -168,9 +173,9 @@ export function calculateChildrenDiscount({ amount, childDiscountAmount }) {
 export function applyReturnBaseInland(
   sumToBeTaxed,
   returnBaseInland,
-  percentage = 0.5,
+  multiplier = 0.5,
 ) {
-  return returnBaseInland ? sumToBeTaxed * percentage : sumToBeTaxed;
+  return returnBaseInland ? sumToBeTaxed * multiplier : sumToBeTaxed;
 }
 
 /**

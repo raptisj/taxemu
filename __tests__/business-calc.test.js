@@ -1,5 +1,4 @@
 import { calculateBusinessResults } from "../utils/business";
-import { insuranceScales2026 } from "../constants";
 
 describe("calculateBusinessResults", () => {
   const baseParams = {
@@ -7,9 +6,6 @@ describe("calculateBusinessResults", () => {
       grossIncome: {
         month: 2000,
         year: 24000,
-      },
-      taxationYearScales: {
-        2026: insuranceScales2026,
       },
       taxationYear: 2026,
       taxYearDuration: 12,

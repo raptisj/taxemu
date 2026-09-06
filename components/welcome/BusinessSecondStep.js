@@ -1,6 +1,7 @@
 import { Box, Text, Flex } from "@chakra-ui/react";
 import Stepper from "components/stepper";
 import { useStore } from "store";
+import { getBusinessRules } from "../../rules";
 
 export const BusinessSecondStep = () => {
   const userDetails = useStore((state) => state.userDetails);
@@ -8,12 +9,10 @@ export const BusinessSecondStep = () => {
   const { taxationYear } = userDetails.business;
 
   const currentInsuranceScales =
-    userDetails.business.taxationYearScales[taxationYear].insuranceScales;
+    getBusinessRules(taxationYear).insurance.monthlyAmounts;
 
-  const currentInsuranceScalesList = Object.keys(currentInsuranceScales).map(
-    (c, i) => {
-      return { value: c, text: currentInsuranceScales[c].amount };
-    }
+  const currentInsuranceScalesList = currentInsuranceScales.map(
+    (amount, index) => ({ value: String(index), text: amount }),
   );
 
   const handleInsurance = (value) => {
@@ -57,11 +56,9 @@ export const BusinessSecondStep = () => {
             <Stepper.MenuPopover
               onChange={(value) => handleInsurance(value)}
               name={userDetails.business.insuranceScaleSelection.toString()}
-              label={userDetails.business.taxationYearScales[
-                userDetails.business.taxationYear
-              ].insuranceScales[
+              label={currentInsuranceScales[
                 userDetails.business.insuranceScaleSelection
-              ].amount.toString()}
+              ].toString()}
               options={currentInsuranceScalesList}
               menuTitle="Επίλεξε περίοδο"
               mb={4}

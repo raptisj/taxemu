@@ -1,0 +1,1248 @@
+{
+  "2021": {
+    "year": 2021,
+    "sources": [],
+    "employee": {
+      "insurance": {
+        "employeeRate": 0.1412,
+        "employerRate": 0.2229,
+        "monthlyContributionCap": 6500
+      },
+      "incomeTax": {
+        "kind": "progressive",
+        "brackets": [
+          {
+            "upTo": 10000,
+            "rate": 0.09
+          },
+          {
+            "upTo": 20000,
+            "rate": 0.22
+          },
+          {
+            "upTo": 30000,
+            "rate": 0.28
+          },
+          {
+            "upTo": 40000,
+            "rate": 0.36
+          },
+          {
+            "upTo": null,
+            "rate": 0.44
+          }
+        ]
+      },
+      "taxCredit": {
+        "amountByChildren": {
+          "0": 777,
+          "1": 810,
+          "2": 900,
+          "3": 1120,
+          "4": 1340
+        },
+        "reductionStartsAbove": 12000,
+        "reductionRate": 0.02
+      },
+      "returningResident": {
+        "taxableIncomeMultiplier": 0.5
+      }
+    },
+    "business": {
+      "insurance": {
+        "specialScale": 0,
+        "monthlyAmounts": [
+          136,
+          220,
+          262,
+          312,
+          373,
+          445
+        ]
+      },
+      "incomeTax": {
+        "kind": "progressive",
+        "brackets": [
+          {
+            "upTo": 10000,
+            "rate": 0.09
+          },
+          {
+            "upTo": 20000,
+            "rate": 0.22
+          },
+          {
+            "upTo": 30000,
+            "rate": 0.28
+          },
+          {
+            "upTo": 40000,
+            "rate": 0.36
+          },
+          {
+            "upTo": null,
+            "rate": 0.44
+          }
+        ]
+      },
+      "firstYearsDiscount": {
+        "enabled": true,
+        "maximumTaxableIncome": 10000,
+        "taxMultiplier": 0.5
+      },
+      "taxPrepayment": {
+        "rate": 0.55,
+        "discountMultiplier": 0.5
+      },
+      "withholding": {
+        "rate": 0.2
+      },
+      "invoice": {
+        "vatRates": [
+          0.24
+        ],
+        "withholdingRates": [
+          0.2
+        ]
+      }
+    },
+    "ui": {
+      "employee": {
+        "salaryMonthOptions": [
+          12,
+          14,
+          14.5
+        ],
+        "maximumChildren": 4,
+        "showAgeGroup": false
+      },
+      "business": {
+        "maximumChildren": 4,
+        "showAgeGroup": false,
+        "showChildren": false
+      }
+    }
+  },
+  "2022": {
+    "year": 2022,
+    "sources": [],
+    "employee": {
+      "insurance": {
+        "employeeRate": 0.1387,
+        "employerRate": 0.2229,
+        "monthlyContributionCap": 6500
+      },
+      "incomeTax": {
+        "kind": "progressive",
+        "brackets": [
+          {
+            "upTo": 10000,
+            "rate": 0.09
+          },
+          {
+            "upTo": 20000,
+            "rate": 0.22
+          },
+          {
+            "upTo": 30000,
+            "rate": 0.28
+          },
+          {
+            "upTo": 40000,
+            "rate": 0.36
+          },
+          {
+            "upTo": null,
+            "rate": 0.44
+          }
+        ]
+      },
+      "taxCredit": {
+        "amountByChildren": {
+          "0": 777,
+          "1": 810,
+          "2": 900,
+          "3": 1120,
+          "4": 1340
+        },
+        "reductionStartsAbove": 12000,
+        "reductionRate": 0.02
+      },
+      "returningResident": {
+        "taxableIncomeMultiplier": 0.5
+      }
+    },
+    "business": {
+      "insurance": {
+        "specialScale": 0,
+        "monthlyAmounts": [
+          136,
+          220,
+          262,
+          312,
+          373,
+          445
+        ]
+      },
+      "incomeTax": {
+        "kind": "progressive",
+        "brackets": [
+          {
+            "upTo": 10000,
+            "rate": 0.09
+          },
+          {
+            "upTo": 20000,
+            "rate": 0.22
+          },
+          {
+            "upTo": 30000,
+            "rate": 0.28
+          },
+          {
+            "upTo": 40000,
+            "rate": 0.36
+          },
+          {
+            "upTo": null,
+            "rate": 0.44
+          }
+        ]
+      },
+      "firstYearsDiscount": {
+        "enabled": true,
+        "maximumTaxableIncome": 10000,
+        "taxMultiplier": 0.5
+      },
+      "taxPrepayment": {
+        "rate": 0.55,
+        "discountMultiplier": 0.5
+      },
+      "withholding": {
+        "rate": 0.2
+      },
+      "invoice": {
+        "vatRates": [
+          0.24
+        ],
+        "withholdingRates": [
+          0.2
+        ]
+      }
+    },
+    "ui": {
+      "employee": {
+        "salaryMonthOptions": [
+          12,
+          14,
+          14.5
+        ],
+        "maximumChildren": 4,
+        "showAgeGroup": false
+      },
+      "business": {
+        "maximumChildren": 4,
+        "showAgeGroup": false,
+        "showChildren": false
+      }
+    }
+  },
+  "2023": {
+    "year": 2023,
+    "sources": [
+      {
+        "name": "e-EFKA Circular 11/2023",
+        "url": "https://www.e-efka.gov.gr/sites/default/files/2023-02/egk_11_2023.pdf"
+      }
+    ],
+    "employee": {
+      "insurance": {
+        "employeeRate": 0.1387,
+        "employerRate": 0.2229,
+        "monthlyContributionCap": 7126.94
+      },
+      "incomeTax": {
+        "kind": "progressive",
+        "brackets": [
+          {
+            "upTo": 10000,
+            "rate": 0.09
+          },
+          {
+            "upTo": 20000,
+            "rate": 0.22
+          },
+          {
+            "upTo": 30000,
+            "rate": 0.28
+          },
+          {
+            "upTo": 40000,
+            "rate": 0.36
+          },
+          {
+            "upTo": null,
+            "rate": 0.44
+          }
+        ]
+      },
+      "taxCredit": {
+        "amountByChildren": {
+          "0": 777,
+          "1": 810,
+          "2": 900,
+          "3": 1120,
+          "4": 1340
+        },
+        "reductionStartsAbove": 12000,
+        "reductionRate": 0.02
+      },
+      "returningResident": {
+        "taxableIncomeMultiplier": 0.5
+      }
+    },
+    "business": {
+      "insurance": {
+        "specialScale": 0,
+        "monthlyAmounts": [
+          138.15,
+          230.25,
+          276.31,
+          331.13,
+          398.02,
+          476.96,
+          620.6
+        ]
+      },
+      "incomeTax": {
+        "kind": "progressive",
+        "brackets": [
+          {
+            "upTo": 10000,
+            "rate": 0.09
+          },
+          {
+            "upTo": 20000,
+            "rate": 0.22
+          },
+          {
+            "upTo": 30000,
+            "rate": 0.28
+          },
+          {
+            "upTo": 40000,
+            "rate": 0.36
+          },
+          {
+            "upTo": null,
+            "rate": 0.44
+          }
+        ]
+      },
+      "firstYearsDiscount": {
+        "enabled": true,
+        "maximumTaxableIncome": 10000,
+        "taxMultiplier": 0.5
+      },
+      "taxPrepayment": {
+        "rate": 0.55,
+        "discountMultiplier": 0.5
+      },
+      "withholding": {
+        "rate": 0.2
+      },
+      "invoice": {
+        "vatRates": [
+          0.24
+        ],
+        "withholdingRates": [
+          0.2
+        ]
+      }
+    },
+    "ui": {
+      "employee": {
+        "salaryMonthOptions": [
+          12,
+          14,
+          14.5
+        ],
+        "maximumChildren": 4,
+        "showAgeGroup": false
+      },
+      "business": {
+        "maximumChildren": 4,
+        "showAgeGroup": false,
+        "showChildren": false
+      }
+    }
+  },
+  "2024": {
+    "year": 2024,
+    "sources": [
+      {
+        "name": "e-EFKA Circular 5/2024",
+        "url": "https://www.e-efka.gov.gr/sites/default/files/2024-02/EGK_5_24.pdf"
+      },
+      {
+        "name": "e-EFKA Circular 4/2024",
+        "url": "https://www.e-efka.gov.gr/sites/default/files/2024-01/egk_4_2024.pdf"
+      }
+    ],
+    "employee": {
+      "insurance": {
+        "employeeRate": 0.1387,
+        "employerRate": 0.2229,
+        "monthlyContributionCap": 7373.53
+      },
+      "incomeTax": {
+        "kind": "progressive",
+        "brackets": [
+          {
+            "upTo": 10000,
+            "rate": 0.09
+          },
+          {
+            "upTo": 20000,
+            "rate": 0.22
+          },
+          {
+            "upTo": 30000,
+            "rate": 0.28
+          },
+          {
+            "upTo": 40000,
+            "rate": 0.36
+          },
+          {
+            "upTo": null,
+            "rate": 0.44
+          }
+        ]
+      },
+      "taxCredit": {
+        "amountByChildren": {
+          "0": 777,
+          "1": 900,
+          "2": 1120,
+          "3": 1340,
+          "4": 1560
+        },
+        "reductionStartsAbove": 12000,
+        "reductionRate": 0.02
+      },
+      "returningResident": {
+        "taxableIncomeMultiplier": 0.5
+      }
+    },
+    "business": {
+      "insurance": {
+        "specialScale": 0,
+        "monthlyAmounts": [
+          142.93,
+          238.22,
+          285.87,
+          342.59,
+          411.78,
+          493.46,
+          642.06
+        ]
+      },
+      "incomeTax": {
+        "kind": "progressive",
+        "brackets": [
+          {
+            "upTo": 10000,
+            "rate": 0.09
+          },
+          {
+            "upTo": 20000,
+            "rate": 0.22
+          },
+          {
+            "upTo": 30000,
+            "rate": 0.28
+          },
+          {
+            "upTo": 40000,
+            "rate": 0.36
+          },
+          {
+            "upTo": null,
+            "rate": 0.44
+          }
+        ]
+      },
+      "firstYearsDiscount": {
+        "enabled": true,
+        "maximumTaxableIncome": 10000,
+        "taxMultiplier": 0.5
+      },
+      "taxPrepayment": {
+        "rate": 0.55,
+        "discountMultiplier": 0.5
+      },
+      "withholding": {
+        "rate": 0.2
+      },
+      "invoice": {
+        "vatRates": [
+          0.24
+        ],
+        "withholdingRates": [
+          0.2
+        ]
+      }
+    },
+    "ui": {
+      "employee": {
+        "salaryMonthOptions": [
+          12,
+          14,
+          14.5
+        ],
+        "maximumChildren": 4,
+        "showAgeGroup": false
+      },
+      "business": {
+        "maximumChildren": 4,
+        "showAgeGroup": false,
+        "showChildren": false
+      }
+    }
+  },
+  "2025": {
+    "year": 2025,
+    "sources": [
+      {
+        "name": "e-EFKA Circular 3/2025",
+        "url": "https://www.e-efka.gov.gr/sites/default/files/2025-02/EGK_3_2025.pdf"
+      },
+      {
+        "name": "e-EFKA Circular 2/2025",
+        "url": "https://www.e-efka.gov.gr/el/egkyklioi-kai-genika-eggrapha/egkyklios-2-31012025"
+      }
+    ],
+    "employee": {
+      "insurance": {
+        "employeeRate": 0.1337,
+        "employerRate": 0.2179,
+        "monthlyContributionCap": 7572.62
+      },
+      "incomeTax": {
+        "kind": "progressive",
+        "brackets": [
+          {
+            "upTo": 10000,
+            "rate": 0.09
+          },
+          {
+            "upTo": 20000,
+            "rate": 0.22
+          },
+          {
+            "upTo": 30000,
+            "rate": 0.28
+          },
+          {
+            "upTo": 40000,
+            "rate": 0.36
+          },
+          {
+            "upTo": null,
+            "rate": 0.44
+          }
+        ]
+      },
+      "taxCredit": {
+        "amountByChildren": {
+          "0": 777,
+          "1": 900,
+          "2": 1120,
+          "3": 1340,
+          "4": 1560
+        },
+        "reductionStartsAbove": 12000,
+        "reductionRate": 0.02
+      },
+      "returningResident": {
+        "taxableIncomeMultiplier": 0.5
+      }
+    },
+    "business": {
+      "insurance": {
+        "specialScale": 0,
+        "monthlyAmounts": [
+          146.79,
+          244.65,
+          293.59,
+          351.84,
+          422.9,
+          506.78,
+          659.39
+        ]
+      },
+      "incomeTax": {
+        "kind": "progressive",
+        "brackets": [
+          {
+            "upTo": 10000,
+            "rate": 0.09
+          },
+          {
+            "upTo": 20000,
+            "rate": 0.22
+          },
+          {
+            "upTo": 30000,
+            "rate": 0.28
+          },
+          {
+            "upTo": 40000,
+            "rate": 0.36
+          },
+          {
+            "upTo": null,
+            "rate": 0.44
+          }
+        ]
+      },
+      "firstYearsDiscount": {
+        "enabled": true,
+        "maximumTaxableIncome": 10000,
+        "taxMultiplier": 0.5
+      },
+      "taxPrepayment": {
+        "rate": 0.55,
+        "discountMultiplier": 0.5
+      },
+      "withholding": {
+        "rate": 0.2
+      },
+      "invoice": {
+        "vatRates": [
+          0.24
+        ],
+        "withholdingRates": [
+          0.2
+        ]
+      }
+    },
+    "ui": {
+      "employee": {
+        "salaryMonthOptions": [
+          12,
+          14,
+          14.5
+        ],
+        "maximumChildren": 4,
+        "showAgeGroup": false
+      },
+      "business": {
+        "maximumChildren": 4,
+        "showAgeGroup": false,
+        "showChildren": false
+      }
+    }
+  },
+  "2026": {
+    "year": 2026,
+    "sources": [
+      {
+        "name": "e-EFKA Circular 5/2026",
+        "url": "https://www.e-efka.gov.gr/el/egkyklioi-kai-genika-eggrapha/egkyklios-52026"
+      },
+      {
+        "name": "e-EFKA Circular 6/2026",
+        "url": "https://www.e-efka.gov.gr/el/egkyklioi-kai-genika-eggrapha/egkyklios-62026"
+      },
+      {
+        "name": "Ministry of Economy and Finance income-tax guide",
+        "url": "https://minfin.gov.gr/forologiki-politiki/forologikos-odigos/forologia-eisodimatos/"
+      }
+    ],
+    "employee": {
+      "insurance": {
+        "employeeRate": 0.1333,
+        "employerRate": 0.2179,
+        "monthlyContributionCap": 7761.94
+      },
+      "incomeTax": {
+        "kind": "progressiveByAgeAndChildren",
+        "bracketsByAgeAndChildren": {
+          "A30P": {
+            "0": [
+              {
+                "upTo": 10000,
+                "rate": 0.09
+              },
+              {
+                "upTo": 20000,
+                "rate": 0.2
+              },
+              {
+                "upTo": 30000,
+                "rate": 0.26
+              },
+              {
+                "upTo": 40000,
+                "rate": 0.34
+              },
+              {
+                "upTo": 60000,
+                "rate": 0.39
+              },
+              {
+                "upTo": null,
+                "rate": 0.44
+              }
+            ],
+            "1": [
+              {
+                "upTo": 10000,
+                "rate": 0.09
+              },
+              {
+                "upTo": 20000,
+                "rate": 0.18
+              },
+              {
+                "upTo": 30000,
+                "rate": 0.24
+              },
+              {
+                "upTo": 40000,
+                "rate": 0.34
+              },
+              {
+                "upTo": 60000,
+                "rate": 0.39
+              },
+              {
+                "upTo": null,
+                "rate": 0.44
+              }
+            ],
+            "2": [
+              {
+                "upTo": 10000,
+                "rate": 0.09
+              },
+              {
+                "upTo": 20000,
+                "rate": 0.16
+              },
+              {
+                "upTo": 30000,
+                "rate": 0.22
+              },
+              {
+                "upTo": 40000,
+                "rate": 0.34
+              },
+              {
+                "upTo": 60000,
+                "rate": 0.39
+              },
+              {
+                "upTo": null,
+                "rate": 0.44
+              }
+            ],
+            "3": [
+              {
+                "upTo": 20000,
+                "rate": 0.09
+              },
+              {
+                "upTo": 30000,
+                "rate": 0.2
+              },
+              {
+                "upTo": 40000,
+                "rate": 0.34
+              },
+              {
+                "upTo": 60000,
+                "rate": 0.39
+              },
+              {
+                "upTo": null,
+                "rate": 0.44
+              }
+            ],
+            "4": [
+              {
+                "upTo": 20000,
+                "rate": 0
+              },
+              {
+                "upTo": 30000,
+                "rate": 0.18
+              },
+              {
+                "upTo": 40000,
+                "rate": 0.34
+              },
+              {
+                "upTo": 60000,
+                "rate": 0.39
+              },
+              {
+                "upTo": null,
+                "rate": 0.44
+              }
+            ],
+            "5": [
+              {
+                "upTo": 20000,
+                "rate": 0
+              },
+              {
+                "upTo": 30000,
+                "rate": 0.16
+              },
+              {
+                "upTo": 40000,
+                "rate": 0.34
+              },
+              {
+                "upTo": 60000,
+                "rate": 0.39
+              },
+              {
+                "upTo": null,
+                "rate": 0.44
+              }
+            ]
+          },
+          "U25": {
+            "0": [
+              {
+                "upTo": 20000,
+                "rate": 0
+              },
+              {
+                "upTo": 30000,
+                "rate": 0.26
+              },
+              {
+                "upTo": 40000,
+                "rate": 0.34
+              },
+              {
+                "upTo": 60000,
+                "rate": 0.39
+              },
+              {
+                "upTo": null,
+                "rate": 0.44
+              }
+            ],
+            "1": [
+              {
+                "upTo": 20000,
+                "rate": 0
+              },
+              {
+                "upTo": 30000,
+                "rate": 0.24
+              },
+              {
+                "upTo": 40000,
+                "rate": 0.34
+              },
+              {
+                "upTo": 60000,
+                "rate": 0.39
+              },
+              {
+                "upTo": null,
+                "rate": 0.44
+              }
+            ],
+            "2": [
+              {
+                "upTo": 20000,
+                "rate": 0
+              },
+              {
+                "upTo": 30000,
+                "rate": 0.22
+              },
+              {
+                "upTo": 40000,
+                "rate": 0.34
+              },
+              {
+                "upTo": 60000,
+                "rate": 0.39
+              },
+              {
+                "upTo": null,
+                "rate": 0.44
+              }
+            ],
+            "3": [
+              {
+                "upTo": 20000,
+                "rate": 0
+              },
+              {
+                "upTo": 30000,
+                "rate": 0.2
+              },
+              {
+                "upTo": 40000,
+                "rate": 0.34
+              },
+              {
+                "upTo": 60000,
+                "rate": 0.39
+              },
+              {
+                "upTo": null,
+                "rate": 0.44
+              }
+            ],
+            "4": [
+              {
+                "upTo": 20000,
+                "rate": 0
+              },
+              {
+                "upTo": 30000,
+                "rate": 0.18
+              },
+              {
+                "upTo": 40000,
+                "rate": 0.34
+              },
+              {
+                "upTo": 60000,
+                "rate": 0.39
+              },
+              {
+                "upTo": null,
+                "rate": 0.44
+              }
+            ],
+            "5": [
+              {
+                "upTo": 20000,
+                "rate": 0
+              },
+              {
+                "upTo": 30000,
+                "rate": 0.16
+              },
+              {
+                "upTo": 40000,
+                "rate": 0.34
+              },
+              {
+                "upTo": 60000,
+                "rate": 0.39
+              },
+              {
+                "upTo": null,
+                "rate": 0.44
+              }
+            ]
+          },
+          "A26_30": {
+            "0": [
+              {
+                "upTo": 10000,
+                "rate": 0.09
+              },
+              {
+                "upTo": 20000,
+                "rate": 0.09
+              },
+              {
+                "upTo": 30000,
+                "rate": 0.26
+              },
+              {
+                "upTo": 40000,
+                "rate": 0.34
+              },
+              {
+                "upTo": 60000,
+                "rate": 0.39
+              },
+              {
+                "upTo": null,
+                "rate": 0.44
+              }
+            ],
+            "1": [
+              {
+                "upTo": 10000,
+                "rate": 0.09
+              },
+              {
+                "upTo": 20000,
+                "rate": 0.09
+              },
+              {
+                "upTo": 30000,
+                "rate": 0.24
+              },
+              {
+                "upTo": 40000,
+                "rate": 0.34
+              },
+              {
+                "upTo": 60000,
+                "rate": 0.39
+              },
+              {
+                "upTo": null,
+                "rate": 0.44
+              }
+            ],
+            "2": [
+              {
+                "upTo": 10000,
+                "rate": 0.09
+              },
+              {
+                "upTo": 20000,
+                "rate": 0.09
+              },
+              {
+                "upTo": 30000,
+                "rate": 0.22
+              },
+              {
+                "upTo": 40000,
+                "rate": 0.34
+              },
+              {
+                "upTo": 60000,
+                "rate": 0.39
+              },
+              {
+                "upTo": null,
+                "rate": 0.44
+              }
+            ],
+            "3": [
+              {
+                "upTo": 10000,
+                "rate": 0.09
+              },
+              {
+                "upTo": 20000,
+                "rate": 0.09
+              },
+              {
+                "upTo": 30000,
+                "rate": 0.2
+              },
+              {
+                "upTo": 40000,
+                "rate": 0.34
+              },
+              {
+                "upTo": 60000,
+                "rate": 0.39
+              },
+              {
+                "upTo": null,
+                "rate": 0.44
+              }
+            ],
+            "4": [
+              {
+                "upTo": 20000,
+                "rate": 0
+              },
+              {
+                "upTo": 30000,
+                "rate": 0.18
+              },
+              {
+                "upTo": 40000,
+                "rate": 0.34
+              },
+              {
+                "upTo": 60000,
+                "rate": 0.39
+              },
+              {
+                "upTo": null,
+                "rate": 0.44
+              }
+            ],
+            "5": [
+              {
+                "upTo": 20000,
+                "rate": 0
+              },
+              {
+                "upTo": 30000,
+                "rate": 0.16
+              },
+              {
+                "upTo": 40000,
+                "rate": 0.34
+              },
+              {
+                "upTo": 60000,
+                "rate": 0.39
+              },
+              {
+                "upTo": null,
+                "rate": 0.44
+              }
+            ]
+          }
+        }
+      },
+      "taxCredit": {
+        "amountByChildren": {
+          "0": 777,
+          "1": 900,
+          "2": 1120,
+          "3": 1340,
+          "4": 1580,
+          "5": 1780
+        },
+        "reductionStartsAbove": 12000,
+        "reductionRate": 0.02
+      },
+      "returningResident": {
+        "taxableIncomeMultiplier": 0.5
+      }
+    },
+    "business": {
+      "insurance": {
+        "specialScale": 0,
+        "monthlyAmounts": [
+          150.46,
+          250.77,
+          300.93,
+          360.63,
+          433.47,
+          519.45,
+          675.87
+        ]
+      },
+      "incomeTax": {
+        "kind": "progressiveWithAgeAndChildren",
+        "brackets": [
+          {
+            "upTo": 10000,
+            "rate": 0.09
+          },
+          {
+            "upTo": 20000,
+            "rate": 0.2
+          },
+          {
+            "upTo": 30000,
+            "rate": 0.26
+          },
+          {
+            "upTo": 40000,
+            "rate": 0.34
+          },
+          {
+            "upTo": 60000,
+            "rate": 0.39
+          },
+          {
+            "upTo": null,
+            "rate": 0.44
+          }
+        ],
+        "children": {
+          "secondBracketRates": {
+            "0": 0.2,
+            "1": 0.18,
+            "2": 0.16,
+            "3": 0.09
+          },
+          "thirdBracketRates": {
+            "0": 0.26,
+            "1": 0.24,
+            "2": 0.22,
+            "3": 0.2
+          },
+          "fourOrMore": {
+            "exemptThrough": 20000,
+            "thirdBracketBaseRate": 0.18,
+            "decrementPerAdditionalChild": 0.02,
+            "minimumRate": 0
+          }
+        },
+        "ageRelief": {
+          "maximumTaxableIncome": 20000,
+          "ratesByAgeGroup": {
+            "U25": [
+              0,
+              0
+            ],
+            "A26_30": [
+              0.09,
+              0.09
+            ]
+          }
+        }
+      },
+      "firstYearsDiscount": {
+        "enabled": false,
+        "maximumTaxableIncome": 10000,
+        "taxMultiplier": 0.5
+      },
+      "taxPrepayment": {
+        "rate": 0.55,
+        "discountMultiplier": 0.5
+      },
+      "withholding": {
+        "rate": 0.2
+      },
+      "invoice": {
+        "vatRates": [
+          0.24
+        ],
+        "withholdingRates": [
+          0.2
+        ]
+      }
+    },
+    "ui": {
+      "ageGroups": [
+        {
+          "value": "U25",
+          "text": "Έως 25"
+        },
+        {
+          "value": "A26_30",
+          "text": "26 έως 30"
+        },
+        {
+          "value": "A30P",
+          "text": "Άνω των 30"
+        }
+      ],
+      "employee": {
+        "salaryMonthOptions": [
+          12,
+          14,
+          14.5
+        ],
+        "maximumChildren": 5,
+        "showAgeGroup": true
+      },
+      "business": {
+        "maximumChildren": 4,
+        "showAgeGroup": true,
+        "showChildren": true
+      }
+    }
+  }
+}

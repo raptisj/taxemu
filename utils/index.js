@@ -125,3 +125,5 @@ export {
   getCalculationDirtyFields,
   getDirtyFields,
 } from "./formState";
+
+export { calculateIncomeTaxFromPolicy } from "./taxPolicy";

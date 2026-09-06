@@ -1,10 +1,13 @@
 import { Box, Text, Flex } from "@chakra-ui/react";
 import Stepper from "components/stepper";
 import { useStore } from "store";
+import { getBusinessRules } from "../../rules";
 
 export const MobileBusinessSecondStep = () => {
   const userDetails = useStore((state) => state.userDetails);
   const updateBusiness = useStore((state) => state.updateBusiness);
+  const businessRules = getBusinessRules(userDetails.business.taxationYear);
+  const insuranceAmounts = businessRules.insurance.monthlyAmounts;
 
   const handleInsurance = (value) => {
     updateBusiness({
@@ -24,19 +27,6 @@ export const MobileBusinessSecondStep = () => {
           <Stepper.Content text="Οι" mr={2} mb={4} />
 
           <Stepper.Content text="μηνιαίες" mr={2} mb={4} />
-          {/* <Stepper.MenuDrawer
-            onChange={handleInsuranePeriod}
-            name={'month'}
-            label={'μηνιαίες'}
-            // options={["μηνιαίες", "ετήσιες"]}
-            options={[
-              { value: "month", text: "μηνιαίες" },
-              { value: "year", text: "ετήσιες" },
-            ]}
-            isDisabled
-            mr={2}
-            mb={4}
-          /> */}
 
           <Stepper.Content text="εισφορές μου" mr={2} mb={4} />
         </Flex>
@@ -55,27 +45,16 @@ export const MobileBusinessSecondStep = () => {
           <Stepper.MenuDrawer
             onChange={(value) => handleInsurance(value)}
             name={userDetails.business.insuranceScaleSelection.toString()}
-            label={userDetails.business.taxationYearScales[
-              userDetails.business.taxationYear
-            ].insuranceScales[
+            label={insuranceAmounts[
               userDetails.business.insuranceScaleSelection
-            ].amount.toString()}
-            options={[
-              { value: "0", text: 136 },
-              { value: "1", text: 220 },
-              { value: "2", text: 262 },
-              { value: "3", text: 312 },
-              { value: "4", text: 373 },
-              { value: "5", text: 445 },
-            ]}
+            ].toString()}
+            options={insuranceAmounts.map((amount, index) => ({
+              value: String(index),
+              text: amount,
+            }))}
             mr={2}
             mb={4}
           />
-
-          {/* <Stepper.NumberInput
-            onChange={handleInsuranceAmount}
-            value={insuranceAmount}
-          /> */}
         </Flex>
 
         <Flex alignItems="center">

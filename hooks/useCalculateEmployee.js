@@ -2,15 +2,14 @@ import { useToast } from "@chakra-ui/react";
 import { useStore } from "store";
 import {
   applyReturnBaseInland,
+  calculateIncomeTaxFromPolicy,
   calculateChildrenDiscount,
-  calculateEmployeeScalesTax,
-  calculateIncomeTax,
   ceilMoney,
   omitDiscountIfNegative,
   roundMoney,
   toFixedNumber,
 } from "../utils";
-import { SCALES_BY_AGE_GROUP, taxScales2021 } from "../constants";
+import { getEmployeeRules } from "../rules";
 
 export const calculateEmployeeForGrossMonth = (
   userDetails,
@@ -20,21 +19,19 @@ export const calculateEmployeeForGrossMonth = (
     salaryMonthCount,
     discountOptions,
     taxationYear,
-    taxationYearScales,
     numberOfChildren,
-    numberOfChildrenScales,
-    employerPercentages,
     ageGroup,
   } = userDetails;
+  const rules = getEmployeeRules(taxationYear);
 
   const insuranceMonthly = roundMoney(
     Math.min(
       currentGrossMonth,
-      taxationYearScales[taxationYear].maxTaxableSalary,
-    ) * taxationYearScales[taxationYear].insurancePercentage,
+      rules.insurance.monthlyContributionCap,
+    ) * rules.insurance.employeeRate,
   );
   const employerMonthlyDues = roundMoney(
-    currentGrossMonth * employerPercentages[taxationYear].value,
+    currentGrossMonth * rules.insurance.employerRate,
   );
   const sumToBeTaxed =
     (currentGrossMonth - insuranceMonthly) * salaryMonthCount;
@@ -45,38 +42,27 @@ export const calculateEmployeeForGrossMonth = (
   const taxableSum = applyReturnBaseInland(
     sumToBeTaxed,
     discountOptions.returnBaseInland,
+    rules.returningResident.taxableIncomeMultiplier,
   );
-  const scalesResult = calculateEmployeeScalesTax({
-    currentScales: taxScales2021.taxScales,
-    sumToBeTaxed: taxableSum,
+  const { tax: taxBeforeDiscount } = calculateIncomeTaxFromPolicy({
+    taxableIncome: taxableSum,
+    policy: rules.incomeTax,
+    ageGroup,
+    children: numberOfChildren,
   });
-  const taxByYear = {
-    2021: () => scalesResult,
-    2022: () => scalesResult,
-    2023: () => scalesResult,
-    2024: () => scalesResult,
-    2025: () => scalesResult,
-    2026: () =>
-      calculateIncomeTax({
-        taxableIncome: taxableSum,
-        ageGroup,
-        children: numberOfChildren,
-        scalesByAgeGroup: SCALES_BY_AGE_GROUP,
-      }).grossTax,
-  };
-  const taxBeforeDiscount = taxByYear[taxationYear]?.();
-
-  if (taxBeforeDiscount === undefined) {
-    throw new Error(
-      `Unsupported taxation year: ${taxationYear}. Please add configuration for this year.`,
-    );
-  }
 
   const childDiscountAmount =
-    numberOfChildrenScales[taxationYear][numberOfChildren].discount;
+    rules.taxCredit.amountByChildren[String(numberOfChildren)];
+  if (childDiscountAmount === undefined) {
+    throw new Error(
+      `No employee tax credit configured for ${numberOfChildren} children in ${taxationYear}`,
+    );
+  }
   const { discount } = calculateChildrenDiscount({
     amount: grossAfterInsuranceYearly,
     childDiscountAmount,
+    reductionStartsAbove: rules.taxCredit.reductionStartsAbove,
+    reductionRate: rules.taxCredit.reductionRate,
   });
   const canApplyDiscount = ceilMoney(taxBeforeDiscount) > childDiscountAmount;
   const taxAfterDiscount = canApplyDiscount

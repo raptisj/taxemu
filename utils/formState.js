@@ -1,3 +1,5 @@
+import { getTaxRules } from "../rules";
+
 const serializeIncome = (source, amount) => `${source}:${Number(amount)}`;
 
 export const getEmployeeCalculationInput = (employee) => ({
@@ -58,25 +60,29 @@ export const getCalculationInput = (entity, details) => {
 };
 
 export const getCalculationDirtyFields = (entity, details) => {
+  const rules = getTaxRules(details.taxationYear);
   const dirtyFields = getDirtyFields(
     getCalculationInput(entity, details),
     details.lastCalculatedInput,
   );
 
   if (entity === "employee") {
-    return details.taxationYear >= 2026
+    return rules.ui.employee.showAgeGroup
       ? dirtyFields
       : dirtyFields.filter((field) => field !== "ageGroup");
   }
 
   return dirtyFields.filter((field) => {
-    if (
-      details.taxationYear < 2026 &&
-      (field === "ageGroup" || field === "numberOfChildren")
-    ) {
+    if (!rules.ui.business.showAgeGroup && field === "ageGroup") {
       return false;
     }
-    if (details.taxationYear >= 2026 && field === "firstScaleDiscount") {
+    if (!rules.ui.business.showChildren && field === "numberOfChildren") {
+      return false;
+    }
+    if (
+      !rules.business.firstYearsDiscount.enabled &&
+      field === "firstScaleDiscount"
+    ) {
       return false;
     }
     if (!details.prePaidNextYearTax && field === "prePaidTaxDiscount") {

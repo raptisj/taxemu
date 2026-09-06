@@ -1,4 +1,5 @@
 import { useStore } from "store";
+import { getTaxRules } from "../rules";
 
 export const useBusinessActions = () => {
   const userDetails = useStore((state) => state.userDetails.business);
@@ -6,8 +7,36 @@ export const useBusinessActions = () => {
   const setHasError = useStore((state) => state.setHasError);
   const isGrossMonthly = userDetails.grossMonthOrYear === "month";
 
-  const onSelectTaxationYear = (e) =>
-    updateBusiness({ taxationYear: Number(e.target.value) });
+  const onSelectTaxationYear = (e) => {
+    const taxationYear = Number(e.target.value);
+    const rules = getTaxRules(taxationYear);
+    const invoiceRules = rules.business.invoice;
+    const quickCalc = userDetails.calculateRealGrossWidget;
+    updateBusiness({
+      taxationYear,
+      insuranceScaleSelection: Math.min(
+        userDetails.insuranceScaleSelection,
+        rules.business.insurance.monthlyAmounts.length - 1,
+      ),
+      numberOfChildren: Math.min(
+        userDetails.numberOfChildren,
+        rules.ui.business.maximumChildren,
+      ),
+      calculateRealGrossWidget: {
+        ...quickCalc,
+        currentAdditionalValueTax: invoiceRules.vatRates.includes(
+          quickCalc.currentAdditionalValueTax,
+        )
+          ? quickCalc.currentAdditionalValueTax
+          : invoiceRules.vatRates[0],
+        currentWithholdingTax: invoiceRules.withholdingRates.includes(
+          quickCalc.currentWithholdingTax,
+        )
+          ? quickCalc.currentWithholdingTax
+          : invoiceRules.withholdingRates[0],
+      },
+    });
+  };
   const onChangeTaxYearDuration = (value) =>
     updateBusiness({ taxYearDuration: Number(value) });
 

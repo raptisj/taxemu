@@ -21,6 +21,7 @@ import { useRouter } from "next/router";
 import FormElements from "components/input";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { useEmployeeActions, useCalculateEmployee } from "hooks";
+import { getTaxRules, supportedTaxYears } from "../../rules";
 
 const EmployeeForm = ({ showCalculatorType = true }) => {
   const userDetails = useStore((state) => state.userDetails.employee);
@@ -54,9 +55,9 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
     finalIncomeYearly,
     finalIncomeMonthly,
     finalMonthOrYear,
-    taxationYearScales,
     ageGroup,
   } = userDetails;
+  const rules = getTaxRules(taxationYear);
 
   const calculatorTypeValue = pathname?.split("/")[1];
 
@@ -68,9 +69,10 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
     push(`/${value}`);
   };
 
-  const insuranceTaxationYearList = Object.keys(taxationYearScales)
-    .reverse()
-    .map((t) => ({ value: t, text: t }));
+  const taxationYearOptions = supportedTaxYears.map((year) => ({
+    value: String(year),
+    text: String(year),
+  }));
 
   return (
     <>
@@ -92,11 +94,10 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
             label="Ετήσιοι μισθοί"
             onChange={onSelectSalaryMonthCount}
             defaultValue={salaryMonthCount}
-            options={[
-              { value: "12", text: "12" },
-              { value: "14", text: "14" },
-              { value: "14.5", text: "14.5" },
-            ]}
+            options={rules.ui.employee.salaryMonthOptions.map((months) => ({
+              value: String(months),
+              text: String(months),
+            }))}
           />
         </Box>
       </Box>
@@ -219,7 +220,7 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
                 label="Φορολογικό έτος"
                 onChange={onSelectTaxationYear}
                 defaultValue={taxationYear}
-                options={[...insuranceTaxationYearList]}
+                options={taxationYearOptions}
               />
             </Box>
 
@@ -240,7 +241,7 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
               <NumberInput
                 mt={2}
                 defaultValue={0}
-                max={4} // TODO: make this support more children
+                max={rules.ui.employee.maximumChildren}
                 min={0}
                 clampValueOnBlur={false}
                 onChange={onChangeNumberOfChildren}
@@ -254,17 +255,13 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
               </NumberInput>
             </Box>
 
-            {taxationYear >= 2026 && (
+            {rules.ui.employee.showAgeGroup && (
               <Box mt={4}>
                 <FormElements.Select
                   label="Ηλικιακή ομάδα"
                   onChange={onSelectAgeGroup}
                   defaultValue={ageGroup}
-                  options={[
-                    { value: "U25", text: "Έως 25" },
-                    { value: "A26_30", text: "26 έως 30" },
-                    { value: "A30P", text: "Άνω των 30" },
-                  ]}
+                  options={rules.ui.ageGroups}
                 />
               </Box>
             )}

@@ -8,12 +8,17 @@ import {
 } from "@chakra-ui/react";
 import { useStore } from "store";
 import FormElements from "components/input";
+import { getBusinessRules } from "../../rules";
 
 const FormFields = () => {
   const calculateRealGross = useStore((state) => state.userDetails.business.calculateRealGrossWidget);
   const updateBusinessQuickCalc = useStore(
     (state) => state.updateBusinessQuickCalc
   );
+  const taxationYear = useStore(
+    (state) => state.userDetails.business.taxationYear,
+  );
+  const invoiceRules = getBusinessRules(taxationYear).invoice;
 
   const onChangeGrossIncome = (value) => {
     updateBusinessQuickCalc({
@@ -21,15 +26,15 @@ const FormFields = () => {
     });
   };
 
-  const onSelectAdditionalValueTax = (value) => {
+  const onSelectAdditionalValueTax = (event) => {
     updateBusinessQuickCalc({
-      currentAdditionalValueTax: parseInt(value),
+      currentAdditionalValueTax: Number(event.target.value),
     });
   };
 
-  const onSelectWithholdingTax = (value) => {
+  const onSelectWithholdingTax = (event) => {
     updateBusinessQuickCalc({
-      currentWithholdingTax: parseInt(value),
+      currentWithholdingTax: Number(event.target.value),
     });
   };
 
@@ -54,14 +59,20 @@ const FormFields = () => {
         <FormElements.Select
           label="ΦΠΑ"
           onChange={onSelectAdditionalValueTax}
-          options={[{ value: 0.24, text: "24%" }]}
+          options={invoiceRules.vatRates.map((rate) => ({
+            value: rate,
+            text: `${rate * 100}%`,
+          }))}
         />
       </GridItem>
       <GridItem mt={4} gridRow={[2, 1]}>
         <FormElements.Select
           label="Παρακρατηση"
           onChange={onSelectWithholdingTax}
-          options={[{ value: 0.2, text: "20%" }]}
+          options={invoiceRules.withholdingRates.map((rate) => ({
+            value: rate,
+            text: `${rate * 100}%`,
+          }))}
         />
       </GridItem>
     </Grid>

@@ -1,10 +1,7 @@
 import { useStore } from "store";
 import { useToast } from "@chakra-ui/react";
 import { getInsuranceTotal, calculateBusinessResults } from "utils";
-
-// TODO: make these dynamic depending the year
-const WITHHOLDING_TAX_PERCENTAGE = 0.2;
-const PRE_PAID_TAX_PERCENTAGE = 0.55;
+import { getBusinessRules } from "../rules";
 
 export const useCalculateBusiness = () => {
   const userDetails = useStore((state) => state.userDetails.business);
@@ -17,7 +14,6 @@ export const useCalculateBusiness = () => {
 
   const {
     grossIncome,
-    taxationYearScales,
     taxationYear,
     taxYearDuration,
     businessExpensesMonthOrYear,
@@ -48,8 +44,6 @@ export const useCalculateBusiness = () => {
     const { totalTax, taxInAdvanceValue, nextBusinessTable, finalIncome } =
       calculateBusinessResults({
         userDetails,
-        prePaidTaxPercentage: PRE_PAID_TAX_PERCENTAGE,
-        withholdingTaxPercentage: WITHHOLDING_TAX_PERCENTAGE,
       });
 
     const taxInAdvance = prePaidNextYearTax
@@ -71,7 +65,7 @@ export const useCalculateBusiness = () => {
 
   const getInsuranceTotalForUI = (type = "month") =>
     getInsuranceTotal({
-      taxationYearScales,
+      rules: getBusinessRules(taxationYear),
       taxationYear,
       taxYearDuration,
       businessExpensesMonthOrYear,

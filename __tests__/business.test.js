@@ -5,7 +5,8 @@ import {
   applyFirstScaleDiscount,
   calculateBusinessScalesTax,
 } from "../utils/business";
-import { AGE_GROUPS, insuranceScales2026 } from "../constants";
+import { AGE_GROUPS } from "../constants";
+import { getBusinessRules } from "../rules";
 
 describe("calculateTax2026Entrepreneur", () => {
   it("throws on invalid inputs", () => {
@@ -116,10 +117,10 @@ describe("calculateTax2026Entrepreneur", () => {
 
 describe("getInsuranceTotal", () => {
   it("returns monthly or yearly insurance totals", () => {
-    const taxationYearScales = { 2026: insuranceScales2026 };
+    const rules = getBusinessRules(2026);
 
     const monthly = getInsuranceTotal({
-      taxationYearScales,
+      rules,
       taxationYear: 2026,
       taxYearDuration: 12,
       businessExpensesMonthOrYear: "month",
@@ -130,7 +131,7 @@ describe("getInsuranceTotal", () => {
     expect(monthly).toBe(300.93);
 
     const yearly = getInsuranceTotal({
-      taxationYearScales,
+      rules,
       taxationYear: 2026,
       taxYearDuration: 11,
       businessExpensesMonthOrYear: "year",
@@ -142,10 +143,10 @@ describe("getInsuranceTotal", () => {
   });
 
   it("forces scale 0 when special insurance scale is enabled", () => {
-    const taxationYearScales = { 2026: insuranceScales2026 };
+    const rules = getBusinessRules(2026);
 
     const result = getInsuranceTotal({
-      taxationYearScales,
+      rules,
       taxationYear: 2026,
       taxYearDuration: 12,
       businessExpensesMonthOrYear: "month",
