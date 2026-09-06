@@ -91,17 +91,23 @@ const initialState = {
     },
     insuranceCarrier: "efka",
     taxationYearScales: {
+      // e-EFKA Circular 5/2026:
+      // https://www.e-efka.gov.gr/el/egkyklioi-kai-genika-eggrapha/egkyklios-52026
       2026: {
         insurancePercentage: 0.1333,
         maxTaxableSalary: 7761.94,
       },
+      // e-EFKA Circular 3/2025:
+      // https://www.e-efka.gov.gr/sites/default/files/2025-02/EGK_3_2025.pdf
       2025: {
         insurancePercentage: 0.1337,
-        maxTaxableSalary: 7126.94,
+        maxTaxableSalary: 7572.62,
       },
+      // e-EFKA Circular 5/2024:
+      // https://www.e-efka.gov.gr/sites/default/files/2024-02/EGK_5_24.pdf
       2024: {
         insurancePercentage: 0.1387,
-        maxTaxableSalary: 7126.94,
+        maxTaxableSalary: 7373.53,
       },
       2023: {
         insurancePercentage: 0.1387,
@@ -123,6 +129,8 @@ const initialState = {
       year: 0,
     },
     numberOfChildrenScales: {
+      // Ministry of Economy and Finance, Article 16 reductions for 2026 onward:
+      // https://minfin.gov.gr/forologiki-politiki/forologikos-odigos/forologia-eisodimatos/
       2026: {
         0: {
           discount: 777,
@@ -137,7 +145,10 @@ const initialState = {
           discount: 1340,
         },
         4: {
-          discount: 1560,
+          discount: 1580,
+        },
+        5: {
+          discount: 1780,
         },
       },
       2025: {

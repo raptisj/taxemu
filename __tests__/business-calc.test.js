@@ -33,11 +33,11 @@ describe("calculateBusinessResults", () => {
   it("calculates base totals for 2026", () => {
     const result = calculateBusinessResults(baseParams);
 
-    expect(result.totalTax.year).toBeCloseTo(3160, 2);
-    expect(result.finalIncome.year).toBeCloseTo(17840, 2);
-    expect(result.nextBusinessTable.insurance.year).toBeCloseTo(3000, 2);
+    expect(result.totalTax.year).toBeCloseTo(3157.6, 2);
+    expect(result.finalIncome.year).toBeCloseTo(17833.16, 2);
+    expect(result.nextBusinessTable.insurance.year).toBeCloseTo(3009.24, 2);
     expect(result.nextBusinessTable.grossIncome.year).toBeCloseTo(24000, 2);
-    expect(result.nextBusinessTable.finalTax.year).toBeCloseTo(3160, 2);
+    expect(result.nextBusinessTable.finalTax.year).toBeCloseTo(3157.6, 2);
   });
 
   it("reduces total tax when children increase", () => {
@@ -49,8 +49,8 @@ describe("calculateBusinessResults", () => {
       },
     });
 
-    expect(result.totalTax.year).toBeCloseTo(2720, 2);
-    expect(result.finalIncome.year).toBeCloseTo(18280, 2);
+    expect(result.totalTax.year).toBeCloseTo(2717.97, 2);
+    expect(result.finalIncome.year).toBeCloseTo(18272.79, 2);
   });
 
   it("updates tax in advance and final income when pre-paid tax is enabled", () => {
@@ -66,7 +66,7 @@ describe("calculateBusinessResults", () => {
       },
     });
 
-    expect(result.taxInAdvanceValue.year).toBeCloseTo(869, 2);
-    expect(result.finalIncome.year).toBeCloseTo(16971, 2);
+    expect(result.taxInAdvanceValue.year).toBeCloseTo(868.34, 2);
+    expect(result.finalIncome.year).toBeCloseTo(16964.82, 2);
   });
 });

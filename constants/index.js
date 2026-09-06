@@ -23,105 +23,117 @@ export const insuranceScales2021 = {
 export const insuranceScales2022 = insuranceScales2021;
 
 export const insuranceScales2023 = {
+  // e-EFKA Circular 11/2023, pension + health totals (the separately
+  // collected EUR 10 unemployment contribution is not modeled here):
+  // https://www.e-efka.gov.gr/sites/default/files/2023-02/egk_11_2023.pdf
   insuranceScales: {
     0: {
-      amount: 136,
+      amount: 138.15,
     },
     1: {
-      amount: 230,
+      amount: 230.25,
     },
     2: {
-      amount: 276,
+      amount: 276.31,
     },
     3: {
-      amount: 350,
+      amount: 331.13,
     },
     4: {
-      amount: 442,
+      amount: 398.02,
     },
     5: {
-      amount: 550,
+      amount: 476.96,
     },
     6: {
-      amount: 746,
+      amount: 620.6,
     },
   },
 };
 
 export const insuranceScales2024 = {
+  // e-EFKA Circular 4/2024, pension + health totals (the separately
+  // collected EUR 10 unemployment contribution is not modeled here):
+  // https://www.e-efka.gov.gr/sites/default/files/2024-01/egk_4_2024.pdf
   insuranceScales: {
     0: {
-      amount: 142,
+      amount: 142.93,
     },
     1: {
-      amount: 239,
+      amount: 238.22,
     },
     2: {
-      amount: 287,
+      amount: 285.87,
     },
     3: {
-      amount: 364,
+      amount: 342.59,
     },
     4: {
-      amount: 459,
+      amount: 411.78,
     },
     5: {
-      amount: 572,
+      amount: 493.46,
     },
     6: {
-      amount: 776,
+      amount: 642.06,
     },
   },
 };
 
 export const insuranceScales2025 = {
+  // e-EFKA Circular 2/2025, pension + health totals (the separately
+  // collected EUR 10 unemployment contribution is not modeled here):
+  // https://www.e-efka.gov.gr/el/egkyklioi-kai-genika-eggrapha/egkyklios-2-31012025
   insuranceScales: {
     0: {
-      amount: 147,
+      amount: 146.79,
     },
     1: {
-      amount: 244,
+      amount: 244.65,
     },
     2: {
-      amount: 293,
+      amount: 293.59,
     },
     3: {
-      amount: 351,
+      amount: 351.84,
     },
     4: {
-      amount: 422,
+      amount: 422.9,
     },
     5: {
-      amount: 507,
+      amount: 506.78,
     },
     6: {
-      amount: 660,
+      amount: 659.39,
     },
   },
 };
 
 export const insuranceScales2026 = {
+  // e-EFKA Circular 6/2026, pension + health totals (the separately
+  // collected EUR 10 unemployment contribution is not modeled here):
+  // https://www.e-efka.gov.gr/el/egkyklioi-kai-genika-eggrapha/egkyklios-62026
   insuranceScales: {
     0: {
-      amount: 150,
+      amount: 150.46,
     },
     1: {
-      amount: 250,
+      amount: 250.77,
     },
     2: {
-      amount: 300,
+      amount: 300.93,
     },
     3: {
-      amount: 360,
+      amount: 360.63,
     },
     4: {
-      amount: 433,
+      amount: 433.47,
     },
     5: {
-      amount: 519,
+      amount: 519.45,
     },
     6: {
-      amount: 675,
+      amount: 675.87,
     },
   },
 };
@@ -210,7 +222,8 @@ export const AGE_GROUPS = Object.freeze({
   A30P: "A30P", // > 30
 });
 
-// Example constants (EDIT to match your exact tables)
+// Ministry of Economy and Finance, income-tax scales for 2026 onward:
+// https://minfin.gov.gr/forologiki-politiki/forologikos-odigos/forologia-eisodimatos/
 export const SCALES_BY_AGE_GROUP = Object.freeze({
   [AGE_GROUPS.A30P]: {
     // keys: "0", "1", "2", "3", "4", "5" ... or "default"
@@ -307,7 +320,6 @@ export const SCALES_BY_AGE_GROUP = Object.freeze({
     ],
   },
 
-  // Fill in with your exact 26–30 tables
   [AGE_GROUPS.A26_30]: {
     0: [
       { upTo: 10000, rate: 0.09 },
@@ -317,11 +329,40 @@ export const SCALES_BY_AGE_GROUP = Object.freeze({
       { upTo: 60000, rate: 0.39 },
       { upTo: null, rate: 0.44 },
     ],
-    // add "1","2","3","4","5" as needed
-    default: [
+    1: [
       { upTo: 10000, rate: 0.09 },
       { upTo: 20000, rate: 0.09 },
-      { upTo: 30000, rate: 0.26 },
+      { upTo: 30000, rate: 0.24 },
+      { upTo: 40000, rate: 0.34 },
+      { upTo: 60000, rate: 0.39 },
+      { upTo: null, rate: 0.44 },
+    ],
+    2: [
+      { upTo: 10000, rate: 0.09 },
+      { upTo: 20000, rate: 0.09 },
+      { upTo: 30000, rate: 0.22 },
+      { upTo: 40000, rate: 0.34 },
+      { upTo: 60000, rate: 0.39 },
+      { upTo: null, rate: 0.44 },
+    ],
+    3: [
+      { upTo: 10000, rate: 0.09 },
+      { upTo: 20000, rate: 0.09 },
+      { upTo: 30000, rate: 0.2 },
+      { upTo: 40000, rate: 0.34 },
+      { upTo: 60000, rate: 0.39 },
+      { upTo: null, rate: 0.44 },
+    ],
+    4: [
+      { upTo: 20000, rate: 0.0 },
+      { upTo: 30000, rate: 0.18 },
+      { upTo: 40000, rate: 0.34 },
+      { upTo: 60000, rate: 0.39 },
+      { upTo: null, rate: 0.44 },
+    ],
+    5: [
+      { upTo: 20000, rate: 0.0 },
+      { upTo: 30000, rate: 0.16 },
       { upTo: 40000, rate: 0.34 },
       { upTo: 60000, rate: 0.39 },
       { upTo: null, rate: 0.44 },

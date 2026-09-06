@@ -127,7 +127,7 @@ describe("getInsuranceTotal", () => {
       specialInsuranceScale: false,
     });
 
-    expect(monthly).toBe(300);
+    expect(monthly).toBe(300.93);
 
     const yearly = getInsuranceTotal({
       taxationYearScales,
@@ -138,7 +138,7 @@ describe("getInsuranceTotal", () => {
       specialInsuranceScale: false,
     });
 
-    expect(yearly).toBe(11 * 300);
+    expect(yearly).toBe(11 * 300.93);
   });
 
   it("forces scale 0 when special insurance scale is enabled", () => {
@@ -153,7 +153,7 @@ describe("getInsuranceTotal", () => {
       specialInsuranceScale: true,
     });
 
-    expect(result).toBe(150);
+    expect(result).toBe(150.46);
   });
 });
 
