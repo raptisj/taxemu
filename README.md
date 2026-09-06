@@ -25,6 +25,30 @@ Run a development server.
 npm run dev
 ```
 
+### Testing
+
+Run the complete Jest test suite once:
+
+```
+npm test -- --runInBand
+```
+
+Run tests in watch mode while developing:
+
+```
+npm test -- --watch
+```
+
+Generate a coverage report:
+
+```
+npm test -- --coverage
+```
+
+When changing `rules/taxRules.json`, add or update a year-regression test with
+expected values taken independently from the cited official source. Then run
+both the test suite and `npm run build` before submitting the change.
+
 ## Authors
 
 John Raptis(Code)
