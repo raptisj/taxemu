@@ -1,6 +1,5 @@
 import {
   Box,
-  Flex,
   Button,
   Drawer,
   DrawerOverlay,
@@ -11,7 +10,13 @@ import {
 } from "@chakra-ui/react";
 import { SubmitButtonContent } from "components/form";
 
-const MobileDrawerForm = ({ children, isOpen, onClose, onCalculate }) => {
+const MobileDrawerForm = ({
+  children,
+  entity,
+  isOpen,
+  onClose,
+  onCalculate,
+}) => {
   const onClick = () => {
     onCalculate();
     onClose();
@@ -35,7 +40,7 @@ const MobileDrawerForm = ({ children, isOpen, onClose, onCalculate }) => {
             backgroundColor="white"
           >
             <Button colorScheme="purple" width="full" onClick={onClick}>
-              <SubmitButtonContent />
+              <SubmitButtonContent entity={entity} />
             </Button>
           </Box>
         </DrawerFooter>

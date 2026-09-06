@@ -66,6 +66,7 @@ const MobileEmployeeView = () => {
       </Box>
 
       <MobileDrawerForm
+        entity="employee"
         isOpen={isDrawerOpen}
         onClose={handleClose}
         onCalculate={

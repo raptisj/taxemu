@@ -30,6 +30,7 @@ const EmployeeView = () => {
       <GridItem minHeight="calc(100vh - 135px)">
         <Flex direction="column" height="100%">
           <Sidebar
+            entity="employee"
             onClear={removeUserDetails}
             onSubmitAction={
               isGrossAction ? centralCalculation : reverseCentralCalculation
@@ -56,6 +57,7 @@ const EmployeeView = () => {
           pb={20}
         >
           <Table.Header
+            entity="employee"
             onSubmitAction={
               isGrossAction ? centralCalculation : reverseCentralCalculation
             }

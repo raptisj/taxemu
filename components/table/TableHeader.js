@@ -1,7 +1,7 @@
 import { Flex, Button, Heading } from "@chakra-ui/react";
 import { SubmitButtonContent } from "../form";
 
-const TableHeader = ({ onSubmitAction }) => {
+const TableHeader = ({ entity, onSubmitAction }) => {
   return (
     <Flex justifyContent="space-between">
       <Heading
@@ -22,7 +22,7 @@ const TableHeader = ({ onSubmitAction }) => {
           onSubmitAction();
         }}
       >
-        <SubmitButtonContent />
+        <SubmitButtonContent entity={entity} />
       </Button>
     </Flex>
   );

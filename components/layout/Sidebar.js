@@ -2,7 +2,7 @@ import { Button, Box, Flex } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
 import { SubmitButtonContent } from "../form";
 
-export const Sidebar = ({ children, onSubmitAction, onClear }) => {
+export const Sidebar = ({ children, entity, onSubmitAction, onClear }) => {
   return (
     <>
       <Box minHeight="calc(100vh - 258px)">{children}</Box>
@@ -24,7 +24,7 @@ export const Sidebar = ({ children, onSubmitAction, onClear }) => {
             onSubmitAction();
           }}
         >
-          <SubmitButtonContent />
+          <SubmitButtonContent entity={entity} />
         </Button>
 
         <Button

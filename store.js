@@ -11,6 +11,10 @@ import {
   taxScales2023,
   taxScales2026,
 } from "./constants";
+import {
+  getBusinessCalculationInput,
+  getEmployeeCalculationInput,
+} from "./utils/formState";
 
 const initialState = {
   calculatorType: "employee",
@@ -242,7 +246,7 @@ const initialState = {
         returnBaseInland: false,
       },
     },
-    dirtyFormState: [],
+    lastCalculatedInput: null,
   },
   //
   //////////////////////////////////////
@@ -390,10 +394,15 @@ const initialState = {
       },
       prePaidNextYearTax: false,
     },
-    dirtyFormState: [],
+    lastCalculatedInput: null,
     query: "",
   },
 };
+
+initialState.employee.lastCalculatedInput =
+  getEmployeeCalculationInput(initialState.employee);
+initialState.business.lastCalculatedInput =
+  getBusinessCalculationInput(initialState.business);
 
 export const useStore = create((set) => ({
   userDetails: initialState,
@@ -411,19 +420,27 @@ export const useStore = create((set) => ({
       },
     })),
 
-  updateEmployeeTable: (newState) =>
-    set((state) => ({
-      userDetails: {
-        ...state.userDetails,
-        employee: {
-          ...state.userDetails.employee,
-          tableResults: {
-            ...state.userDetails.employee.tableResults,
-            ...newState,
+  commitEmployeeCalculation: ({ newState, tableResults }) =>
+    set((state) => {
+      const employee = {
+        ...state.userDetails.employee,
+        ...newState,
+        tableResults: {
+          ...state.userDetails.employee.tableResults,
+          ...tableResults,
+        },
+      };
+
+      return {
+        userDetails: {
+          ...state.userDetails,
+          employee: {
+            ...employee,
+            lastCalculatedInput: getEmployeeCalculationInput(employee),
           },
         },
-      },
-    })),
+      };
+    }),
 
   updateBusiness: (newState) => {
     set((state) => ({
@@ -451,19 +468,27 @@ export const useStore = create((set) => ({
       },
     })),
 
-  updateBusinessTable: (newState) =>
-    set((state) => ({
-      userDetails: {
-        ...state.userDetails,
-        business: {
-          ...state.userDetails.business,
-          tableResults: {
-            ...state.userDetails.business.tableResults,
-            ...newState,
+  commitBusinessCalculation: ({ newState, tableResults }) =>
+    set((state) => {
+      const business = {
+        ...state.userDetails.business,
+        ...newState,
+        tableResults: {
+          ...state.userDetails.business.tableResults,
+          ...tableResults,
+        },
+      };
+
+      return {
+        userDetails: {
+          ...state.userDetails,
+          business: {
+            ...business,
+            lastCalculatedInput: getBusinessCalculationInput(business),
           },
         },
-      },
-    })),
+      };
+    }),
 
   setHasError: ({ entity, value }) =>
     set((state) => ({

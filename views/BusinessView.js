@@ -21,6 +21,7 @@ const BusinessView = () => {
     >
       <GridItem minHeight="calc(100vh - 135px)">
         <Sidebar
+          entity="business"
           onSubmitAction={centralCalculation}
           onClear={removeUserDetails}
         >
@@ -37,7 +38,7 @@ const BusinessView = () => {
         position="relative"
       >
         <Flex position="sticky" top={8} flexDirection="column" height="100%">
-          <Table.Header onSubmitAction={centralCalculation} />
+          <Table.Header entity="business" onSubmitAction={centralCalculation} />
           <Table.Business />
         </Flex>
       </GridItem>

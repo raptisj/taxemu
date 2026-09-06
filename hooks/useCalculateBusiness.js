@@ -9,8 +9,9 @@ const PRE_PAID_TAX_PERCENTAGE = 0.55;
 export const useCalculateBusiness = () => {
   const userDetails = useStore((state) => state.userDetails.business);
   const hasError = useStore((state) => state.userDetails.business.hasError);
-  const updateBusiness = useStore((state) => state.updateBusiness);
-  const updateBusinessTable = useStore((state) => state.updateBusinessTable);
+  const commitBusinessCalculation = useStore(
+    (state) => state.commitBusinessCalculation,
+  );
   const setHasError = useStore((state) => state.setHasError);
   const toast = useToast();
 
@@ -51,23 +52,20 @@ export const useCalculateBusiness = () => {
         withholdingTaxPercentage: WITHHOLDING_TAX_PERCENTAGE,
       });
 
-    updateBusiness({ totalTax });
+    const taxInAdvance = prePaidNextYearTax
+      ? taxInAdvanceValue
+      : { month: 0, year: 0 };
 
-    if (prePaidNextYearTax) {
-      updateBusiness({
-        taxInAdvance: taxInAdvanceValue,
-      });
-
-      updateBusinessTable({
-        taxInAdvance: taxInAdvanceValue,
-      });
-    }
-
-    updateBusinessTable(nextBusinessTable);
-
-    updateBusiness({
-      finalIncome,
-      dirtyFormState: [],
+    commitBusinessCalculation({
+      newState: {
+        totalTax,
+        taxInAdvance,
+        finalIncome,
+      },
+      tableResults: {
+        ...nextBusinessTable,
+        taxInAdvance,
+      },
     });
   };
 

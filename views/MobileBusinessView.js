@@ -49,6 +49,7 @@ const MobileBusinessView = () => {
       </Box>
 
       <MobileDrawerForm
+        entity="business"
         isOpen={isDrawerOpen}
         onClose={handleClose}
         onCalculate={centralCalculation}

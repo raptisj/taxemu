@@ -1,19 +1,17 @@
 import { useStore } from "store";
+import { getCalculationDirtyFields } from "utils";
 
-export const SubmitButtonContent = () => {
-  const userEmployeeDetails = useStore((state) => state.userDetails.employee);
-  const userBusinessDetails = useStore((state) => state.userDetails.business);
+export const SubmitButtonContent = ({ entity }) => {
+  const details = useStore((state) => state.userDetails[entity]);
+  const dirtyFieldCount = getCalculationDirtyFields(entity, details).length;
 
-  const hasFormChanged =
-    userEmployeeDetails.dirtyFormState.length ||
-    userBusinessDetails.dirtyFormState.length;
   return (
     <>
       Υπολόγισε
-      {!!hasFormChanged && (
+      {!!dirtyFieldCount && (
         <span style={{ marginLeft: "4px" }}>
           {" "}
-          {`(${hasFormChanged} ${hasFormChanged > 1 ? "αλλαγές" : "αλλαγή"})`}
+          {`(${dirtyFieldCount} ${dirtyFieldCount > 1 ? "αλλαγές" : "αλλαγή"})`}
         </span>
       )}
     </>
