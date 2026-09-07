@@ -4,6 +4,46 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import * as gtag from "../config/gtag";
 import Script from "next/script";
+import { getTaxRules, latestTaxYear } from "../rules";
+
+const latestRules = getTaxRules(latestTaxYear);
+const formatPercent = (rate) =>
+  `${new Intl.NumberFormat("el-GR", { maximumFractionDigits: 3 }).format(
+    rate * 100,
+  )}%`;
+const formatMoney = (amount) =>
+  `${new Intl.NumberFormat("el-GR", { maximumFractionDigits: 0 }).format(amount)}€`;
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "Πώς υπολογίζονται οι ασφαλιστικές εισφορές μισθωτού;",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: `Για το ${latestTaxYear}, οι εισφορές εργαζομένου υπολογίζονται με συντελεστή ${formatPercent(latestRules.employee.insurance.employeeRate)} επί του μικτού μισθού, έως το μηνιαίο όριο ασφαλιστέων αποδοχών των ${formatMoney(latestRules.employee.insurance.monthlyContributionCap)}.`,
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Πώς υπολογίζεται ο φόρος εισοδήματος μισθωτού;",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: `Για το ${latestTaxYear}, ο φόρος υπολογίζεται προοδευτικά στο ετήσιο φορολογητέο εισόδημα μετά τις ασφαλιστικές εισφορές. Οι εφαρμοζόμενοι συντελεστές εξαρτώνται από την ηλικιακή ομάδα και τον αριθμό εξαρτώμενων τέκνων.`,
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Πώς υπολογίζεται η μείωση φόρου μισθωτού;",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: `Η αρχική μείωση φόρου εξαρτάται από τον αριθμό εξαρτώμενων τέκνων. Πάνω από ${formatMoney(latestRules.employee.taxCredit.reductionStartsAbove)} μειώνεται κατά ${formatPercent(latestRules.employee.taxCredit.reductionRate)} του υπερβάλλοντος ποσού.`,
+      },
+    },
+  ],
+};
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -61,34 +101,7 @@ function MyApp({ Component, pageProps }) {
           key="structured-data"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: `
-          {
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            "mainEntity": [{
-              "@type": "Question",
-              "name": "Πως υπολογίζονται οι ασφαλιστικές εισφορές μισθωτού",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "<p>Οι ασφαλιστικές εισφορές του εργαζομένου προκύπτουν από την εφαρμογή ενός ποσοστού επί το μικτού μισθού.</p> <br /> <p><strong>Παράδειγμα:</strong> Για ένα μικτό μηνιαίο 2000€ και με το ποσοστό των ασφαλιστικών εισφορών που παρακρατούνται να είναι στο 13.867%: μικτό μηνιαίο * 0.13867 = ασφαλιστικές εισφορές ανά μήνα</p>"
-              }
-            }, {
-              "@type": "Question",
-              "name": "Πως υπολογίζεται ο φόρος εισοδήματος μισθωτού",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "<p>Για τον υπολογισμό χρησιμοποιείται το ετήσιο φορολογητέο εισόδημα αφότου γίνει η αφαίρεση τον ασφαλιστικών εισφορών, και ο φόρος υπολογίζεται κλιμακωτά:</p> <br /> <ul><li>0€-10.000€ → 9%</li><li>10.000€-€20.000€ → 22%</li><li>20.000€-€30.000€ → 28%</li><li>30.000€-€40.000€ → 36%</li><li>40.000€+ → 44%</li></ul> <br/> <p><strong>παράδειγμα:</strong> Με ετήσιο φορολογητέο εισόδημα 17.232€ προκύπτει:</p> <ul><li>10.000€ * 0.09 = €900</li><li>7.232€ * 0.22 = 1591€</li><li>σύνολο = 2491€</li></ul>"
-              }
-            }, {
-              "@type": "Question",
-              "name": "Πως υπολογίζεται η έκπτωση φόρου μισθωτού",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "<p>Η έκπτωση φόρου εισοδήματος για μισθωτούς εξαρτάται από τον αριθμό των προστατευόμενων τέκνων. Για εισοδήματα κάτω των 12.000€ είναι οι εξής:</p> <ul> <li>777€, εάν δεν υπάρχουν προστατευόμενα τέκνα</li><li>810€, εάν υφίσταται ένα προστατευόμενο τέκνο</li><li>900€, εάν υπάρχουν δύο προστατευόμενα τέκνα</li><li>1.120€, εάν υφίστανται τρία προστατευόμενα τέκνα</li><li>1.340€, εάν υφίστανται τέσσερα προστατευόμενα τέκνα</li><li>επιπλέον 220€ για κάθε προστατευόμενο τέκνο από το πέμπτο και πάνω</li> </ul> <p>Αν το εισοδήματα υπερβαίνει τα 12.000€ η έκπτωση μειώνεται κατά 20€ ανά 1.000€.</p>"
-            }
-          }]
-          }
-          `,
+            __html: JSON.stringify(structuredData),
           }}
         />
       )}

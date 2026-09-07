@@ -1,5 +1,33 @@
 import { calcProgressiveTax, toFixedNumber } from "./employee";
 
+export const buildTaxBreakdown = (taxableIncome, brackets) => {
+  let previousLimit = 0;
+
+  return brackets.flatMap((bracket) => {
+    if (taxableIncome <= previousLimit) return [];
+
+    const upperLimit = bracket.upTo ?? Infinity;
+    const amount = Math.max(
+      0,
+      Math.min(taxableIncome, upperLimit) - previousLimit,
+    );
+    const from = previousLimit;
+    previousLimit = upperLimit;
+
+    return amount
+      ? [
+          {
+            from,
+            to: bracket.upTo,
+            amount: toFixedNumber(amount, 2),
+            rate: bracket.rate,
+            tax: toFixedNumber(amount * bracket.rate, 2),
+          },
+        ]
+      : [];
+  });
+};
+
 const assertTaxContext = (taxableIncome, ageGroup, children) => {
   if (!Number.isFinite(taxableIncome) || taxableIncome < 0) {
     throw new Error("taxableIncome must be non-negative");

@@ -18,6 +18,11 @@ describe("annual tax rules", () => {
     supportedTaxYears.forEach((year) => {
       const rules = getTaxRules(year);
       expect(rules.year).toBe(year);
+      expect(rules.sources.length).toBeGreaterThan(0);
+      rules.sources.forEach((source) => {
+        expect(source.name).toEqual(expect.any(String));
+        expect(source.url).toMatch(/^https:\/\//);
+      });
       expect(rules.employee.insurance).toBeDefined();
       expect(rules.employee.incomeTax).toBeDefined();
       expect(rules.business.insurance.monthlyAmounts.length).toBeGreaterThan(0);
@@ -64,6 +69,13 @@ describe("annual tax rules", () => {
     expect(() => validateTaxRules(malformedRules)).toThrow(
       "2026.employee.insurance.employeeRate",
     );
+  });
+
+  it("rejects a year without traceable official sources", () => {
+    const malformedRules = JSON.parse(JSON.stringify(taxRulesByYear));
+    malformedRules[2026].sources = [];
+
+    expect(() => validateTaxRules(malformedRules)).toThrow("2026.sources");
   });
 
   it("rejects unsupported years with a useful error", () => {

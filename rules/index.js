@@ -33,6 +33,25 @@ const assertNonEmptyNumberMap = (values, path) => {
   );
 };
 
+const validateSources = (sources, path) => {
+  if (!Array.isArray(sources) || sources.length === 0) {
+    throw new Error(`${path} must contain at least one official source`);
+  }
+
+  sources.forEach((source, index) => {
+    const sourcePath = `${path}[${index}]`;
+    if (typeof source?.name !== "string" || !source.name.trim()) {
+      throw new Error(`${sourcePath}.name must be a non-empty string`);
+    }
+    if (
+      typeof source?.url !== "string" ||
+      !/^https:\/\/[a-z0-9.-]+(?:\/|$)/i.test(source.url)
+    ) {
+      throw new Error(`${sourcePath}.url must be a valid HTTPS URL`);
+    }
+  });
+};
+
 const validateBrackets = (brackets, path) => {
   if (!Array.isArray(brackets) || brackets.length === 0) {
     throw new Error(`${path} must contain at least one bracket`);
@@ -70,6 +89,8 @@ export const validateTaxRules = (rulesByYear = taxRulesByYear) => {
     if (rules.year !== Number(yearKey)) {
       throw new Error(`${yearKey}.year must match its object key`);
     }
+
+    validateSources(rules.sources, `${yearKey}.sources`);
 
     ["employee", "business"].forEach((entity) => {
       const policy = rules[entity]?.incomeTax;

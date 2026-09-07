@@ -1,34 +1,12 @@
 import { AGE_GROUPS } from "../constants";
 import { getBusinessRules } from "../rules";
 import { roundMoney, toFixedNumber } from "./employee";
-import { calculateIncomeTaxFromPolicy } from "./taxPolicy";
+import {
+  buildTaxBreakdown,
+  calculateIncomeTaxFromPolicy,
+} from "./taxPolicy";
 
 const DEFAULT_BUSINESS_RULES = getBusinessRules(2026);
-
-const buildBreakdown = (taxableIncome, brackets) => {
-  let previousLimit = 0;
-  return brackets.flatMap((bracket) => {
-    if (taxableIncome <= previousLimit) return [];
-    const upperLimit = bracket.upTo ?? Infinity;
-    const amount = Math.max(
-      0,
-      Math.min(taxableIncome, upperLimit) - previousLimit,
-    );
-    const from = previousLimit;
-    previousLimit = upperLimit;
-    return amount
-      ? [
-          {
-            from,
-            to: bracket.upTo,
-            amount: toFixedNumber(amount, 2),
-            rate: bracket.rate,
-            tax: toFixedNumber(amount * bracket.rate, 2),
-          },
-        ]
-      : [];
-  });
-};
 
 export const calculateTax2026Entrepreneur = ({
   taxableIncome,
@@ -62,7 +40,7 @@ export const calculateTax2026Entrepreneur = ({
     appliedRates: Object.fromEntries(
       brackets.map((bracket, index) => [rateLabels[index], bracket.rate]),
     ),
-    breakdown: buildBreakdown(taxableIncome, brackets),
+    breakdown: buildTaxBreakdown(taxableIncome, brackets),
   };
 };
 
