@@ -43,7 +43,11 @@ const MobileEmployeeView = () => {
     <>
       <Box position="relative" height="calc(100vh - 150px)" mt={[6, 16]}>
         <Box pb={20}>
-          <Table.MobileEmployeeTable />
+          <Table.MobileEmployeeTable
+            onSubmitAction={
+              isGrossAction ? centralCalculation : reverseCentralCalculation
+            }
+          />
 
           <YearComparison entity="employee" />
 

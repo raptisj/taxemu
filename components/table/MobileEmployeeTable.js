@@ -11,7 +11,7 @@ import { useStore } from "store";
 import { formatCellPercentage, formatCellValue } from "utils";
 import MobileTableHeader from "./MobileTableHeader";
 
-const MobileEmployeeTable = () => {
+const MobileEmployeeTable = ({ onSubmitAction }) => {
   const userDetails = useStore((state) => state.userDetails.employee);
 
   const {
@@ -31,7 +31,7 @@ const MobileEmployeeTable = () => {
 
   return (
     <>
-      <MobileTableHeader entity="μισθωτού" />
+      <MobileTableHeader entity="μισθωτού" onSubmitAction={onSubmitAction} />
 
       <Tabs isFitted mt={2}>
         <TabList>

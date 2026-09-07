@@ -11,7 +11,7 @@ import { useStore } from "store";
 import { formatCellValue } from "utils";
 import MobileTableHeader from "./MobileTableHeader";
 
-const MobileBusinessTable = () => {
+const MobileBusinessTable = ({ onSubmitAction }) => {
   const userDetails = useStore((state) => state.userDetails.business);
 
   const {
@@ -32,7 +32,10 @@ const MobileBusinessTable = () => {
 
   return (
     <>
-      <MobileTableHeader entity="ελεύθερου επαγγελματία" />
+      <MobileTableHeader
+        entity="ελεύθερου επαγγελματία"
+        onSubmitAction={onSubmitAction}
+      />
 
       <Tabs isFitted mt={2}>
         <TabList>

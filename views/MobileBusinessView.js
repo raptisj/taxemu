@@ -32,7 +32,7 @@ const MobileBusinessView = () => {
   return (
     <>
       <Box position="relative" height="calc(100vh - 150px)" mt={[6, 16]}>
-        <Table.MobileBusinessTable />
+        <Table.MobileBusinessTable onSubmitAction={centralCalculation} />
         <YearComparison entity="business" />
 
         <Box
