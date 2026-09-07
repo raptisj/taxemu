@@ -126,7 +126,7 @@ const EmployeeTable = () => {
                 {formatCellValue(
                   grossIncomeMonthly > finalTax.month && finalTax.month > 0
                     ? finalTax.month
-                    : null
+                    : null,
                 )}
               </Text>
             </Td>
@@ -135,7 +135,7 @@ const EmployeeTable = () => {
                 {formatCellValue(
                   grossIncomeYearly > finalTax.year && finalTax.year > 0
                     ? finalTax.year
-                    : null
+                    : null,
                 )}
               </Text>
             </Td>
@@ -201,15 +201,17 @@ const EmployeeTable = () => {
           <Tr background="purple.50">
             <Td border="none">
               <Text color="purple.800" fontWeight="700" fontSize="sm">
-                Συνολική φορολογική επιβάρυνση
+                Φορολογική επιβάρυνση
               </Text>
             </Td>
             <Td border="none">
               <Text color="purple.800" fontWeight="600" fontSize="sm">
-                {formatCellValue(taxWedge.month)} ({formatCellPercentage(
+                {formatCellValue(taxWedge.month)} (
+                {formatCellPercentage(
                   taxWedgePercentage.month,
                   totalEmployerCost.month > 0,
-                )})
+                )}
+                )
               </Text>
             </Td>
             <Td isNumeric border="none">
@@ -219,10 +221,12 @@ const EmployeeTable = () => {
                 fontSize="sm"
                 textAlign="left"
               >
-                {formatCellValue(taxWedge.year)} ({formatCellPercentage(
+                {formatCellValue(taxWedge.year)} (
+                {formatCellPercentage(
                   taxWedgePercentage.year,
                   totalEmployerCost.year > 0,
-                )})
+                )}
+                )
               </Text>
             </Td>
           </Tr>

@@ -58,8 +58,7 @@ describe("dynamic calculation explanations", () => {
         .flatMap(({ items = [] }) => items)
         .some(
           (item) =>
-            item.includes("Συνολική φορολογική επιβάρυνση") &&
-            item.includes("%"),
+            item.includes("Φορολογική επιβάρυνση") && item.includes("%"),
         ),
     ).toBe(true);
   });

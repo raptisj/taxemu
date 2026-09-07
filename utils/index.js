@@ -145,3 +145,9 @@ export {
   removeComparisonParams,
   serializeComparisonInput,
 } from "./yearComparison";
+
+export {
+  calculateBinnedPercentile,
+  getInflationRatesBetween,
+  getWageDistributionForYear,
+} from "./insights";

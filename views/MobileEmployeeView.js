@@ -4,10 +4,9 @@ import MobileDrawerForm from "components/layout/MobileDrawerForm";
 import EmployeeForm from "components/employee/EmployeeForm";
 import { useCalculateEmployee } from "hooks";
 import { useStore } from "store";
-import { WageComparisonWidget } from "features/wageComparisonMobileWidget";
 import { useRouter } from "next/router";
-import { InflationMobileWidget } from "features/inflationMobileWidget";
 import { YearComparison } from "features/yearComparison";
+import { MobileEmployeeInsights } from "features/employeeInsights";
 
 const MobileEmployeeView = () => {
   const router = useRouter();
@@ -49,10 +48,9 @@ const MobileEmployeeView = () => {
             }
           />
 
-          <YearComparison entity="employee" />
+          <MobileEmployeeInsights />
 
-          <WageComparisonWidget />
-          <InflationMobileWidget />
+          <YearComparison entity="employee" />
         </Box>
 
         <Box

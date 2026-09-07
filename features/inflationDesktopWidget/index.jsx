@@ -1,32 +1,42 @@
 import {
+  Badge,
   Box,
-  Button,
-  Flex,
   Heading,
   Link,
   Text,
-  useDisclosure,
-  Modal,
-  ModalBody,
-  ModalHeader,
-  ModalContent,
-  ModalOverlay,
-  ModalCloseButton,
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
 } from "@chakra-ui/react";
-import { inflationRatesMap, inflationRates } from "../../constants";
+import {
+  hicpInflation,
+  hicpSource,
+  latestActualInflationYear,
+  purchasingPowerBaseYear,
+} from "../../constants";
 import { useStore } from "store";
-import { calculateInflationDetails } from "utils";
+import {
+  calculateInflationDetails,
+  formatEuroCurrency,
+  getInflationRatesBetween,
+} from "utils";
 import { InflationWidgetContent } from "./InflationWidgetContent";
 
 export const InflationDesktopWidget = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const userDetails = useStore((state) => state.userDetails.employee);
 
-  const { finalIncomeMonthly, grossIncomeYearly, taxationYear } = userDetails;
+  const { finalIncomeMonthly, grossIncomeYearly } = userDetails;
+  const rates = getInflationRatesBetween(
+    purchasingPowerBaseYear,
+    latestActualInflationYear,
+    hicpInflation,
+  );
 
   const totalResultDetails = calculateInflationDetails(
     grossIncomeYearly,
-    inflationRates
+    rates.map(({ rate }) => rate),
   );
 
   if (!finalIncomeMonthly) {
@@ -34,53 +44,50 @@ export const InflationDesktopWidget = () => {
   }
 
   return (
-    <Box borderWidth={1} borderColor="gray.300" borderRadius={6} p={3} mt={3}>
-      <Flex justifyContent="space-between" alignItems="center">
-        <Flex gap={3} alignItems="center">
-          <Heading as="h3" fontSize="1.25rem" fontWeight={700}>
-            {(inflationRatesMap[taxationYear] * 100).toFixed(1)}%
-          </Heading>
-          <Box>
-            <Text fontSize=".8rem" fontWeight={600}>
-              Ετήσιος πληθωρισμός για το {taxationYear}
-            </Text>
-            <Link
-              textDecoration="underline"
-              color="gray.600"
-              target="_blank"
-              href="https://economy-finance.ec.europa.eu/economic-surveillance-eu-economies/greece/economic-forecast-greece_en"
-              fontSize=".8rem"
-            >
-              Πηγή: European Commision
-            </Link>
-          </Box>
-        </Flex>
+    <Box borderWidth="1px" borderRadius="xl" bg="white" p={{ base: 4, md: 5 }}>
+      <Badge colorScheme="orange" mb={2}>ΑΓΟΡΑΣΤΙΚΗ ΔΥΝΑΜΗ</Badge>
+      <Heading as="h3" fontSize={{ base: "lg", md: "xl" }} color="gray.700">
+        +{totalResultDetails.increasePercentage}% από το {purchasingPowerBaseYear}{" "}
+        έως το {latestActualInflationYear}
+      </Heading>
+      <Text color="gray.600" fontSize="sm" mt={2}>
+        Εισόδημα {formatEuroCurrency(grossIncomeYearly)} το {purchasingPowerBaseYear}{" "}
+        αντιστοιχεί περίπου σε {formatEuroCurrency(totalResultDetails.finalAmount)} το{" "}
+        {latestActualInflationYear}.
+      </Text>
 
-        <Button size="sm" onClick={onOpen}>
-          Πως με επηρεάζει;
-        </Button>
-      </Flex>
-
-      <Modal onClose={onClose} size="xl" isOpen={isOpen}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader borderBottomWidth="1px" borderBottomColor="gray.200">
-            <h2>Πως με επηρεάζει;</h2>
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody
-            minH="400px"
-            maxH={{ md: "70vh", xl: "50vh" }}
-            overflow="auto"
-            pb={6}
-          >
+      <Accordion allowToggle mt={3}>
+        <AccordionItem border="none">
+          <AccordionButton px={0} color="purple.600">
+            <Box as="span" flex="1" textAlign="left" fontSize="sm" fontWeight="600">
+              Πώς υπολογίζεται;
+            </Box>
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel px={0} pb={2}>
             <InflationWidgetContent
               grossIncomeYearly={grossIncomeYearly}
               totalResultDetails={totalResultDetails}
+              fromYear={purchasingPowerBaseYear}
+              toYear={latestActualInflationYear}
+              rates={rates}
             />
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+          </AccordionPanel>
+        </AccordionItem>
+      </Accordion>
+
+      <Link
+        display="inline-block"
+        mt={2}
+        fontSize="xs"
+        textDecoration="underline"
+        color="gray.400"
+        target="_blank"
+        rel="noreferrer"
+        href={hicpSource.url}
+      >
+        Πηγή: {hicpSource.name}
+      </Link>
     </Box>
   );
 };

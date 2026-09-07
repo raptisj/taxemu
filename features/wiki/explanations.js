@@ -54,7 +54,9 @@ const getTaxModel = ({ taxableIncome, policy, ageGroup, children }) => {
   return {
     tax,
     brackets: describeBrackets(brackets),
-    breakdown: buildTaxBreakdown(taxableIncome, brackets).map(describeBreakdown),
+    breakdown: buildTaxBreakdown(taxableIncome, brackets).map(
+      describeBreakdown,
+    ),
   };
 };
 
@@ -97,7 +99,7 @@ export const buildEmployeeExplanation = (details) => {
               `Εισφορές εργαζομένου: ${formatExplanationMoney(calculated.insurance.month)} ανά μισθό, ${formatExplanationMoney(calculated.insurance.year)} ετησίως`,
               `Εργοδοτικές εισφορές: ${formatExplanationMoney(calculated.employerObligations.month)} ανά μισθό, ${formatExplanationMoney(calculated.employerObligations.year)} ετησίως`,
               `Συνολικό εργοδοτικό κόστος: ${formatExplanationMoney(calculated.totalEmployerCost.month)} ανά μισθό, ${formatExplanationMoney(calculated.totalEmployerCost.year)} ετησίως`,
-              `Συνολική φορολογική επιβάρυνση: ${formatExplanationMoney(calculated.taxWedge.month)} (${formatExplanationRate(calculated.taxWedgePercentage.month / 100)}) ανά μισθό, ${formatExplanationMoney(calculated.taxWedge.year)} (${formatExplanationRate(calculated.taxWedgePercentage.year / 100)}) ετησίως`,
+              `Φορολογική επιβάρυνση: ${formatExplanationMoney(calculated.taxWedge.month)} (${formatExplanationRate(calculated.taxWedgePercentage.month / 100)}) ανά μισθό, ${formatExplanationMoney(calculated.taxWedge.year)} (${formatExplanationRate(calculated.taxWedgePercentage.year / 100)}) ετησίως`,
             ]
           : [],
       },
@@ -122,7 +124,9 @@ export const buildEmployeeExplanation = (details) => {
         exampleTitle: hasCalculation ? "Εφαρμογή στο εισόδημά σου" : null,
         example: tax.breakdown,
         items: calculated
-          ? [`Φόρος πριν από τη μείωση: ${formatExplanationMoney(calculated.initialTax.year)}`]
+          ? [
+              `Φόρος πριν από τη μείωση: ${formatExplanationMoney(calculated.initialTax.year)}`,
+            ]
           : [],
       },
       {
@@ -184,7 +188,9 @@ export const buildBusinessExplanation = (details) => {
             `${index === 0 ? "Ειδική" : `${index}η κατηγορία`}: ${formatExplanationMoney(amount)} / μήνα`,
         ),
         items: table
-          ? [`Σύνολο εισφορών περιόδου: ${formatExplanationMoney(table.insurance.year)}`]
+          ? [
+              `Σύνολο εισφορών περιόδου: ${formatExplanationMoney(table.insurance.year)}`,
+            ]
           : [],
       },
       {
@@ -211,7 +217,9 @@ export const buildBusinessExplanation = (details) => {
           ? [
               `Φόρος κλίμακας: ${formatExplanationMoney(tax.tax)}`,
               ...(taxWasDiscounted
-                ? [`Φόρος μετά την έκπτωση πρώτων ετών: ${formatExplanationMoney(calculation.totalTax.year)}`]
+                ? [
+                    `Φόρος μετά την έκπτωση πρώτων ετών: ${formatExplanationMoney(calculation.totalTax.year)}`,
+                  ]
                 : []),
             ]
           : [],
@@ -222,10 +230,14 @@ export const buildBusinessExplanation = (details) => {
         items: hasCalculation
           ? [
               ...(details.prePaidNextYearTax
-                ? [`Προκαταβολή επόμενου έτους: ${formatExplanationMoney(calculation.taxInAdvanceValue.year)}`]
+                ? [
+                    `Προκαταβολή επόμενου έτους: ${formatExplanationMoney(calculation.taxInAdvanceValue.year)}`,
+                  ]
                 : []),
               ...(details.withholdingTax
-                ? [`Παρακράτηση που έχει ήδη αποδοθεί: ${formatExplanationMoney(table.withholdingTaxAmount.year)}`]
+                ? [
+                    `Παρακράτηση που έχει ήδη αποδοθεί: ${formatExplanationMoney(table.withholdingTaxAmount.year)}`,
+                  ]
                 : []),
               `Καθαρό εισόδημα περιόδου: ${formatExplanationMoney(calculation.finalIncome.year)}`,
             ]

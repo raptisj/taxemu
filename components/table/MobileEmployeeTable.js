@@ -70,7 +70,7 @@ const MobileEmployeeTable = ({ onSubmitAction }) => {
                 {formatCellValue(
                   grossIncomeMonthly > finalTax.month && finalTax.month > 0
                     ? finalTax.month
-                    : null
+                    : null,
                 )}
               </Text>
             </Flex>
@@ -102,13 +102,15 @@ const MobileEmployeeTable = ({ onSubmitAction }) => {
               background="purple.50"
             >
               <Text color="purple.800" fontWeight="600" fontSize="sm">
-                Συνολική φορολογική επιβάρυνση
+                Φορολογική επιβάρυνση
               </Text>
               <Text color="purple.800" fontWeight="600">
-                {formatCellValue(taxWedge.month)} ({formatCellPercentage(
+                {formatCellValue(taxWedge.month)} (
+                {formatCellPercentage(
                   taxWedgePercentage.month,
                   totalEmployerCost.month > 0,
-                )})
+                )}
+                )
               </Text>
             </Flex>
           </TabPanel>
@@ -139,7 +141,7 @@ const MobileEmployeeTable = ({ onSubmitAction }) => {
                 {formatCellValue(
                   grossIncomeYearly > finalTax.year && finalTax.year > 0
                     ? finalTax.year
-                    : null
+                    : null,
                 )}
               </Text>
             </Flex>
@@ -171,13 +173,15 @@ const MobileEmployeeTable = ({ onSubmitAction }) => {
               background="purple.50"
             >
               <Text color="purple.800" fontWeight="600" fontSize="sm">
-                Συνολική φορολογική επιβάρυνση
+                Φορολογική επιβάρυνση
               </Text>
               <Text color="purple.800" fontWeight="600">
-                {formatCellValue(taxWedge.year)} ({formatCellPercentage(
+                {formatCellValue(taxWedge.year)} (
+                {formatCellPercentage(
                   taxWedgePercentage.year,
                   totalEmployerCost.year > 0,
-                )})
+                )}
+                )
               </Text>
             </Flex>
           </TabPanel>

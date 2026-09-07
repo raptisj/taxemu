@@ -1,11 +1,20 @@
-import { Box, Grid, Flex, GridItem } from "@chakra-ui/react";
+import {
+  Box,
+  Grid,
+  Flex,
+  GridItem,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+} from "@chakra-ui/react";
 import { useStore } from "store";
 import { Sidebar } from "components/layout";
 import Table from "components/table";
 import { useCalculateEmployee } from "hooks";
 import EmployeeForm from "components/employee/EmployeeForm";
-import { WageComparisonChart } from "features/wageComparisonChart";
-import { InflationDesktopWidget } from "features/inflationDesktopWidget";
+import { EmployeeInsights } from "features/employeeInsights";
 import { YearComparison } from "features/yearComparison";
 import { useRouter } from "next/router";
 import { removeComparisonParams } from "utils/yearComparison";
@@ -72,21 +81,27 @@ const EmployeeView = () => {
           height="100%"
           pb={20}
         >
-          <Table.Header
-            entity="employee"
-            onSubmitAction={
-              isGrossAction ? centralCalculation : reverseCentralCalculation
-            }
-          />
-          <Table.Employee />
-
-          <YearComparison entity="employee" />
-
-          <WageComparisonChart />
-
-          <Box pr={4} mt={4}>
-            <InflationDesktopWidget />
-          </Box>
+          <Tabs colorScheme="purple" isLazy>
+            <TabList mb={5}>
+              <Tab>Αποτελέσματα</Tab>
+              <Tab>Αναλύσεις</Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel p={0}>
+                <Table.Header
+                  entity="employee"
+                  onSubmitAction={
+                    isGrossAction ? centralCalculation : reverseCentralCalculation
+                  }
+                />
+                <Table.Employee />
+                <YearComparison entity="employee" />
+              </TabPanel>
+              <TabPanel p={0} pr={4}>
+                <EmployeeInsights />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
         </Flex>
       </GridItem>
     </Grid>
