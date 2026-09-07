@@ -1,7 +1,24 @@
 {
   "2021": {
     "year": 2021,
-    "sources": [],
+    "sources": [
+      {
+        "name": "e-EFKA Circular 3/2020 — non-salaried insurance categories",
+        "url": "https://www.e-efka.gov.gr/el/egkyklioi-kai-genika-eggrapha/egkyklios-3-03032020"
+      },
+      {
+        "name": "e-EFKA insured-person information — €6,500 contribution ceiling through 2022",
+        "url": "https://apps.e-efka.gov.gr/eWorkContractsIns/index.xhtml"
+      },
+      {
+        "name": "AADE instructions for the 2021 personal income-tax return",
+        "url": "https://www.aade.gr/sites/default/files/2022-05/odigies_fefp_v2_2021.pdf"
+      },
+      {
+        "name": "AADE basic VAT rates",
+        "url": "https://www.aade.gr/exypiretisi-enimerosi/hristikoi-odigoi/enarxi-epiheirimatikis-drastiriotitas/basikoi-syntelestes-fpa"
+      }
+    ],
     "employee": {
       "insurance": {
         "employeeRate": 0.1412,
@@ -125,7 +142,24 @@
   },
   "2022": {
     "year": 2022,
-    "sources": [],
+    "sources": [
+      {
+        "name": "e-EFKA Circular 3/2020 — non-salaried insurance categories",
+        "url": "https://www.e-efka.gov.gr/el/egkyklioi-kai-genika-eggrapha/egkyklios-3-03032020"
+      },
+      {
+        "name": "e-EFKA insured-person information — €6,500 contribution ceiling through 2022",
+        "url": "https://apps.e-efka.gov.gr/eWorkContractsIns/index.xhtml"
+      },
+      {
+        "name": "AADE instructions for the 2022 personal income-tax return",
+        "url": "https://www.aade.gr/sites/default/files/2023-05/odigies_symplirosifefp_fe2022.pdf"
+      },
+      {
+        "name": "AADE basic VAT rates",
+        "url": "https://www.aade.gr/exypiretisi-enimerosi/hristikoi-odigoi/enarxi-epiheirimatikis-drastiriotitas/basikoi-syntelestes-fpa"
+      }
+    ],
     "employee": {
       "insurance": {
         "employeeRate": 0.1387,
@@ -251,8 +285,20 @@
     "year": 2023,
     "sources": [
       {
-        "name": "e-EFKA Circular 11/2023",
+        "name": "e-EFKA Circular 10/2023 — employee contribution ceiling",
+        "url": "https://www.e-efka.gov.gr/el/egkyklioi-kai-genika-eggrapha/egkyklios-10-09022023"
+      },
+      {
+        "name": "e-EFKA Circular 11/2023 — non-salaried insurance categories",
         "url": "https://www.e-efka.gov.gr/sites/default/files/2023-02/egk_11_2023.pdf"
+      },
+      {
+        "name": "AADE instructions for the 2023 personal income-tax return",
+        "url": "https://www.aade.gr/sites/default/files/2024-06/odigies_E1_2024_2.pdf"
+      },
+      {
+        "name": "AADE basic VAT rates",
+        "url": "https://www.aade.gr/exypiretisi-enimerosi/hristikoi-odigoi/enarxi-epiheirimatikis-drastiriotitas/basikoi-syntelestes-fpa"
       }
     ],
     "employee": {
@@ -381,12 +427,24 @@
     "year": 2024,
     "sources": [
       {
-        "name": "e-EFKA Circular 5/2024",
+        "name": "e-EFKA Circular 5/2024 — employee contribution ceiling",
         "url": "https://www.e-efka.gov.gr/sites/default/files/2024-02/EGK_5_24.pdf"
       },
       {
-        "name": "e-EFKA Circular 4/2024",
+        "name": "e-EFKA Circular 4/2024 — non-salaried insurance categories",
         "url": "https://www.e-efka.gov.gr/sites/default/files/2024-01/egk_4_2024.pdf"
+      },
+      {
+        "name": "AADE instructions for the 2024 personal income-tax return",
+        "url": "https://www.aade.gr/sites/default/files/2025-05/odigies_symplirosisFEFP-2024_16-05-2025.pdf"
+      },
+      {
+        "name": "AADE Circular O.3047/2023 — increased tax credits for dependent children",
+        "url": "https://www.aade.gr/egkyklioi-kai-apofaseis/o-3047-04-08-2023"
+      },
+      {
+        "name": "AADE basic VAT rates",
+        "url": "https://www.aade.gr/exypiretisi-enimerosi/hristikoi-odigoi/enarxi-epiheirimatikis-drastiriotitas/basikoi-syntelestes-fpa"
       }
     ],
     "employee": {
@@ -515,12 +573,24 @@
     "year": 2025,
     "sources": [
       {
-        "name": "e-EFKA Circular 3/2025",
+        "name": "e-EFKA Circular 3/2025 — employee contribution ceiling",
         "url": "https://www.e-efka.gov.gr/sites/default/files/2025-02/EGK_3_2025.pdf"
       },
       {
-        "name": "e-EFKA Circular 2/2025",
+        "name": "e-EFKA Circular 2/2025 — non-salaried insurance categories",
         "url": "https://www.e-efka.gov.gr/el/egkyklioi-kai-genika-eggrapha/egkyklios-2-31012025"
+      },
+      {
+        "name": "AADE instructions for the 2025 personal income-tax return",
+        "url": "https://www.aade.gr/sites/default/files/2026-03/Odigies_E1_2026_0.pdf"
+      },
+      {
+        "name": "AADE Circular O.3047/2023 — increased tax credits for dependent children",
+        "url": "https://www.aade.gr/egkyklioi-kai-apofaseis/o-3047-04-08-2023"
+      },
+      {
+        "name": "AADE basic VAT rates",
+        "url": "https://www.aade.gr/exypiretisi-enimerosi/hristikoi-odigoi/enarxi-epiheirimatikis-drastiriotitas/basikoi-syntelestes-fpa"
       }
     ],
     "employee": {
@@ -649,16 +719,24 @@
     "year": 2026,
     "sources": [
       {
-        "name": "e-EFKA Circular 5/2026",
+        "name": "e-EFKA Circular 5/2026 — employee contribution ceiling",
         "url": "https://www.e-efka.gov.gr/el/egkyklioi-kai-genika-eggrapha/egkyklios-52026"
       },
       {
-        "name": "e-EFKA Circular 6/2026",
+        "name": "e-EFKA Circular 6/2026 — non-salaried insurance categories",
         "url": "https://www.e-efka.gov.gr/el/egkyklioi-kai-genika-eggrapha/egkyklios-62026"
       },
       {
         "name": "Ministry of Economy and Finance income-tax guide",
         "url": "https://minfin.gov.gr/forologiki-politiki/forologikos-odigos/forologia-eisodimatos/"
+      },
+      {
+        "name": "AADE Circular O.3068/2025 — 2026 income-tax brackets and family relief",
+        "url": "https://www.aade.gr/egkyklioi-kai-apofaseis/o-3068-18-11-2025"
+      },
+      {
+        "name": "AADE basic VAT rates",
+        "url": "https://www.aade.gr/exypiretisi-enimerosi/hristikoi-odigoi/enarxi-epiheirimatikis-drastiriotitas/basikoi-syntelestes-fpa"
       }
     ],
     "employee": {
