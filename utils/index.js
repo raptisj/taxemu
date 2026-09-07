@@ -142,5 +142,6 @@ export {
   getDifference,
   parseComparisonInput,
   parseComparisonYears,
+  removeComparisonParams,
   serializeComparisonInput,
 } from "./yearComparison";

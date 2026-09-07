@@ -5,10 +5,25 @@ import { useCalculateBusiness } from "hooks";
 import BusinessForm from "components/business/BusinessForm";
 import { useStore } from "store";
 import { YearComparison } from "features/yearComparison";
+import { useRouter } from "next/router";
+import { removeComparisonParams } from "utils/yearComparison";
 
 const BusinessView = () => {
   const { centralCalculation } = useCalculateBusiness();
   const removeUserDetails = useStore((state) => state.removeUserDetails);
+  const router = useRouter();
+
+  const clearCalculator = () => {
+    removeUserDetails();
+    router.replace(
+      {
+        pathname: router.pathname,
+        query: removeComparisonParams(router.query),
+      },
+      undefined,
+      { shallow: true },
+    );
+  };
 
   return (
     <Grid
@@ -24,7 +39,7 @@ const BusinessView = () => {
         <Sidebar
           entity="business"
           onSubmitAction={centralCalculation}
-          onClear={removeUserDetails}
+          onClear={clearCalculator}
         >
           <Box pb={6}>
             <BusinessForm />

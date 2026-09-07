@@ -3,6 +3,7 @@ import {
   getDifference,
   parseComparisonInput,
   parseComparisonYears,
+  removeComparisonParams,
   serializeComparisonInput,
 } from "../utils/yearComparison";
 
@@ -113,5 +114,16 @@ describe("year comparison", () => {
     expect(parsed).not.toHaveProperty("tableResults");
     expect(parseComparisonInput("business", value)).toBeNull();
     expect(parseComparisonInput("employee", "not-json")).toBeNull();
+  });
+
+  it("clears comparison URL state without removing unrelated parameters", () => {
+    const query = {
+      compare: "2025,2026",
+      compareInput: "shared-input",
+      wiki: "open",
+    };
+
+    expect(removeComparisonParams(query)).toEqual({ wiki: "open" });
+    expect(query).toHaveProperty("compare");
   });
 });

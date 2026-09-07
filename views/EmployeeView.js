@@ -7,11 +7,26 @@ import EmployeeForm from "components/employee/EmployeeForm";
 import { WageComparisonChart } from "features/wageComparisonChart";
 import { InflationDesktopWidget } from "features/inflationDesktopWidget";
 import { YearComparison } from "features/yearComparison";
+import { useRouter } from "next/router";
+import { removeComparisonParams } from "utils/yearComparison";
 
 const EmployeeView = () => {
   const { centralCalculation, reverseCentralCalculation } =
     useCalculateEmployee();
   const removeUserDetails = useStore((state) => state.removeUserDetails);
+  const router = useRouter();
+
+  const clearCalculator = () => {
+    removeUserDetails();
+    router.replace(
+      {
+        pathname: router.pathname,
+        query: removeComparisonParams(router.query),
+      },
+      undefined,
+      { shallow: true },
+    );
+  };
 
   const userDetails = useStore((state) => state.userDetails.employee);
 
@@ -32,7 +47,7 @@ const EmployeeView = () => {
         <Flex direction="column" height="100%">
           <Sidebar
             entity="employee"
-            onClear={removeUserDetails}
+            onClear={clearCalculator}
             onSubmitAction={
               isGrossAction ? centralCalculation : reverseCentralCalculation
             }

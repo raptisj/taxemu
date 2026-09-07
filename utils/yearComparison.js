@@ -23,6 +23,13 @@ export const parseComparisonYears = (value, selectedYear) => {
     : getDefaultComparisonYears(selectedYear);
 };
 
+export const removeComparisonParams = (query = {}) => {
+  const nextQuery = { ...query };
+  delete nextQuery.compare;
+  delete nextQuery.compareInput;
+  return nextQuery;
+};
+
 const sharedFields = {
   employee: [
     "activeInput",
