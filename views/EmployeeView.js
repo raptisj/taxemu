@@ -6,6 +6,7 @@ import { useCalculateEmployee } from "hooks";
 import EmployeeForm from "components/employee/EmployeeForm";
 import { WageComparisonChart } from "features/wageComparisonChart";
 import { InflationDesktopWidget } from "features/inflationDesktopWidget";
+import { YearComparison } from "features/yearComparison";
 
 const EmployeeView = () => {
   const { centralCalculation, reverseCentralCalculation } =
@@ -63,6 +64,8 @@ const EmployeeView = () => {
             }
           />
           <Table.Employee />
+
+          <YearComparison entity="employee" />
 
           <WageComparisonChart />
 

@@ -228,6 +228,10 @@ export const calculateBusinessResults = ({ userDetails, rules }) => {
     totalTax: totalTaxValue,
     taxInAdvanceValue,
     finalIncome: { month: findMonthAmount(final), year: final },
+    taxableIncome: {
+      month: findMonthAmount(taxableIncome),
+      year: taxableIncome,
+    },
     nextBusinessTable,
   };
 };

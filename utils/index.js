@@ -127,3 +127,12 @@ export {
 } from "./formState";
 
 export { calculateIncomeTaxFromPolicy } from "./taxPolicy";
+
+export {
+  calculateYearComparison,
+  getDefaultComparisonYears,
+  getDifference,
+  parseComparisonInput,
+  parseComparisonYears,
+  serializeComparisonInput,
+} from "./yearComparison";

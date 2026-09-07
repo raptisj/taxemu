@@ -4,6 +4,7 @@ import BusinessForm from "components/business/BusinessForm";
 import MobileDrawerForm from "components/layout/MobileDrawerForm";
 import { useCalculateBusiness } from "hooks";
 import { useRouter } from "next/router";
+import { YearComparison } from "features/yearComparison";
 
 const MobileBusinessView = () => {
   const router = useRouter();
@@ -32,6 +33,7 @@ const MobileBusinessView = () => {
     <>
       <Box position="relative" height="calc(100vh - 150px)" mt={[6, 16]}>
         <Table.MobileBusinessTable />
+        <YearComparison entity="business" />
 
         <Box
           borderTop="1px solid"

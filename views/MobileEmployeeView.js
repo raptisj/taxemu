@@ -7,6 +7,7 @@ import { useStore } from "store";
 import { WageComparisonWidget } from "features/wageComparisonMobileWidget";
 import { useRouter } from "next/router";
 import { InflationMobileWidget } from "features/inflationMobileWidget";
+import { YearComparison } from "features/yearComparison";
 
 const MobileEmployeeView = () => {
   const router = useRouter();
@@ -43,6 +44,8 @@ const MobileEmployeeView = () => {
       <Box position="relative" height="calc(100vh - 150px)" mt={[6, 16]}>
         <Box pb={20}>
           <Table.MobileEmployeeTable />
+
+          <YearComparison entity="employee" />
 
           <WageComparisonWidget />
           <InflationMobileWidget />

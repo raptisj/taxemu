@@ -4,6 +4,7 @@ import Table from "../components/table";
 import { useCalculateBusiness } from "hooks";
 import BusinessForm from "components/business/BusinessForm";
 import { useStore } from "store";
+import { YearComparison } from "features/yearComparison";
 
 const BusinessView = () => {
   const { centralCalculation } = useCalculateBusiness();
@@ -40,6 +41,7 @@ const BusinessView = () => {
         <Flex position="sticky" top={8} flexDirection="column" height="100%">
           <Table.Header entity="business" onSubmitAction={centralCalculation} />
           <Table.Business />
+          <YearComparison entity="business" />
         </Flex>
       </GridItem>
     </Grid>
