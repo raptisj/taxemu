@@ -8,7 +8,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useStore } from "store";
-import { formatCellValue } from "utils";
+import { formatCellPercentage, formatCellValue } from "utils";
 import MobileTableHeader from "./MobileTableHeader";
 
 const MobileEmployeeTable = () => {
@@ -22,6 +22,9 @@ const MobileEmployeeTable = () => {
     finalTax,
     insurance,
     employerObligations,
+    totalEmployerCost,
+    taxWedge,
+    taxWedgePercentage,
     childrenDiscountAmount,
     taxableIncome,
   } = userDetails;
@@ -81,6 +84,33 @@ const MobileEmployeeTable = () => {
               <Text fontSize="sm">Εργοδοτικές εισφορές</Text>
               <Text>{formatCellValue(employerObligations.month)}</Text>
             </Flex>
+            <Flex
+              padding={3}
+              justifyContent="space-between"
+              background="purple.50"
+            >
+              <Text color="purple.800" fontWeight="600" fontSize="sm">
+                Συνολικό εργοδοτικό κόστος
+              </Text>
+              <Text color="purple.800" fontWeight="600">
+                {formatCellValue(totalEmployerCost.month)}
+              </Text>
+            </Flex>
+            <Flex
+              padding={3}
+              justifyContent="space-between"
+              background="purple.50"
+            >
+              <Text color="purple.800" fontWeight="600" fontSize="sm">
+                Συνολική φορολογική επιβάρυνση
+              </Text>
+              <Text color="purple.800" fontWeight="600">
+                {formatCellValue(taxWedge.month)} ({formatCellPercentage(
+                  taxWedgePercentage.month,
+                  totalEmployerCost.month > 0,
+                )})
+              </Text>
+            </Flex>
           </TabPanel>
           <TabPanel p={0} pt={4}>
             <Flex padding={3} justifyContent="space-between">
@@ -122,6 +152,33 @@ const MobileEmployeeTable = () => {
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Εργοδοτικές εισφορές</Text>
               <Text>{formatCellValue(employerObligations.year)}</Text>
+            </Flex>
+            <Flex
+              padding={3}
+              justifyContent="space-between"
+              background="purple.50"
+            >
+              <Text color="purple.800" fontWeight="600" fontSize="sm">
+                Συνολικό εργοδοτικό κόστος
+              </Text>
+              <Text color="purple.800" fontWeight="600">
+                {formatCellValue(totalEmployerCost.year)}
+              </Text>
+            </Flex>
+            <Flex
+              padding={3}
+              justifyContent="space-between"
+              background="purple.50"
+            >
+              <Text color="purple.800" fontWeight="600" fontSize="sm">
+                Συνολική φορολογική επιβάρυνση
+              </Text>
+              <Text color="purple.800" fontWeight="600">
+                {formatCellValue(taxWedge.year)} ({formatCellPercentage(
+                  taxWedgePercentage.year,
+                  totalEmployerCost.year > 0,
+                )})
+              </Text>
             </Flex>
           </TabPanel>
         </TabPanels>

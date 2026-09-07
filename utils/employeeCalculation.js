@@ -22,12 +22,15 @@ export const calculateEmployeeForGrossMonth = (
   } = userDetails;
   const rules = getEmployeeRules(taxationYear);
 
+  const contributionBase = Math.min(
+    currentGrossMonth,
+    rules.insurance.monthlyContributionCap,
+  );
   const insuranceMonthly = roundMoney(
-    Math.min(currentGrossMonth, rules.insurance.monthlyContributionCap) *
-      rules.insurance.employeeRate,
+    contributionBase * rules.insurance.employeeRate,
   );
   const employerMonthlyDues = roundMoney(
-    currentGrossMonth * rules.insurance.employerRate,
+    contributionBase * rules.insurance.employerRate,
   );
   const sumToBeTaxed =
     (currentGrossMonth - insuranceMonthly) * salaryMonthCount;
@@ -71,6 +74,13 @@ export const calculateEmployeeForGrossMonth = (
     finalIncomeBeforeRounding * salaryMonthCount,
     0,
   );
+  const totalEmployerCostMonthly = currentGrossMonth + employerMonthlyDues;
+  const totalEmployerCostYearly =
+    totalEmployerCostMonthly * salaryMonthCount;
+  const taxWedgeMonthly = totalEmployerCostMonthly - finalIncomeMonthly;
+  const taxWedgeYearly = totalEmployerCostYearly - finalIncomeYearly;
+  const asPercentageOfEmployerCost = (amount, employerCost) =>
+    employerCost > 0 ? toFixedNumber((amount / employerCost) * 100, 2) : 0;
 
   return {
     finalIncomeMonthly,
@@ -83,6 +93,24 @@ export const calculateEmployeeForGrossMonth = (
       employerObligations: {
         month: employerMonthlyDues,
         year: employerMonthlyDues * salaryMonthCount,
+      },
+      totalEmployerCost: {
+        month: totalEmployerCostMonthly,
+        year: totalEmployerCostYearly,
+      },
+      taxWedge: {
+        month: taxWedgeMonthly,
+        year: taxWedgeYearly,
+      },
+      taxWedgePercentage: {
+        month: asPercentageOfEmployerCost(
+          taxWedgeMonthly,
+          totalEmployerCostMonthly,
+        ),
+        year: asPercentageOfEmployerCost(
+          taxWedgeYearly,
+          totalEmployerCostYearly,
+        ),
       },
       childrenDiscountAmount: { month: 0, year: discount },
       taxableIncome: {

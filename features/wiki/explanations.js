@@ -91,12 +91,13 @@ export const buildEmployeeExplanation = (details) => {
       },
       {
         title: "Ασφαλιστικές και εργοδοτικές εισφορές",
-        description: `Οι εισφορές εργαζομένου είναι ${formatExplanationRate(employeeRules.insurance.employeeRate)} και οι εργοδοτικές ${formatExplanationRate(employeeRules.insurance.employerRate)}. Οι εισφορές εργαζομένου εφαρμόζονται έως το μηνιαίο όριο ασφαλιστέων αποδοχών των ${formatExplanationMoney(employeeRules.insurance.monthlyContributionCap)}.`,
+        description: `Οι εισφορές εργαζομένου είναι ${formatExplanationRate(employeeRules.insurance.employeeRate)} και οι εργοδοτικές ${formatExplanationRate(employeeRules.insurance.employerRate)}. Και οι δύο εφαρμόζονται έως το μηνιαίο όριο ασφαλιστέων αποδοχών των ${formatExplanationMoney(employeeRules.insurance.monthlyContributionCap)}.`,
         items: calculated
           ? [
               `Εισφορές εργαζομένου: ${formatExplanationMoney(calculated.insurance.month)} ανά μισθό, ${formatExplanationMoney(calculated.insurance.year)} ετησίως`,
               `Εργοδοτικές εισφορές: ${formatExplanationMoney(calculated.employerObligations.month)} ανά μισθό, ${formatExplanationMoney(calculated.employerObligations.year)} ετησίως`,
-              `Συνολικό ετήσιο εργοδοτικό κόστος: ${formatExplanationMoney(annualGross + calculated.employerObligations.year)}`,
+              `Συνολικό εργοδοτικό κόστος: ${formatExplanationMoney(calculated.totalEmployerCost.month)} ανά μισθό, ${formatExplanationMoney(calculated.totalEmployerCost.year)} ετησίως`,
+              `Συνολική φορολογική επιβάρυνση: ${formatExplanationMoney(calculated.taxWedge.month)} (${formatExplanationRate(calculated.taxWedgePercentage.month / 100)}) ανά μισθό, ${formatExplanationMoney(calculated.taxWedge.year)} (${formatExplanationRate(calculated.taxWedgePercentage.year / 100)}) ετησίως`,
             ]
           : [],
       },

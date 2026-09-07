@@ -60,6 +60,18 @@ const initialState = {
       month: 0,
       year: 0,
     },
+    totalEmployerCost: {
+      month: 0,
+      year: 0,
+    },
+    taxWedge: {
+      month: 0,
+      year: 0,
+    },
+    taxWedgePercentage: {
+      month: 0,
+      year: 0,
+    },
     insuranceCarrier: "efka",
     servicesFMY: 0,
     numberOfChildren: 0,

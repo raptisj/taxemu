@@ -38,4 +38,38 @@ describe("calculateEmployeeForGrossMonth", () => {
     expect(result.finalIncomeMonthly).toBe(1600);
     expect(result.finalIncomeYearly).toBe(22399);
   });
+
+  test.each([12, 14, 14.5])(
+    "calculates employer cost and tax wedge for %s salaries",
+    (salaryMonthCount) => {
+      const result = calculateEmployeeForGrossMonth(
+        createEmployeeInput({ salaryMonthCount }),
+        2000,
+      );
+      const { calculatedState } = result;
+
+      expect(calculatedState.employerObligations.month).toBe(436);
+      expect(calculatedState.employerObligations.year).toBe(
+        436 * salaryMonthCount,
+      );
+      expect(calculatedState.totalEmployerCost).toEqual({
+        month: 2436,
+        year: 2436 * salaryMonthCount,
+      });
+      expect(calculatedState.taxWedge.month).toBe(
+        2436 - result.finalIncomeMonthly,
+      );
+      expect(calculatedState.taxWedge.year).toBe(
+        2436 * salaryMonthCount - result.finalIncomeYearly,
+      );
+      expect(calculatedState.taxWedgePercentage.month).toBeCloseTo(
+        (calculatedState.taxWedge.month / 2436) * 100,
+        2,
+      );
+      expect(calculatedState.taxWedgePercentage.year).toBeCloseTo(
+        (calculatedState.taxWedge.year / (2436 * salaryMonthCount)) * 100,
+        2,
+      );
+    },
+  );
 });

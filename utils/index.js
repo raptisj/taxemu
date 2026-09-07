@@ -3,6 +3,14 @@ export const formatCellValue = (val, submitGuard = true) =>
     ? `€${val.toLocaleString("en-US").split(".")[0]}`
     : "------";
 
+export const formatCellPercentage = (val, submitGuard = true) =>
+  Number.isFinite(Number(val)) && submitGuard
+    ? `${Number(val).toLocaleString("el-GR", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+      })}%`
+    : "------";
+
 export const calcFinal = (obj, type) => {
   return Object.keys(obj)
     .map((p) => obj[p][type])

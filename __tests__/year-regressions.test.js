@@ -115,14 +115,15 @@ describe("year-by-year calculation regressions", () => {
     );
   });
 
-  it("uses the employee contribution cap for high monthly income", () => {
+  it("uses the contribution cap for both employee and employer dues", () => {
     const result = calculateEmployeeForGrossMonth(
       createEmployeeInput(2025),
       10000,
     );
 
     expect(result.calculatedState.insurance.month).toBe(1012);
-    expect(result.calculatedState.employerObligations.month).toBe(2179);
+    expect(result.calculatedState.employerObligations.month).toBe(1650);
+    expect(result.calculatedState.totalEmployerCost.month).toBe(11650);
   });
 
   it("rejects an employee child count with no configured tax credit", () => {

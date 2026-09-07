@@ -10,7 +10,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useStore } from "store";
-import { formatCellValue } from "utils";
+import { formatCellPercentage, formatCellValue } from "utils";
 
 const EmployeeTable = () => {
   const userDetails = useStore((state) => state.userDetails.employee);
@@ -22,6 +22,9 @@ const EmployeeTable = () => {
     finalTax, // TODO: add this in table result
     insurance, // TODO: add this in table result
     employerObligations,
+    totalEmployerCost,
+    taxWedge,
+    taxWedgePercentage,
     childrenDiscountAmount,
     taxableIncome,
   } = userDetails;
@@ -170,6 +173,56 @@ const EmployeeTable = () => {
             <Td isNumeric border="none">
               <Text color="gray.700" fontSize="sm" textAlign="left">
                 {formatCellValue(employerObligations.year)}
+              </Text>
+            </Td>
+          </Tr>
+          <Tr background="purple.50">
+            <Td border="none">
+              <Text color="purple.800" fontWeight="700" fontSize="sm">
+                Συνολικό εργοδοτικό κόστος
+              </Text>
+            </Td>
+            <Td border="none">
+              <Text color="purple.800" fontWeight="600" fontSize="sm">
+                {formatCellValue(totalEmployerCost.month)}
+              </Text>
+            </Td>
+            <Td isNumeric border="none">
+              <Text
+                color="purple.800"
+                fontWeight="600"
+                fontSize="sm"
+                textAlign="left"
+              >
+                {formatCellValue(totalEmployerCost.year)}
+              </Text>
+            </Td>
+          </Tr>
+          <Tr background="purple.50">
+            <Td border="none">
+              <Text color="purple.800" fontWeight="700" fontSize="sm">
+                Συνολική φορολογική επιβάρυνση
+              </Text>
+            </Td>
+            <Td border="none">
+              <Text color="purple.800" fontWeight="600" fontSize="sm">
+                {formatCellValue(taxWedge.month)} ({formatCellPercentage(
+                  taxWedgePercentage.month,
+                  totalEmployerCost.month > 0,
+                )})
+              </Text>
+            </Td>
+            <Td isNumeric border="none">
+              <Text
+                color="purple.800"
+                fontWeight="600"
+                fontSize="sm"
+                textAlign="left"
+              >
+                {formatCellValue(taxWedge.year)} ({formatCellPercentage(
+                  taxWedgePercentage.year,
+                  totalEmployerCost.year > 0,
+                )})
               </Text>
             </Td>
           </Tr>

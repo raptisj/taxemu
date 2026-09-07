@@ -51,7 +51,16 @@ describe("dynamic calculation explanations", () => {
     expect(
       explanation2026.sections
         .flatMap(({ items = [] }) => items)
-        .some((item) => item.includes("Συνολικό ετήσιο εργοδοτικό κόστος")),
+        .some((item) => item.includes("Συνολικό εργοδοτικό κόστος")),
+    ).toBe(true);
+    expect(
+      explanation2026.sections
+        .flatMap(({ items = [] }) => items)
+        .some(
+          (item) =>
+            item.includes("Συνολική φορολογική επιβάρυνση") &&
+            item.includes("%"),
+        ),
     ).toBe(true);
   });
 
