@@ -257,12 +257,20 @@ export const OecdTaxWedge = () => {
                 {profile.description}
               </Text>
               <Stack spacing={3} mt={5}>
+                <Text
+                  color="gray.500"
+                  fontSize="xs"
+                  fontWeight="700"
+                  letterSpacing="0.04em"
+                >
+                  ΦΟΡΟΛΟΓΙΚΗ ΕΠΙΒΑΡΥΝΣΗ ΤΗΣ ΕΡΓΑΣΙΑΣ
+                </Text>
                 <Flex justify="space-between">
                   <Text color="gray.600">Ελλάδα</Text>
                   <Text fontWeight="700">{formatPercentage(profile.greece)}</Text>
                 </Flex>
                 <Flex justify="space-between">
-                  <Text color="gray.600">ΟΟΣΑ</Text>
+                  <Text color="gray.600">Μέσος όρος ΟΟΣΑ</Text>
                   <Text fontWeight="700">{formatPercentage(profile.oecd)}</Text>
                 </Flex>
               </Stack>
