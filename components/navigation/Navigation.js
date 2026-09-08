@@ -55,18 +55,45 @@ export const Navigation = () => {
         maxWidth="1366px"
         mx="auto"
       >
-        <Flex gap={6} alignItems="flex-end">
+        <Flex gap={{ base: 3, sm: 5, md: 6 }} alignItems="center" minW={0}>
           <Link href="/welcome">
             <Flex flexDirection="column">
               <Image src={logo} alt="Taxemu" />
             </Flex>
           </Link>
           {!router.pathname.includes("/welcome") && (
-            <Link href="/blog">
-              <Text color="gray.500" _hover={{ color: "gray.600" }}>
-                Blog
-              </Text>
-            </Link>
+            <Flex gap={{ base: 3, sm: 5 }} alignItems="center">
+              <Link href="/blog">
+                <Text
+                  color={
+                    router.pathname.includes("/blog")
+                      ? "purple.600"
+                      : "gray.500"
+                  }
+                  fontSize={{ base: "sm", sm: "md" }}
+                  fontWeight={router.pathname.includes("/blog") ? "600" : "400"}
+                  whiteSpace="nowrap"
+                  _hover={{ color: "gray.700" }}
+                >
+                  Blog
+                </Text>
+              </Link>
+              <Link href="/statistics">
+                <Text
+                  color={
+                    router.pathname === "/statistics"
+                      ? "purple.600"
+                      : "gray.500"
+                  }
+                  fontSize={{ base: "sm", sm: "md" }}
+                  fontWeight={router.pathname === "/statistics" ? "600" : "400"}
+                  whiteSpace="nowrap"
+                  _hover={{ color: "gray.700" }}
+                >
+                  Στατιστικά
+                </Text>
+              </Link>
+            </Flex>
           )}
         </Flex>
 

@@ -9,10 +9,12 @@ export const Layout = ({ children, ...rest }) => {
   const [isLargerThan30] = useMediaQuery("(min-width: 30em)");
   const isMobile = !isLargerThan30;
   const router = useRouter();
+  const hasPageSpecificMeta =
+    router.pathname.includes("/blog") || router.pathname === "/statistics";
 
   return (
     <>
-      {!router.pathname.includes("/blog") && <Meta />}
+      {!hasPageSpecificMeta && <Meta />}
 
       <Flex
         minH="100vh"
