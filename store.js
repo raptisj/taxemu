@@ -187,6 +187,7 @@ const initialState = {
         year: 0,
       },
       taxableIncome: { month: 0, year: 0 },
+      totalTax: { month: 0, year: 0 },
       taxInAdvance: {
         month: 0,
         year: 0,

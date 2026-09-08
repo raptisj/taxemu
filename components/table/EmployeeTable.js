@@ -7,10 +7,12 @@ import {
   Tbody,
   TableCaption,
   TableContainer,
+  Flex,
   Text,
 } from "@chakra-ui/react";
 import { useStore } from "store";
 import { formatCellPercentage, formatCellValue } from "utils";
+import TaxWedgeInfoPopover from "./TaxWedgeInfoPopover";
 
 const EmployeeTable = () => {
   const userDetails = useStore((state) => state.userDetails.employee);
@@ -199,34 +201,38 @@ const EmployeeTable = () => {
           </Tr>
           <Tr background="purple.50">
             <Td border="none">
-              <Text color="purple.800" fontWeight="700" fontSize="sm">
-                Φορολογική επιβάρυνση
-              </Text>
+              <Flex align="center" gap={1}>
+                <Text color="purple.800" fontWeight="700" fontSize="sm">
+                  Φορολογική επιβάρυνση
+                </Text>
+                <TaxWedgeInfoPopover />
+              </Flex>
             </Td>
             <Td border="none">
-              <Text color="purple.800" fontWeight="600" fontSize="sm">
-                {formatCellValue(taxWedge.month)} (
-                {formatCellPercentage(
-                  taxWedgePercentage.month,
-                  totalEmployerCost.month > 0,
-                )}
-                )
-              </Text>
+              <Flex align="baseline" gap={1} color="purple.800" fontWeight="600">
+                <Text fontSize="sm">{formatCellValue(taxWedge.month)}</Text>
+                <Text fontSize="xs">
+                  (
+                  {formatCellPercentage(
+                    taxWedgePercentage.month,
+                    totalEmployerCost.month > 0,
+                  )}
+                  )
+                </Text>
+              </Flex>
             </Td>
             <Td isNumeric border="none">
-              <Text
-                color="purple.800"
-                fontWeight="600"
-                fontSize="sm"
-                textAlign="left"
-              >
-                {formatCellValue(taxWedge.year)} (
-                {formatCellPercentage(
-                  taxWedgePercentage.year,
-                  totalEmployerCost.year > 0,
-                )}
-                )
-              </Text>
+              <Flex align="baseline" gap={1} color="purple.800" fontWeight="600">
+                <Text fontSize="sm">{formatCellValue(taxWedge.year)}</Text>
+                <Text fontSize="xs">
+                  (
+                  {formatCellPercentage(
+                    taxWedgePercentage.year,
+                    totalEmployerCost.year > 0,
+                  )}
+                  )
+                </Text>
+              </Flex>
             </Td>
           </Tr>
         </Tbody>

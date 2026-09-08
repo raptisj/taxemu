@@ -1,6 +1,7 @@
 import { Flex, Button, Heading } from "@chakra-ui/react";
 import { SubmitButtonContent } from "../form";
 import KeyboardShortcutsButton from "../keyboard/KeyboardShortcutsButton";
+import { ResultsActionsMenu } from "./ResultsActions";
 
 const TableHeader = ({ entity, onSubmitAction }) => {
   return (
@@ -18,16 +19,19 @@ const TableHeader = ({ entity, onSubmitAction }) => {
         <KeyboardShortcutsButton onCalculate={onSubmitAction} />
       </Flex>
 
-      <Button
-        minW="196px"
-        height="32px"
-        colorScheme="purple"
-        onClick={() => {
-          onSubmitAction();
-        }}
-      >
-        <SubmitButtonContent entity={entity} />
-      </Button>
+      <Flex gap={2} alignItems="center">
+        <ResultsActionsMenu entity={entity} />
+        <Button
+          minW="196px"
+          height="32px"
+          colorScheme="purple"
+          onClick={() => {
+            onSubmitAction();
+          }}
+        >
+          <SubmitButtonContent entity={entity} />
+        </Button>
+      </Flex>
     </Flex>
   );
 };

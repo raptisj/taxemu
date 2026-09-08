@@ -63,6 +63,8 @@ export const useCalculateBusiness = () => {
       },
       tableResults: {
         ...nextBusinessTable,
+        taxableIncome,
+        totalTax,
         taxInAdvance,
         calculationInput: getComparisonInput("business", userDetails),
       },

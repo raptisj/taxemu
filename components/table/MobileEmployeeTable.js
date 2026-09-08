@@ -10,6 +10,7 @@ import {
 import { useStore } from "store";
 import { formatCellPercentage, formatCellValue } from "utils";
 import MobileTableHeader from "./MobileTableHeader";
+import TaxWedgeInfoPopover from "./TaxWedgeInfoPopover";
 
 const MobileEmployeeTable = ({ onSubmitAction }) => {
   const userDetails = useStore((state) => state.userDetails.employee);
@@ -29,7 +30,11 @@ const MobileEmployeeTable = ({ onSubmitAction }) => {
 
   return (
     <>
-      <MobileTableHeader entity="μισθωτού" onSubmitAction={onSubmitAction} />
+      <MobileTableHeader
+        entity="μισθωτού"
+        calculatorEntity="employee"
+        onSubmitAction={onSubmitAction}
+      />
 
       <Tabs isFitted mt={2}>
         <TabList>
@@ -99,17 +104,29 @@ const MobileEmployeeTable = ({ onSubmitAction }) => {
               justifyContent="space-between"
               background="purple.50"
             >
-              <Text color="purple.800" fontWeight="600" fontSize="sm">
-                Φορολογική επιβάρυνση
-              </Text>
-              <Text color="purple.800" fontWeight="600">
-                {formatCellValue(taxWedge.month)} (
-                {formatCellPercentage(
-                  taxWedgePercentage.month,
-                  totalEmployerCost.month > 0,
-                )}
-                )
-              </Text>
+              <Flex align="center" gap={1}>
+                <Text color="purple.800" fontWeight="600" fontSize="sm">
+                  Φορολογική επιβάρυνση
+                </Text>
+                <TaxWedgeInfoPopover isMobile />
+              </Flex>
+              <Flex
+                align="baseline"
+                gap={1}
+                color="purple.800"
+                fontWeight="600"
+                flexShrink={0}
+              >
+                <Text>{formatCellValue(taxWedge.month)}</Text>
+                <Text fontSize="xs">
+                  (
+                  {formatCellPercentage(
+                    taxWedgePercentage.month,
+                    totalEmployerCost.month > 0,
+                  )}
+                  )
+                </Text>
+              </Flex>
             </Flex>
           </TabPanel>
           <TabPanel p={0} pt={4}>
@@ -170,17 +187,29 @@ const MobileEmployeeTable = ({ onSubmitAction }) => {
               justifyContent="space-between"
               background="purple.50"
             >
-              <Text color="purple.800" fontWeight="600" fontSize="sm">
-                Φορολογική επιβάρυνση
-              </Text>
-              <Text color="purple.800" fontWeight="600">
-                {formatCellValue(taxWedge.year)} (
-                {formatCellPercentage(
-                  taxWedgePercentage.year,
-                  totalEmployerCost.year > 0,
-                )}
-                )
-              </Text>
+              <Flex align="center" gap={1}>
+                <Text color="purple.800" fontWeight="600" fontSize="sm">
+                  Φορολογική επιβάρυνση
+                </Text>
+                <TaxWedgeInfoPopover isMobile />
+              </Flex>
+              <Flex
+                align="baseline"
+                gap={1}
+                color="purple.800"
+                fontWeight="600"
+                flexShrink={0}
+              >
+                <Text>{formatCellValue(taxWedge.year)}</Text>
+                <Text fontSize="xs">
+                  (
+                  {formatCellPercentage(
+                    taxWedgePercentage.year,
+                    totalEmployerCost.year > 0,
+                  )}
+                  )
+                </Text>
+              </Flex>
             </Flex>
           </TabPanel>
         </TabPanels>

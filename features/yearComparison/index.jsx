@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import {
   Badge,
   Box,
-  Button,
   Flex,
   Heading,
   Select,
@@ -104,6 +103,53 @@ const DifferenceCard = ({ entity, differences, years }) => (
   </Box>
 );
 
+export const useYearComparisonActions = (entity) => {
+  const router = useRouter();
+  const details = useStore((state) => state.userDetails[entity]);
+  const compareParam = Array.isArray(router.query.compare)
+    ? router.query.compare[0]
+    : router.query.compare;
+  const isOpen = Boolean(compareParam);
+  const years = parseComparisonYears(compareParam, details.taxationYear);
+  const committedInput = details.tableResults?.calculationInput;
+  const serializedInput = committedInput
+    ? serializeComparisonInput(entity, {
+        ...details,
+        ...committedInput,
+        discountOptions: {
+          ...details.discountOptions,
+          ...committedInput.discountOptions,
+        },
+      })
+    : null;
+
+  const toggleComparison = async () => {
+    const query = { ...router.query };
+    if (isOpen) {
+      delete query.compare;
+      delete query.compareInput;
+    } else {
+      query.compare = years.join(",");
+      if (serializedInput) query.compareInput = serializedInput;
+    }
+    await router.replace({ pathname: router.pathname, query }, undefined, {
+      shallow: true,
+    });
+
+    if (!isOpen) {
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
+          document
+            .getElementById(`year-comparison-${entity}`)
+            ?.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      });
+    }
+  };
+
+  return { isOpen, toggleComparison };
+};
+
 export const YearComparison = ({ entity }) => {
   const router = useRouter();
   const details = useStore((state) => state.userDetails[entity]);
@@ -179,28 +225,23 @@ export const YearComparison = ({ entity }) => {
     setComparison(next);
   };
 
-  return (
-    <Box mt={6} mb={4}>
-      <Flex justify="space-between" align="center" gap={4}>
-        <Box>
-          <Heading as="h2" fontSize={{ base: "lg", md: "xl" }}>Σύγκριση ετών</Heading>
-          <Text color="gray.500" fontSize="sm">Τα ίδια στοιχεία υπολογίζονται με τους κανόνες κάθε έτους.</Text>
-        </Box>
-        <Button
-          size="sm"
-          variant={isOpen ? "ghost" : "outline"}
-          colorScheme="purple"
-          onClick={() => setComparison(isOpen ? null : years)}
-          aria-expanded={isOpen}
-        >
-          {isOpen ? "Κλείσιμο" : "Σύγκριση"}
-        </Button>
-      </Flex>
+  if (!isOpen) return null;
 
-      {isOpen && (
-        <Box mt={4}>
-          <SimpleGrid columns={{ base: 1, sm: 2 }} spacing={3} mb={4}>
-            {years.map((year, index) => (
+  return (
+    <Box
+      id={`year-comparison-${entity}`}
+      mt={6}
+      mb={4}
+      scrollMarginTop={{ base: "20px", md: "40px" }}
+    >
+      <Box>
+        <Heading as="h2" fontSize={{ base: "lg", md: "xl" }}>Σύγκριση ετών</Heading>
+        <Text color="gray.500" fontSize="sm">Τα ίδια στοιχεία υπολογίζονται με τους κανόνες κάθε έτους.</Text>
+      </Box>
+
+      <Box mt={4}>
+        <SimpleGrid columns={{ base: 1, sm: 2 }} spacing={3} mb={4}>
+          {years.map((year, index) => (
               <Box key={index}>
                 <Text as="label" htmlFor={`compare-${entity}-${index}`} fontSize="sm" fontWeight="600">
                   {index === 0 ? "Έτος βάσης" : "Έτος σύγκρισης"}
@@ -214,27 +255,26 @@ export const YearComparison = ({ entity }) => {
                   {supportedTaxYears.map((option) => <option key={option} value={option}>{option}</option>)}
                 </Select>
               </Box>
-            ))}
-          </SimpleGrid>
+          ))}
+        </SimpleGrid>
 
-          {!hasInput ? (
-            <Box borderRadius="lg" bg="orange.50" color="orange.800" p={4} fontSize="sm">
-              Συμπλήρωσε εισόδημα και υπολόγισε για να δεις τη σύγκριση.
+        {!hasInput ? (
+          <Box borderRadius="lg" bg="orange.50" color="orange.800" p={4} fontSize="sm">
+            Συμπλήρωσε εισόδημα και υπολόγισε για να δεις τη σύγκριση.
+          </Box>
+        ) : (
+          <>
+            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+              {comparison.results.map((result) => (
+                <ComparisonCard key={result.year} entity={entity} result={result} />
+              ))}
+            </SimpleGrid>
+            <Box mt={4}>
+              <DifferenceCard entity={entity} differences={comparison.differences} years={years} />
             </Box>
-          ) : (
-            <>
-              <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
-                {comparison.results.map((result) => (
-                  <ComparisonCard key={result.year} entity={entity} result={result} />
-                ))}
-              </SimpleGrid>
-              <Box mt={4}>
-                <DifferenceCard entity={entity} differences={comparison.differences} years={years} />
-              </Box>
-            </>
-          )}
-        </Box>
-      )}
+          </>
+        )}
+      </Box>
     </Box>
   );
 };

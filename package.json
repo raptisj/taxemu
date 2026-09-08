@@ -30,6 +30,7 @@
     "@chakra-ui/react": "^2.4.0",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
+    "@react-pdf/renderer": "^4.9.0",
     "framer-motion": "^6.3.10",
     "gray-matter": "^4.0.3",
     "marked": "^15.0.7",
