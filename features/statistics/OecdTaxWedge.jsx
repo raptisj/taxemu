@@ -242,6 +242,11 @@ export const OecdTaxWedge = () => {
           Τα παραδείγματα του ΟΟΣΑ χρησιμοποιούν σταθερούς τύπους νοικοκυριών.
           Όπου υπάρχουν παιδιά, θεωρούνται δύο παιδιά ηλικίας 6–11 ετών.
         </Text>
+        <Text color="gray.600" fontSize="sm" maxW="720px" mt={2}>
+          Η αναφορά στον μέσο μισθό περιγράφει τις μικτές αποδοχές του
+          παραδείγματος σε κάθε χώρα· δεν είναι φορολογικός συντελεστής ούτε
+          κατάταξη μισθού.
+        </Text>
         <Grid templateColumns={{ base: "1fr", lg: "repeat(3, 1fr)" }} gap={4} mt={5}>
           {data.householdProfiles.map((profile) => (
             <Card key={profile.key} p={5}>

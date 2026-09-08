@@ -20,21 +20,23 @@ export const oecdTaxWedge2025 = Object.freeze({
     Object.freeze({
       key: "single-average",
       title: "Άγαμος, χωρίς παιδιά",
-      description: "100% του μέσου μισθού",
+      description: "Μικτός μισθός ίσος με τον μέσο μισθό κάθε χώρας",
       greece: 39.3,
       oecd: 35.1,
     }),
     Object.freeze({
       key: "single-parent",
       title: "Άγαμος, 2 παιδιά",
-      description: "67% του μέσου μισθού",
+      description:
+        "Μικτός μισθός ίσος με το 67% του μέσου μισθού κάθε χώρας",
       greece: 29.0,
       oecd: 16.3,
     }),
     Object.freeze({
       key: "one-earner-family",
       title: "Ζευγάρι, 1 εργαζόμενος, 2 παιδιά",
-      description: "100% του μέσου μισθού",
+      description:
+        "Ένας μικτός μισθός ίσος με τον μέσο μισθό κάθε χώρας",
       greece: 37.5,
       oecd: 26.2,
     }),
