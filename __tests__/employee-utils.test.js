@@ -145,6 +145,9 @@ describe("employee calculation utilities", () => {
         reductionRate: 0.05,
       }),
     ).toEqual({ discount: 800 });
+    expect(
+      calculateChildrenDiscount({ amount: 70000, childDiscountAmount: 777 }),
+    ).toEqual({ discount: 0 });
   });
 
   it("applies returning-resident and rounding policies", () => {

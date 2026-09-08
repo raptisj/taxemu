@@ -20,11 +20,11 @@ import { InflationDesktopWidget } from "features/inflationDesktopWidget";
 import { EmployerCostBreakdown } from "features/employerCostBreakdown";
 
 export const EmployeeInsights = () => {
-  const grossIncomeMonthly = useStore(
-    (state) => state.userDetails.employee.grossIncomeMonthly,
+  const calculatedGrossIncome = useStore(
+    (state) => state.userDetails.employee.tableResults.grossIncome.month,
   );
 
-  if (!grossIncomeMonthly) {
+  if (!calculatedGrossIncome) {
     return (
       <Box borderRadius="lg" bg="orange.50" color="orange.800" p={4} fontSize="sm">
         Συμπλήρωσε τον μισθό σου και υπολόγισε για να δεις τις αναλύσεις.
@@ -43,8 +43,8 @@ export const EmployeeInsights = () => {
 
 export const MobileEmployeeInsights = () => {
   const router = useRouter();
-  const grossIncomeMonthly = useStore(
-    (state) => state.userDetails.employee.grossIncomeMonthly,
+  const calculatedGrossIncome = useStore(
+    (state) => state.userDetails.employee.tableResults.grossIncome.month,
   );
   const currentParams = new URLSearchParams(router.query);
   const isOpen = currentParams.get("drawer-insights") === "open";
@@ -68,7 +68,7 @@ export const MobileEmployeeInsights = () => {
 
   return (
     <>
-      {grossIncomeMonthly ? (
+      {calculatedGrossIncome ? (
         <Box borderWidth="1px" borderColor="purple.200" borderRadius="xl" p={4} mt={4} bg="purple.50">
           <Flex align="center" justify="space-between" gap={4}>
             <Box>

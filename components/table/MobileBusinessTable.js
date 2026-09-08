@@ -15,9 +15,6 @@ const MobileBusinessTable = ({ onSubmitAction }) => {
   const userDetails = useStore((state) => state.userDetails.business);
 
   const {
-    prePaidNextYearTax,
-    discountOptions,
-    tableResults: {
       finalTax,
       insurance,
       grossIncome,
@@ -27,8 +24,9 @@ const MobileBusinessTable = ({ onSubmitAction }) => {
       withholdingTax,
       withholdingTaxAmount,
       previousYearTaxInAdvance,
-    },
-  } = userDetails;
+      prePaidNextYearTax,
+      discountOptions,
+    } = userDetails.tableResults;
 
   return (
     <>

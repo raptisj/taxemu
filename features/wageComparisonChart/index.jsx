@@ -19,7 +19,10 @@ import {
 export const WageComparisonChart = () => {
   const userDetails = useStore((state) => state.userDetails.employee);
 
-  const { grossIncomeMonthly, taxationYear } = userDetails;
+  const {
+    grossIncome: { month: grossIncomeMonthly },
+    taxationYear,
+  } = userDetails.tableResults;
 
   if (!grossIncomeMonthly) {
     return null;

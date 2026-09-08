@@ -28,13 +28,11 @@ const formatPerHundred = (value) =>
   }).format(value)}€`;
 
 export const EmployerCostBreakdown = () => {
-  const {
-    employerObligations,
-    finalTax,
-    insurance,
-    tableResults,
-    totalEmployerCost,
-  } = useStore((state) => state.userDetails.employee);
+  const tableResults = useStore(
+    (state) => state.userDetails.employee.tableResults,
+  );
+  const { employerObligations, finalTax, insurance, totalEmployerCost } =
+    tableResults;
 
   if (!totalEmployerCost?.year) return null;
 

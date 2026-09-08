@@ -116,18 +116,16 @@ export const YearComparison = ({ entity }) => {
     ? router.query.compareInput[0]
     : router.query.compareInput;
   const sharedInput = parseComparisonInput(entity, inputParam);
-  const hasLocalInput = entity === "employee"
-    ? details.activeInput === "gross"
-      ? details.grossIncomeMonthly > 0
-      : details.finalIncomeMonthly > 0
-    : details.grossIncome.year > 0;
-  const calculationDetails = !hasLocalInput && sharedInput
+  const committedInput = details.tableResults?.calculationInput;
+  const hasLocalInput = Boolean(committedInput);
+  const selectedInput = committedInput ?? sharedInput;
+  const calculationDetails = selectedInput
     ? {
         ...details,
-        ...sharedInput,
+        ...selectedInput,
         discountOptions: {
           ...details.discountOptions,
-          ...sharedInput.discountOptions,
+          ...selectedInput.discountOptions,
         },
       }
     : details;

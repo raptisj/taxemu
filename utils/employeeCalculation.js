@@ -112,7 +112,10 @@ export const calculateEmployeeForGrossMonth = (
           totalEmployerCostYearly,
         ),
       },
-      childrenDiscountAmount: { month: 0, year: discount },
+      childrenDiscountAmount: {
+        month: discount / salaryMonthCount,
+        year: discount,
+      },
       taxableIncome: {
         month: ceilMoney(taxableSum / salaryMonthCount),
         year: taxableSum,

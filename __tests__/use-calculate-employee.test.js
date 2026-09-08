@@ -100,9 +100,18 @@ describe("useCalculateEmployee", () => {
         tableResults: expect.objectContaining({
           grossIncome: { month: 2000, year: 28000 },
           finalIncome: { month: 1464, year: 20500 },
+          finalTax: { month: expect.any(Number), year: 3762 },
+          childrenDiscountAmount: {
+            month: expect.any(Number),
+            year: expect.any(Number),
+          },
           salaryMonthCount: 14,
           numberOfChildren: 0,
           discountOptions: { returnBaseInland: false },
+          calculationInput: expect.objectContaining({
+            grossIncomeMonthly: 2000,
+            grossIncomeYearly: 28000,
+          }),
         }),
       }),
     );

@@ -19,6 +19,10 @@ describe("calculateEmployeeForGrossMonth", () => {
     });
     expect(result.calculatedState.initialTax.year).toBe(4294);
     expect(result.calculatedState.taxAfterDiscount).toBe(3762);
+    expect(result.calculatedState.childrenDiscountAmount.month).toBeCloseTo(
+      result.calculatedState.childrenDiscountAmount.year / 14,
+      8,
+    );
     expect(result.finalIncomeMonthly).toBe(1464);
     expect(result.finalIncomeYearly).toBe(20500);
   });
@@ -37,6 +41,15 @@ describe("calculateEmployeeForGrossMonth", () => {
     expect(result.calculatedState.taxAfterDiscount).toBe(1863);
     expect(result.finalIncomeMonthly).toBe(1600);
     expect(result.finalIncomeYearly).toBe(22399);
+  });
+
+  it("never reports a negative tax reduction after it phases out", () => {
+    const result = calculateEmployeeForGrossMonth(createEmployeeInput(), 6000);
+
+    expect(result.calculatedState.childrenDiscountAmount).toEqual({
+      month: 0,
+      year: 0,
+    });
   });
 
   test.each([12, 14, 14.5])(

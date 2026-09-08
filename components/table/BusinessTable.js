@@ -16,9 +16,6 @@ const BusinessTable = () => {
   const userDetails = useStore((state) => state.userDetails.business);
 
   const {
-    discountOptions,
-    prePaidNextYearTax,
-    tableResults: {
       finalTax,
       insurance,
       grossIncome,
@@ -28,8 +25,9 @@ const BusinessTable = () => {
       withholdingTax,
       withholdingTaxAmount,
       previousYearTaxInAdvance,
-    },
-  } = userDetails;
+      discountOptions,
+      prePaidNextYearTax,
+    } = userDetails.tableResults;
 
   return (
     <TableContainer mt={6} background="#ffffff70">

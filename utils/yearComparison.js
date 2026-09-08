@@ -58,12 +58,14 @@ const sharedFields = {
   ],
 };
 
+export const getComparisonInput = (entity, details) => Object.fromEntries(
+  sharedFields[entity].map((field) => [field, details[field]]),
+);
+
 export const serializeComparisonInput = (entity, details) => JSON.stringify({
   version: 1,
   entity,
-  input: Object.fromEntries(
-    sharedFields[entity].map((field) => [field, details[field]]),
-  ),
+  input: getComparisonInput(entity, details),
 });
 
 export const parseComparisonInput = (entity, value) => {

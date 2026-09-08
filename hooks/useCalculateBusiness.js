@@ -2,6 +2,7 @@ import { useStore } from "store";
 import { useToast } from "@chakra-ui/react";
 import { getInsuranceTotal, calculateBusinessResults } from "utils";
 import { getBusinessRules } from "../rules";
+import { getComparisonInput } from "../utils/yearComparison";
 
 export const useCalculateBusiness = () => {
   const userDetails = useStore((state) => state.userDetails.business);
@@ -41,10 +42,13 @@ export const useCalculateBusiness = () => {
       return showError();
     }
 
-    const { totalTax, taxInAdvanceValue, nextBusinessTable, finalIncome } =
-      calculateBusinessResults({
-        userDetails,
-      });
+    const {
+      totalTax,
+      taxInAdvanceValue,
+      nextBusinessTable,
+      finalIncome,
+      taxableIncome,
+    } = calculateBusinessResults({ userDetails });
 
     const taxInAdvance = prePaidNextYearTax
       ? taxInAdvanceValue
@@ -55,10 +59,12 @@ export const useCalculateBusiness = () => {
         totalTax,
         taxInAdvance,
         finalIncome,
+        taxableIncome,
       },
       tableResults: {
         ...nextBusinessTable,
         taxInAdvance,
+        calculationInput: getComparisonInput("business", userDetails),
       },
     });
   };

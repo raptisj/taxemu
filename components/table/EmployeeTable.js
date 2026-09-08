@@ -16,18 +16,17 @@ const EmployeeTable = () => {
   const userDetails = useStore((state) => state.userDetails.employee);
 
   const {
-    grossIncomeMonthly,
-    grossIncomeYearly,
-    tableResults: { grossIncome, finalIncome },
-    finalTax, // TODO: add this in table result
-    insurance, // TODO: add this in table result
+    grossIncome,
+    finalIncome,
+    finalTax,
+    insurance,
     employerObligations,
     totalEmployerCost,
     taxWedge,
     taxWedgePercentage,
     childrenDiscountAmount,
     taxableIncome,
-  } = userDetails;
+  } = userDetails.tableResults;
 
   return (
     <TableContainer mt={6} background="#ffffff70">
@@ -124,7 +123,7 @@ const EmployeeTable = () => {
             <Td border="none">
               <Text color="gray.700" fontSize="sm">
                 {formatCellValue(
-                  grossIncomeMonthly > finalTax.month && finalTax.month > 0
+                  grossIncome.month > finalTax.month && finalTax.month > 0
                     ? finalTax.month
                     : null,
                 )}
@@ -133,7 +132,7 @@ const EmployeeTable = () => {
             <Td isNumeric border="none">
               <Text color="gray.700" fontSize="sm" textAlign="left">
                 {formatCellValue(
-                  grossIncomeYearly > finalTax.year && finalTax.year > 0
+                  grossIncome.year > finalTax.year && finalTax.year > 0
                     ? finalTax.year
                     : null,
                 )}
@@ -144,7 +143,7 @@ const EmployeeTable = () => {
           <Tr>
             <Td border="none">
               <Text color="gray.700" fontWeight="500" fontSize="sm">
-                Έκπτωση τέκνων
+                Μείωση φόρου
               </Text>
             </Td>
             <Td border="none">

@@ -65,4 +65,19 @@ describe("calculateBusinessResults", () => {
     expect(result.taxInAdvanceValue.year).toBeCloseTo(868.34, 2);
     expect(result.finalIncome.year).toBeCloseTo(16964.82, 2);
   });
+
+  it("treats a business loss as zero taxable income", () => {
+    const result = calculateBusinessResults({
+      ...baseParams,
+      userDetails: {
+        ...baseParams.userDetails,
+        grossIncome: { month: 500, year: 6000 },
+        extraBusinessExpenses: 10000,
+      },
+    });
+
+    expect(result.taxableIncome).toEqual({ month: 0, year: 0 });
+    expect(result.totalTax).toEqual({ month: 0, year: 0 });
+    expect(result.finalIncome.year).toBeLessThan(0);
+  });
 });

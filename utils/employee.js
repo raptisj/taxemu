@@ -158,7 +158,7 @@ export function calculateChildrenDiscount({
   if (amount > reductionStartsAbove) {
     const aboveThresholdAmount = amount - reductionStartsAbove;
     const result = aboveThresholdAmount * reductionRate;
-    return { discount: childDiscountAmount - result };
+    return { discount: Math.max(0, childDiscountAmount - result) };
   }
   return { discount: childDiscountAmount };
 }

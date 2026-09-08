@@ -27,7 +27,10 @@ import { InflationWidgetContent } from "./InflationWidgetContent";
 export const InflationDesktopWidget = () => {
   const userDetails = useStore((state) => state.userDetails.employee);
 
-  const { finalIncomeMonthly, grossIncomeYearly } = userDetails;
+  const {
+    finalIncome: { month: finalIncomeMonthly },
+    grossIncome: { year: grossIncomeYearly },
+  } = userDetails.tableResults;
   const rates = getInflationRatesBetween(
     purchasingPowerBaseYear,
     latestActualInflationYear,

@@ -141,8 +141,10 @@ export const calculateBusinessResults = ({ userDetails, rules }) => {
     specialInsuranceScale,
     type: "year",
   });
-  const taxableIncome =
-    calculationGrossIncome - insurancePerYear - extraBusinessExpenses;
+  const taxableIncome = Math.max(
+    0,
+    calculationGrossIncome - insurancePerYear - extraBusinessExpenses,
+  );
 
   const totalTax =
     businessRules.incomeTax.kind === "progressive"
@@ -205,6 +207,10 @@ export const calculateBusinessResults = ({ userDetails, rules }) => {
     businessExpenses: {
       month: findMonthAmount(extraBusinessExpenses),
       year: extraBusinessExpenses,
+    },
+    taxableIncome: {
+      month: findMonthAmount(taxableIncome),
+      year: taxableIncome,
     },
     withholdingTaxAmount: {
       month: roundedPrePaidTaxAmount,

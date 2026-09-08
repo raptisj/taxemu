@@ -1,6 +1,7 @@
 import { useToast } from "@chakra-ui/react";
 import { useStore } from "store";
 import { calculateEmployeeForGrossMonth } from "../utils/employeeCalculation";
+import { getComparisonInput } from "../utils/yearComparison";
 
 export { calculateEmployeeForGrossMonth } from "../utils/employeeCalculation";
 
@@ -39,19 +40,22 @@ export const useCalculateEmployee = () => {
       salaryMonthCount,
     } = userDetails;
 
+    const newState = {
+      ...result.calculatedState,
+      grossIncomeMonthly,
+      grossIncomeYearly,
+      finalIncomeMonthly,
+      finalIncomeYearly,
+      finalMonthOrYear:
+        activeInput === "gross" ? grossMonthOrYear : finalMonthOrYear,
+      grossMonthOrYear:
+        activeInput === "final" ? finalMonthOrYear : grossMonthOrYear,
+    };
+
     commitEmployeeCalculation({
-      newState: {
-        ...result.calculatedState,
-        grossIncomeMonthly,
-        grossIncomeYearly,
-        finalIncomeMonthly,
-        finalIncomeYearly,
-        finalMonthOrYear:
-          activeInput === "gross" ? grossMonthOrYear : finalMonthOrYear,
-        grossMonthOrYear:
-          activeInput === "final" ? finalMonthOrYear : grossMonthOrYear,
-      },
+      newState,
       tableResults: {
+        ...result.calculatedState,
         grossIncome: {
           month: grossIncomeMonthly,
           year: grossIncomeYearly,
@@ -65,6 +69,12 @@ export const useCalculateEmployee = () => {
         discountOptions: {
           returnBaseInland: discountOptions.returnBaseInland,
         },
+        taxationYear: userDetails.taxationYear,
+        ageGroup: userDetails.ageGroup,
+        calculationInput: getComparisonInput("employee", {
+          ...userDetails,
+          ...newState,
+        }),
       },
     });
   };

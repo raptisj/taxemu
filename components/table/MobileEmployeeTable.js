@@ -15,10 +15,8 @@ const MobileEmployeeTable = ({ onSubmitAction }) => {
   const userDetails = useStore((state) => state.userDetails.employee);
 
   const {
-    finalIncomeMonthly,
-    finalIncomeYearly,
-    grossIncomeMonthly,
-    grossIncomeYearly,
+    finalIncome,
+    grossIncome,
     finalTax,
     insurance,
     employerObligations,
@@ -27,7 +25,7 @@ const MobileEmployeeTable = ({ onSubmitAction }) => {
     taxWedgePercentage,
     childrenDiscountAmount,
     taxableIncome,
-  } = userDetails;
+  } = userDetails.tableResults;
 
   return (
     <>
@@ -46,12 +44,12 @@ const MobileEmployeeTable = ({ onSubmitAction }) => {
                 Καθαρό εισόδημα
               </Text>
               <Text fontWeight="600">
-                {formatCellValue(finalIncomeMonthly)}
+                {formatCellValue(finalIncome.month)}
               </Text>
             </Flex>
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Μικτό εισόδημα</Text>
-              <Text>{formatCellValue(grossIncomeMonthly)}</Text>
+              <Text>{formatCellValue(grossIncome.month)}</Text>
             </Flex>
 
             <Flex padding={3} justifyContent="space-between">
@@ -68,7 +66,7 @@ const MobileEmployeeTable = ({ onSubmitAction }) => {
               <Text fontSize="sm">Φόρος εισοδήματος</Text>
               <Text>
                 {formatCellValue(
-                  grossIncomeMonthly > finalTax.month && finalTax.month > 0
+                  grossIncome.month > finalTax.month && finalTax.month > 0
                     ? finalTax.month
                     : null,
                 )}
@@ -76,7 +74,7 @@ const MobileEmployeeTable = ({ onSubmitAction }) => {
             </Flex>
 
             <Flex padding={3} justifyContent="space-between">
-              <Text fontSize="sm">Έκπτωση τέκνων</Text>
+              <Text fontSize="sm">Μείωση φόρου</Text>
               <Text>{formatCellValue(childrenDiscountAmount.month)}</Text>
             </Flex>
 
@@ -119,11 +117,11 @@ const MobileEmployeeTable = ({ onSubmitAction }) => {
               <Text fontWeight="600" fontSize="sm">
                 Καθαρό εισόδημα
               </Text>
-              <Text fontWeight="600">{formatCellValue(finalIncomeYearly)}</Text>
+              <Text fontWeight="600">{formatCellValue(finalIncome.year)}</Text>
             </Flex>
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Μικτό εισόδημα</Text>
-              <Text>{formatCellValue(grossIncomeYearly)}</Text>
+              <Text>{formatCellValue(grossIncome.year)}</Text>
             </Flex>
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Ασφαλιστικές εισφορές</Text>
@@ -139,7 +137,7 @@ const MobileEmployeeTable = ({ onSubmitAction }) => {
               <Text fontSize="sm">Φόρος εισοδήματος</Text>
               <Text>
                 {formatCellValue(
-                  grossIncomeYearly > finalTax.year && finalTax.year > 0
+                  grossIncome.year > finalTax.year && finalTax.year > 0
                     ? finalTax.year
                     : null,
                 )}
@@ -147,7 +145,7 @@ const MobileEmployeeTable = ({ onSubmitAction }) => {
             </Flex>
 
             <Flex padding={3} justifyContent="space-between">
-              <Text fontSize="sm">Έκπτωση τέκνων</Text>
+              <Text fontSize="sm">Μείωση φόρου</Text>
               <Text>{formatCellValue(childrenDiscountAmount.year)}</Text>
             </Flex>
 
