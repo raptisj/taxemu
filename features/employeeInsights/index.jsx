@@ -17,6 +17,7 @@ import { useRouter } from "next/router";
 import { useStore } from "store";
 import { WageComparisonChart } from "features/wageComparisonChart";
 import { InflationDesktopWidget } from "features/inflationDesktopWidget";
+import { EmployerCostBreakdown } from "features/employerCostBreakdown";
 
 export const EmployeeInsights = () => {
   const grossIncomeMonthly = useStore(
@@ -35,6 +36,7 @@ export const EmployeeInsights = () => {
     <Stack spacing={4}>
       <WageComparisonChart />
       <InflationDesktopWidget />
+      <EmployerCostBreakdown />
     </Stack>
   );
 };
@@ -72,10 +74,10 @@ export const MobileEmployeeInsights = () => {
             <Box>
               <Flex align="center" gap={2} mb={1}>
                 <Heading as="h2" fontSize="md">Αναλύσεις</Heading>
-                <Badge colorScheme="purple">2</Badge>
+                <Badge colorScheme="purple">3</Badge>
               </Flex>
               <Text fontSize="sm" color="gray.600">
-                Θέση μισθού και αγοραστική δύναμη
+                Θέση μισθού, αγοραστική δύναμη και διάσπαση κόστους
               </Text>
             </Box>
             <Button size="sm" colorScheme="purple" onClick={handleOpen} flexShrink={0}>

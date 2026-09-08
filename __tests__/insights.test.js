@@ -1,6 +1,7 @@
 import { hicpInflation, wageDistributions } from "../constants";
 import {
   calculateBinnedPercentile,
+  calculateEmployerCostBreakdown,
   getInflationRatesBetween,
   getWageDistributionForYear,
 } from "../utils";
@@ -59,5 +60,30 @@ describe("insight datasets", () => {
       { year: 2024, rate: 0.03, status: "actual" },
       { year: 2025, rate: 0.029, status: "actual" },
     ]);
+  });
+
+  it("expresses each employer-cost component per €100", () => {
+    const breakdown = calculateEmployerCostBreakdown({
+      finalIncome: 2072,
+      incomeTax: 527,
+      employeeContributions: 400,
+      employerContributions: 654,
+      totalEmployerCost: 3654,
+    });
+
+    expect(breakdown.map(({ key, perHundred }) => [key, perHundred])).toEqual([
+      ["netIncome", 56.7],
+      ["incomeTax", 14.42],
+      ["employeeContributions", 10.95],
+      ["employerContributions", 17.9],
+    ]);
+  });
+
+  it("returns zeroes when employer cost is unavailable", () => {
+    expect(
+      calculateEmployerCostBreakdown({ totalEmployerCost: 0 }).every(
+        ({ amount, perHundred }) => amount === 0 && perHundred === 0,
+      ),
+    ).toBe(true);
   });
 });

@@ -148,6 +148,7 @@ export {
 
 export {
   calculateBinnedPercentile,
+  calculateEmployerCostBreakdown,
   getInflationRatesBetween,
   getWageDistributionForYear,
 } from "./insights";

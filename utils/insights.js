@@ -63,3 +63,47 @@ export const getInflationRatesBetween = (fromYear, toYear, inflationByYear) =>
     .map(([year, details]) => ({ year: Number(year), ...details }))
     .filter(({ year }) => year > fromYear && year <= toYear)
     .sort((a, b) => a.year - b.year);
+
+export const calculateEmployerCostBreakdown = ({
+  finalIncome,
+  incomeTax,
+  employeeContributions,
+  employerContributions,
+  totalEmployerCost,
+}) => {
+  const total = Number(totalEmployerCost);
+  const components = [
+    { key: "netIncome", label: "Καθαρός μισθός", amount: Number(finalIncome) },
+    { key: "incomeTax", label: "Φόρος εισοδήματος", amount: Number(incomeTax) },
+    {
+      key: "employeeContributions",
+      label: "Εισφορές εργαζομένου",
+      amount: Number(employeeContributions),
+    },
+    {
+      key: "employerContributions",
+      label: "Εισφορές εργοδότη",
+      amount: Number(employerContributions),
+    },
+  ];
+
+  if (!Number.isFinite(total) || total <= 0) {
+    return components.map((component) => ({
+      ...component,
+      amount: 0,
+      perHundred: 0,
+    }));
+  }
+
+  return components.map((component) => {
+    const amount = Number.isFinite(component.amount)
+      ? Math.max(0, component.amount)
+      : 0;
+
+    return {
+      ...component,
+      amount,
+      perHundred: Number(((amount / total) * 100).toFixed(2)),
+    };
+  });
+};
