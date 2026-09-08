@@ -190,10 +190,10 @@ export const OecdTaxWedge = () => {
         <Grid templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }} gap={4} mt={8}>
           <Box bg="purple.50" borderRadius="lg" p={4}>
             <Text color="gray.600" fontSize="sm">
-              Διαφορά από τον ΟΟΣΑ
+              Διαφορά από τον μέσο όρο του ΟΟΣΑ
             </Text>
             <Text color="purple.700" fontSize="2xl" fontWeight="700">
-              +{formatNumber(difference)} μ.μ.
+              +{formatNumber(difference)} ποσοστιαίες μονάδες
             </Text>
           </Box>
           <Box bg="gray.50" borderRadius="lg" p={4}>
