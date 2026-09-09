@@ -35,6 +35,10 @@ const businessInput = {
   previousYearTaxInAdvance: 0,
   numberOfChildren: 0,
   ageGroup: "A30P",
+  minimumPresumedIncome: {
+    businessAge: 6,
+    hasAdjustments: false,
+  },
 };
 
 const buildEmployeeDetails = () => {
@@ -129,6 +133,8 @@ describe("personal calculation PDF data", () => {
     const keys = data.results.map(({ key }) => key);
 
     expect(keys).toContain("taxableIncome");
+    expect(keys).toContain("accountingProfit");
+    expect(keys).toContain("presumedIncome");
     expect(keys).toContain("taxPrepayment");
     expect(keys).toContain("taxDue");
     expect(data.comparison.results).toHaveLength(2);

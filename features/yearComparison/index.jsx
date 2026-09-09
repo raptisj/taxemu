@@ -11,7 +11,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useStore } from "store";
-import { supportedTaxYears } from "../../rules";
+import { getTaxRules, supportedTaxYears } from "../../rules";
 import {
   calculateYearComparison,
   parseComparisonInput,
@@ -22,6 +22,8 @@ import {
 const metricLabels = {
   insurance: "Ασφαλιστικές εισφορές",
   taxableIncome: "Φορολογητέο εισόδημα",
+  accountingProfit: "Λογιστικό κέρδος",
+  presumedIncome: "Ελάχιστο τεκμαρτό εισόδημα",
   tax: "Φόρος εισοδήματος",
   adjustment: {
     employee: "Έκπτωση φόρου",
@@ -175,11 +177,21 @@ export const YearComparison = ({ entity }) => {
         },
       }
     : details;
+  const selectedRules = getTaxRules(calculationDetails.taxationYear);
+  const minimumIncomeReady =
+    entity !== "business" ||
+    !selectedRules.business.minimumPresumedIncome.enabled ||
+    (Number.isInteger(
+      Number(calculationDetails.minimumPresumedIncome?.businessAge),
+    ) &&
+      Number(calculationDetails.minimumPresumedIncome.businessAge) > 0 &&
+      typeof calculationDetails.minimumPresumedIncome?.hasAdjustments ===
+        "boolean");
   const hasInput = entity === "employee"
     ? calculationDetails.activeInput === "gross"
       ? calculationDetails.grossIncomeMonthly > 0
       : calculationDetails.finalIncomeMonthly > 0
-    : calculationDetails.grossIncome.year > 0;
+    : calculationDetails.grossIncome.year > 0 && minimumIncomeReady;
   const serializedInput = hasInput
     ? serializeComparisonInput(entity, calculationDetails)
     : null;

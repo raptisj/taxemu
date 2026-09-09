@@ -189,6 +189,41 @@ export const validateTaxRules = (rulesByYear = taxRulesByYear) => {
     }
 
     const businessRules = rules.business;
+    const minimumIncomeRules = businessRules.minimumPresumedIncome;
+    if (typeof minimumIncomeRules?.enabled !== "boolean") {
+      throw new Error(
+        `${yearKey}.business.minimumPresumedIncome.enabled must be boolean`,
+      );
+    }
+    if (minimumIncomeRules.enabled) {
+      [
+        "monthlyMinimumSalary",
+        "salaryPaymentsPerYear",
+        "payrollAdditionCap",
+        "highestEmployeeCap",
+        "overallCap",
+      ].forEach((field) =>
+        assertNonNegativeNumber(
+          minimumIncomeRules[field],
+          `${yearKey}.business.minimumPresumedIncome.${field}`,
+        ),
+      );
+      ["payrollRate", "turnoverRate"].forEach((field) =>
+        assertRate(
+          minimumIncomeRules[field],
+          `${yearKey}.business.minimumPresumedIncome.${field}`,
+        ),
+      );
+      if (
+        !["baseComponent", "total"].includes(
+          minimumIncomeRules.highestEmployeeComparison,
+        )
+      ) {
+        throw new Error(
+          `${yearKey}.business.minimumPresumedIncome.highestEmployeeComparison is invalid`,
+        );
+      }
+    }
     const monthlyAmounts = businessRules.insurance?.monthlyAmounts;
     if (!Array.isArray(monthlyAmounts) || monthlyAmounts.length === 0) {
       throw new Error(

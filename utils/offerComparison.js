@@ -30,6 +30,7 @@ export const createDefaultOfferComparisonInput = () => ({
   unpaidLeaveDays: 20,
   leaveIsBillable: false,
   businessExpensesAnnual: 2400,
+  businessAge: 6,
   insuranceScaleSelection: 1,
   numberOfChildren: 0,
   ageGroup: "A30P",
@@ -128,6 +129,10 @@ const businessDetails = (input, annualRevenue) => ({
   ),
   numberOfChildren: Math.trunc(finiteNonNegative(input.numberOfChildren)),
   ageGroup: input.ageGroup,
+  minimumPresumedIncome: {
+    businessAge: Math.max(1, Math.trunc(finiteNonNegative(input.businessAge))),
+    hasAdjustments: false,
+  },
 });
 
 export const calculateFreelancerOffer = (input, annualRevenue) => {

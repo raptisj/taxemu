@@ -201,6 +201,7 @@ export const ComparisonForm = ({ input, setInput }) => {
           <NumberField label="Μήνες τιμολόγησης" value={input.billableMonths} onChange={(value) => setField("billableMonths", Math.min(12, value))} max={12} precision={2} />
           <NumberField label="Ημέρες άδειας" value={input.unpaidLeaveDays} onChange={(value) => setField("unpaidLeaveDays", Math.min(260, value))} max={260} />
           <NumberField label="Ετήσια επαγγελματικά έξοδα" value={input.businessExpensesAnnual} onChange={(value) => setField("businessExpensesAnnual", value)} />
+          <NumberField label="Έτος άσκησης δραστηριότητας" value={input.businessAge} onChange={(value) => setField("businessAge", Math.max(1, Math.trunc(value)))} min={1} max={60} />
           <Box bg="gray.50" borderRadius="md" p={3} alignSelf="end">
             <Text color="gray.500" fontSize="xs">Πραγματικά χρεώσιμο διάστημα</Text>
             <Text fontWeight="700">{new Intl.NumberFormat("el-GR", { maximumFractionDigits: 2 }).format(effectiveMonths)} μήνες</Text>

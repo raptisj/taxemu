@@ -39,6 +39,7 @@ const BusinessForm = ({ showCalculatorType = true }) => {
     onChangePreviousYearTaxInAdvance,
     onChangeNumberOfChildren,
     onSelectAgeGroup,
+    updateMinimumPresumedIncome,
   } = useBusinessActions();
 
   const {
@@ -54,9 +55,11 @@ const BusinessForm = ({ showCalculatorType = true }) => {
     insuranceScaleSelection,
     numberOfChildren,
     ageGroup,
+    minimumPresumedIncome,
   } = userDetails;
   const rules = getTaxRules(taxationYear);
   const firstYearsDiscount = rules.business.firstYearsDiscount;
+  const minimumIncomeRules = rules.business.minimumPresumedIncome;
 
   const onChange = (value) => {
     update({
@@ -227,6 +230,204 @@ const BusinessForm = ({ showCalculatorType = true }) => {
           />
         )}
       </SidebarSubSection>
+
+      {minimumIncomeRules.enabled && (
+        <>
+          <Divider pt={6} />
+          <SidebarSubSectionAccordion title="Ελάχιστο τεκμαρτό εισόδημα">
+            <Box mt={4}>
+              <Text fontWeight="500" color="gray.700">
+                Έτος άσκησης δραστηριότητας
+              </Text>
+              <FormControl isInvalid={hasError && !minimumPresumedIncome.businessAge}>
+                <NumberInput
+                  mt={2}
+                  min={1}
+                  max={60}
+                  value={minimumPresumedIncome.businessAge ?? ""}
+                  onChange={(value) =>
+                    updateMinimumPresumedIncome({
+                      businessAge: value === "" ? null : Number(value),
+                    })
+                  }
+                >
+                  <NumberInputField />
+                </NumberInput>
+                <FormErrorMessage>Συμπλήρωσε το έτος δραστηριότητας</FormErrorMessage>
+              </FormControl>
+              <Text color="gray.500" fontSize="xs" mt={1}>
+                Από την πρώτη έναρξη, χωρίς τα διαστήματα διακοπής.
+              </Text>
+            </Box>
+
+            <Box mt={4}>
+              <FormElements.RadioGroup
+                label="Υπάρχουν ειδικές προσαρμογές;"
+                value={
+                  minimumPresumedIncome.hasAdjustments === null
+                    ? ""
+                    : minimumPresumedIncome.hasAdjustments
+                      ? "yes"
+                      : "no"
+                }
+                onChange={(value) =>
+                  updateMinimumPresumedIncome({
+                    hasAdjustments: value === "yes",
+                  })
+                }
+                options={[
+                  { title: "Όχι", key: "no" },
+                  { title: "Ναι", key: "yes" },
+                ]}
+              />
+              {hasError && minimumPresumedIncome.hasAdjustments === null && (
+                <Text color="red.500" fontSize="xs" mt={1}>
+                  Επίλεξε αν υπάρχουν προσαρμογές
+                </Text>
+              )}
+            </Box>
+
+            {minimumPresumedIncome.hasAdjustments && (
+              <Box mt={3}>
+                <FormElements.CheckboxNested
+                  label="Απασχολώ προσωπικό"
+                  isChecked={minimumPresumedIncome.employeeAdjustment}
+                  show={minimumPresumedIncome.employeeAdjustment}
+                  onChange={() =>
+                    updateMinimumPresumedIncome({
+                      employeeAdjustment:
+                        !minimumPresumedIncome.employeeAdjustment,
+                    })
+                  }
+                >
+                  <Text fontSize="sm" color="gray.700">Ετήσιο κόστος μισθοδοσίας</Text>
+                  <NumberInput
+                    value={minimumPresumedIncome.annualPayrollCost || ""}
+                    onChange={(value) =>
+                      updateMinimumPresumedIncome({
+                        annualPayrollCost: Number(value),
+                      })
+                    }
+                  >
+                    <NumberInputField />
+                  </NumberInput>
+                  <Text fontSize="sm" color="gray.700">Μικτές ετήσιες αποδοχές υψηλότερα αμειβόμενου</Text>
+                  <NumberInput
+                    value={minimumPresumedIncome.highestPaidEmployeeGross || ""}
+                    onChange={(value) =>
+                      updateMinimumPresumedIncome({
+                        highestPaidEmployeeGross: Number(value),
+                      })
+                    }
+                  >
+                    <NumberInputField />
+                  </NumberInput>
+                </FormElements.CheckboxNested>
+
+                <FormElements.CheckboxNested
+                  label="Εφαρμόζεται προσαύξηση τζίρου βάσει ΚΑΔ"
+                  isChecked={minimumPresumedIncome.turnoverAdjustment}
+                  show={minimumPresumedIncome.turnoverAdjustment}
+                  onChange={() =>
+                    updateMinimumPresumedIncome({
+                      turnoverAdjustment:
+                        !minimumPresumedIncome.turnoverAdjustment,
+                    })
+                  }
+                >
+                  <Text fontSize="sm" color="gray.700">Επίσημος μέσος ετήσιος τζίρος ΚΑΔ</Text>
+                  <NumberInput
+                    value={minimumPresumedIncome.kadAverageTurnover || ""}
+                    onChange={(value) =>
+                      updateMinimumPresumedIncome({
+                        kadAverageTurnover: Number(value),
+                      })
+                    }
+                  >
+                    <NumberInputField />
+                  </NumberInput>
+                  <Link href="https://www.aade.gr/shediasmos-apologismos/statistika/mesos-oros-etisioy-kykloy-ergasion-ana-kad">
+                    <Text color="blue.600" fontSize="xs" textDecoration="underline">
+                      Πίνακες μέσου τζίρου ανά ΚΑΔ της ΑΑΔΕ
+                    </Text>
+                  </Link>
+                </FormElements.CheckboxNested>
+
+                <FormElements.CheckboxNested
+                  label="Έχω εισόδημα από μισθό, σύνταξη ή αγροτική δραστηριότητα"
+                  isChecked={minimumPresumedIncome.otherIncomeAdjustment}
+                  show={minimumPresumedIncome.otherIncomeAdjustment}
+                  onChange={() =>
+                    updateMinimumPresumedIncome({
+                      otherIncomeAdjustment:
+                        !minimumPresumedIncome.otherIncomeAdjustment,
+                    })
+                  }
+                >
+                  <Text fontSize="sm" color="gray.700">Συνολικό ετήσιο ποσό</Text>
+                  <NumberInput
+                    value={minimumPresumedIncome.otherIncome || ""}
+                    onChange={(value) =>
+                      updateMinimumPresumedIncome({ otherIncome: Number(value) })
+                    }
+                  >
+                    <NumberInputField />
+                  </NumberInput>
+                </FormElements.CheckboxNested>
+
+                <FormElements.CheckboxNested
+                  label="Δικαιούμαι εξαίρεση ή μείωση"
+                  isChecked={minimumPresumedIncome.reliefAdjustment}
+                  show={minimumPresumedIncome.reliefAdjustment}
+                  onChange={() =>
+                    updateMinimumPresumedIncome({
+                      reliefAdjustment: !minimumPresumedIncome.reliefAdjustment,
+                    })
+                  }
+                >
+                  <FormElements.Select
+                    label="Νόμιμη μεταχείριση"
+                    value={minimumPresumedIncome.reliefType}
+                    onChange={(event) =>
+                      updateMinimumPresumedIncome({
+                        reliefType: event.target.value,
+                      })
+                    }
+                    options={[
+                      { value: "none", text: "Επίλεξε" },
+                      { value: "exempt", text: "Πλήρης εξαίρεση" },
+                      { value: "half", text: "Μείωση 50%" },
+                      { value: "limited", text: "Περιορισμένη διάρκεια" },
+                    ]}
+                  />
+                  {minimumPresumedIncome.reliefType === "limited" && (
+                    <Box>
+                      <Text fontSize="sm" color="gray.700">Επιλέξιμες ημέρες λειτουργίας</Text>
+                      <NumberInput
+                        min={1}
+                        max={365}
+                        value={minimumPresumedIncome.eligibleOperatingDays || ""}
+                        onChange={(value) =>
+                          updateMinimumPresumedIncome({
+                            eligibleOperatingDays: Number(value),
+                          })
+                        }
+                      >
+                        <NumberInputField />
+                      </NumberInput>
+                    </Box>
+                  )}
+                  <Link href="https://www.aade.gr/sites/default/files/2026-03/Odigies_E1_2026_0.pdf">
+                    <Text color="blue.600" fontSize="xs" textDecoration="underline">
+                      Δες ποιες περιπτώσεις αναγνωρίζει η ΑΑΔΕ
+                    </Text>
+                  </Link>
+                </FormElements.CheckboxNested>
+              </Box>
+            )}
+          </SidebarSubSectionAccordion>
+        </>
+      )}
 
       <Box mt={6}>
         <BusinessNegotiateWidget />

@@ -55,6 +55,7 @@ const sharedFields = {
     "previousYearTaxInAdvance",
     "numberOfChildren",
     "ageGroup",
+    "minimumPresumedIncome",
   ],
 };
 
@@ -151,6 +152,8 @@ const businessResultForYear = (details, year) => {
     metrics: {
       insurance: result.nextBusinessTable.insurance,
       taxableIncome: result.taxableIncome,
+      accountingProfit: result.accountingProfit,
+      presumedIncome: result.presumedIncome,
       tax: result.totalTax,
       adjustment: details.prePaidNextYearTax
         ? result.taxInAdvanceValue

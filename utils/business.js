@@ -106,6 +106,127 @@ export const calculateBusinessScalesTax = ({
   );
 };
 
+const getBusinessAgeFactor = (businessAge) => {
+  if (businessAge <= 3) return 0;
+  if (businessAge === 4) return 1 / 3;
+  if (businessAge === 5) return 2 / 3;
+  return 1;
+};
+
+const getExperienceFactor = (businessAge) => {
+  if (businessAge <= 6) return 1;
+  if (businessAge <= 9) return 1.1;
+  if (businessAge <= 12) return 1.21;
+  return 1.331;
+};
+
+export const calculateMinimumPresumedBusinessIncome = ({
+  taxationYear,
+  annualTurnover,
+  minimumPresumedIncome,
+  rules,
+}) => {
+  const businessRules = rules ?? getBusinessRules(taxationYear);
+  const policy = businessRules.minimumPresumedIncome;
+
+  if (!policy?.enabled) {
+    return {
+      applies: false,
+      amount: 0,
+      breakdown: null,
+    };
+  }
+
+  const details = minimumPresumedIncome ?? {};
+  const businessAge = Number(details.businessAge);
+  if (!Number.isInteger(businessAge) || businessAge < 1) {
+    throw new Error("businessAge must be a positive integer");
+  }
+
+  const hasAdjustments = details.hasAdjustments === true;
+  const employee = hasAdjustments && details.employeeAdjustment;
+  const turnover = hasAdjustments && details.turnoverAdjustment;
+  const otherIncome = hasAdjustments && details.otherIncomeAdjustment;
+  const relief = hasAdjustments && details.reliefAdjustment;
+  const reliefType = relief ? details.reliefType : "none";
+
+  const annualMinimumSalary =
+    policy.monthlyMinimumSalary * policy.salaryPaymentsPerYear;
+  const experienceFactor = getExperienceFactor(businessAge);
+  const wageComponent = annualMinimumSalary * experienceFactor;
+  const annualPayrollCost = employee
+    ? Math.max(0, Number(details.annualPayrollCost) || 0)
+    : 0;
+  const payrollComponent = Math.min(
+    annualPayrollCost * policy.payrollRate,
+    policy.payrollAdditionCap,
+  );
+  const highestPaidEmployeeGross = employee
+    ? Math.max(0, Number(details.highestPaidEmployeeGross) || 0)
+    : 0;
+  const employeeComparisonAmount = Math.min(
+    highestPaidEmployeeGross,
+    policy.highestEmployeeCap,
+  );
+  const kadAverageTurnover = turnover
+    ? Math.max(0, Number(details.kadAverageTurnover) || 0)
+    : 0;
+  const turnoverComponent = turnover
+    ? Math.max(0, annualTurnover - kadAverageTurnover) * policy.turnoverRate
+    : 0;
+
+  let article28AAmount;
+  if (policy.highestEmployeeComparison === "baseComponent") {
+    article28AAmount =
+      Math.max(wageComponent, employeeComparisonAmount) +
+      payrollComponent +
+      turnoverComponent;
+  } else {
+    const componentTotal =
+      wageComponent + payrollComponent + turnoverComponent;
+    article28AAmount = Math.max(componentTotal, employeeComparisonAmount);
+  }
+  article28AAmount = Math.min(article28AAmount, policy.overallCap);
+
+  const eligibleOperatingDays =
+    reliefType === "limited"
+      ? Math.min(365, Math.max(0, Number(details.eligibleOperatingDays) || 0))
+      : 365;
+  const durationFactor = eligibleOperatingDays / 365;
+  const businessAgeFactor = getBusinessAgeFactor(businessAge);
+  const reliefFactor =
+    reliefType === "exempt" ? 0 : reliefType === "half" ? 0.5 : 1;
+  const incomeOffsets = otherIncome
+    ? Math.max(0, Number(details.otherIncome) || 0)
+    : 0;
+  const money = (value) => toFixedNumber(value, 2);
+  // The E1 calculation applies Article 28B income offsets before the
+  // exemptions/reductions of Article 28C paragraphs 2 and 3.
+  const adjustedBeforeOffsets =
+    article28AAmount * durationFactor * businessAgeFactor;
+  const afterIncomeOffsets = Math.max(0, adjustedBeforeOffsets - incomeOffsets);
+  const amount = money(afterIncomeOffsets * reliefFactor);
+
+  return {
+    applies: amount > 0,
+    amount,
+    breakdown: {
+      annualMinimumSalary: money(annualMinimumSalary),
+      experienceFactor,
+      wageComponent: money(wageComponent),
+      payrollComponent: money(payrollComponent),
+      turnoverComponent: money(turnoverComponent),
+      employeeComparisonAmount: money(employeeComparisonAmount),
+      article28AAmount: money(article28AAmount),
+      durationFactor,
+      businessAgeFactor,
+      reliefFactor,
+      incomeOffsets: money(incomeOffsets),
+      afterIncomeOffsets: money(afterIncomeOffsets),
+    },
+  };
+};
+
 export const calculateBusinessResults = ({ userDetails, rules }) => {
   const {
     grossIncome,
@@ -121,6 +242,7 @@ export const calculateBusinessResults = ({ userDetails, rules }) => {
     previousYearTaxInAdvance,
     numberOfChildren,
     ageGroup,
+    minimumPresumedIncome,
   } = userDetails;
   const businessRules = rules ?? getBusinessRules(taxationYear);
   const { specialInsuranceScale, prePaidTaxDiscount, firstScaleDiscount } =
@@ -141,10 +263,17 @@ export const calculateBusinessResults = ({ userDetails, rules }) => {
     specialInsuranceScale,
     type: "year",
   });
-  const taxableIncome = Math.max(
+  const accountingProfit = Math.max(
     0,
     calculationGrossIncome - insurancePerYear - extraBusinessExpenses,
   );
+  const presumedIncomeResult = calculateMinimumPresumedBusinessIncome({
+    taxationYear,
+    annualTurnover: calculationGrossIncome,
+    minimumPresumedIncome,
+    rules: businessRules,
+  });
+  const taxableIncome = Math.max(accountingProfit, presumedIncomeResult.amount);
 
   const totalTax =
     businessRules.incomeTax.kind === "progressive"
@@ -212,6 +341,15 @@ export const calculateBusinessResults = ({ userDetails, rules }) => {
       month: findMonthAmount(taxableIncome),
       year: taxableIncome,
     },
+    accountingProfit: {
+      month: findMonthAmount(accountingProfit),
+      year: accountingProfit,
+    },
+    presumedIncome: {
+      month: findMonthAmount(presumedIncomeResult.amount),
+      year: presumedIncomeResult.amount,
+    },
+    presumedIncomeBreakdown: presumedIncomeResult.breakdown,
     withholdingTaxAmount: {
       month: roundedPrePaidTaxAmount,
       year: findYearAmount(roundedPrePaidTaxAmount),
@@ -238,6 +376,15 @@ export const calculateBusinessResults = ({ userDetails, rules }) => {
       month: findMonthAmount(taxableIncome),
       year: taxableIncome,
     },
+    accountingProfit: {
+      month: findMonthAmount(accountingProfit),
+      year: accountingProfit,
+    },
+    presumedIncome: {
+      month: findMonthAmount(presumedIncomeResult.amount),
+      year: presumedIncomeResult.amount,
+    },
+    presumedIncomeBreakdown: presumedIncomeResult.breakdown,
     nextBusinessTable,
   };
 };

@@ -4,6 +4,7 @@ import {
   applyPrePaidDiscount,
   applyFirstScaleDiscount,
   calculateBusinessScalesTax,
+  calculateMinimumPresumedBusinessIncome,
 } from "../utils/business";
 import { AGE_GROUPS } from "../constants";
 import { getBusinessRules } from "../rules";
@@ -210,5 +211,89 @@ describe("calculateBusinessScalesTax", () => {
         firstScaleDiscount: false,
       }),
     ).toBeCloseTo(13900, 2);
+  });
+});
+
+describe("calculateMinimumPresumedBusinessIncome", () => {
+  const calculate = (businessAge, overrides = {}, taxationYear = 2025) =>
+    calculateMinimumPresumedBusinessIncome({
+      taxationYear,
+      annualTurnover: 6000,
+      minimumPresumedIncome: {
+        businessAge,
+        hasAdjustments: false,
+        ...overrides,
+      },
+    });
+
+  it("uses the selected year's annual minimum salary", () => {
+    expect(calculate(6, {}, 2023).amount).toBe(10920);
+    expect(calculate(6, {}, 2024).amount).toBe(11620);
+    expect(calculate(6, {}, 2025).amount).toBe(12320);
+    expect(calculate(6, {}, 2026).amount).toBe(12880);
+  });
+
+  it("applies the new-business reductions and later trienniums", () => {
+    expect(calculate(3).amount).toBe(0);
+    expect(calculate(4).amount).toBeCloseTo(4106.67, 2);
+    expect(calculate(5).amount).toBeCloseTo(8213.33, 2);
+    expect(calculate(6).amount).toBe(12320);
+    expect(calculate(7).amount).toBe(13552);
+    expect(calculate(10).amount).toBeCloseTo(14907.2, 2);
+    expect(calculate(13).amount).toBeCloseTo(16397.92, 2);
+  });
+
+  it("applies employee, turnover, offset, relief, duration, and caps", () => {
+    const adjusted = calculate(6, {
+      hasAdjustments: true,
+      employeeAdjustment: true,
+      annualPayrollCost: 20000,
+      highestPaidEmployeeGross: 18000,
+      turnoverAdjustment: true,
+      kadAverageTurnover: 4000,
+      otherIncomeAdjustment: true,
+      otherIncome: 1000,
+      reliefAdjustment: true,
+      reliefType: "half",
+    });
+
+    expect(adjusted.breakdown.payrollComponent).toBe(2000);
+    expect(adjusted.breakdown.turnoverComponent).toBe(100);
+    expect(adjusted.breakdown.article28AAmount).toBe(18000);
+    expect(adjusted.amount).toBe(8500);
+
+    const limited = calculate(6, {
+      hasAdjustments: true,
+      reliefAdjustment: true,
+      reliefType: "limited",
+      eligibleOperatingDays: 100,
+    });
+    expect(limited.amount).toBeCloseTo(3375.34, 2);
+
+    const exempt = calculate(6, {
+      hasAdjustments: true,
+      reliefAdjustment: true,
+      reliefType: "exempt",
+    });
+    expect(exempt.amount).toBe(0);
+
+    const capped = calculate(6, {
+      hasAdjustments: true,
+      employeeAdjustment: true,
+      annualPayrollCost: 500000,
+      highestPaidEmployeeGross: 100000,
+      turnoverAdjustment: true,
+      kadAverageTurnover: 1,
+    });
+    expect(capped.breakdown.article28AAmount).toBeLessThanOrEqual(50000);
+  });
+
+  it("does not apply before tax year 2023 and validates business age", () => {
+    expect(calculate(6, {}, 2022)).toEqual({
+      applies: false,
+      amount: 0,
+      breakdown: null,
+    });
+    expect(() => calculate(0)).toThrow("businessAge");
   });
 });

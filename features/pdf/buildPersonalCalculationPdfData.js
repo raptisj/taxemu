@@ -47,6 +47,10 @@ const buildBusinessResults = (tableResults) => {
     { key: "grossIncome", label: "Μικτό εισόδημα", value: pair(tableResults.grossIncome) },
     { key: "businessExpenses", label: "Πρόσθετα έξοδα", value: pair(tableResults.businessExpenses) },
     { key: "insurance", label: "Ασφάλιση", value: pair(tableResults.insurance) },
+    { key: "accountingProfit", label: "Λογιστικό κέρδος", value: pair(tableResults.accountingProfit) },
+    ...(tableResults.presumedIncome?.year
+      ? [{ key: "presumedIncome", label: "Ελάχιστο τεκμαρτό εισόδημα", value: pair(tableResults.presumedIncome) }]
+      : []),
     { key: "taxableIncome", label: "Φορολογητέο εισόδημα", value: pair(tableResults.taxableIncome) },
     { key: "tax", label: "Φόρος εισοδήματος", value: pair(tableResults.totalTax) },
   ];
@@ -116,6 +120,18 @@ const buildAssumptions = (entity, input, rules) => {
     { label: "Ασφαλιστική κατηγορία", value: input.discountOptions?.specialInsuranceScale ? "Ειδική" : `${input.insuranceScaleSelection}η` },
     { label: "Πρόσθετα έξοδα", value: Number(input.extraBusinessExpenses) || 0, type: "money" },
   ];
+  if (rules.business.minimumPresumedIncome.enabled) {
+    assumptions.push(
+      {
+        label: "Έτος άσκησης δραστηριότητας",
+        value: input.minimumPresumedIncome?.businessAge,
+      },
+      {
+        label: "Ειδικές προσαρμογές τεκμαρτού",
+        value: input.minimumPresumedIncome?.hasAdjustments ? "Ναι" : "Όχι",
+      },
+    );
+  }
   if (rules.ui.business.showChildren) {
     assumptions.push({ label: "Τέκνα", value: input.numberOfChildren });
   }

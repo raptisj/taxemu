@@ -123,6 +123,7 @@ export {
   applyPrePaidDiscount,
   applyFirstScaleDiscount,
   calculateBusinessScalesTax,
+  calculateMinimumPresumedBusinessIncome,
   calculateBusinessResults,
 } from "./business";
 

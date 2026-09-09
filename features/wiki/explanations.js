@@ -149,21 +149,20 @@ export const buildEmployeeExplanation = (details) => {
 export const buildBusinessExplanation = (details) => {
   const rules = getTaxRules(details.taxationYear);
   const businessRules = rules.business;
+  const minimumIncomeReady =
+    !businessRules.minimumPresumedIncome.enabled ||
+    (Number.isInteger(Number(details.minimumPresumedIncome?.businessAge)) &&
+      Number(details.minimumPresumedIncome.businessAge) > 0 &&
+      typeof details.minimumPresumedIncome?.hasAdjustments === "boolean");
   const hasCalculation =
     asNumber(details.grossIncome?.month) > 0 &&
-    asNumber(details.grossIncome?.year) > 0;
+    asNumber(details.grossIncome?.year) > 0 &&
+    minimumIncomeReady;
   const calculation = hasCalculation
     ? calculateBusinessResults({ userDetails: details, rules: businessRules })
     : null;
   const table = calculation?.nextBusinessTable;
-  const taxableIncome = table
-    ? Math.max(
-        0,
-        table.grossIncome.year -
-          table.insurance.year -
-          table.businessExpenses.year,
-      )
-    : 0;
+  const taxableIncome = table?.taxableIncome?.year ?? 0;
   const tax = getTaxModel({
     taxableIncome,
     policy: businessRules.incomeTax,

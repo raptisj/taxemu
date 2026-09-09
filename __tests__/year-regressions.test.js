@@ -28,6 +28,10 @@ const createBusinessInput = (taxationYear, overrides = {}) => ({
   previousYearTaxInAdvance: 0,
   numberOfChildren: 0,
   ageGroup: "A30P",
+  minimumPresumedIncome: {
+    businessAge: 6,
+    hasAdjustments: false,
+  },
   ...overrides,
 });
 

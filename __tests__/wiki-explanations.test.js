@@ -30,6 +30,10 @@ const businessDetails = (taxationYear) => ({
   previousYearTaxInAdvance: 0,
   numberOfChildren: 0,
   ageGroup: "A30P",
+  minimumPresumedIncome: {
+    businessAge: 6,
+    hasAdjustments: false,
+  },
 });
 
 describe("dynamic calculation explanations", () => {

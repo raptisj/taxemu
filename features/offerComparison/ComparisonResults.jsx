@@ -150,6 +150,7 @@ export const ComparisonResults = ({ comparison, input }) => {
           <Assumption label="Χρεώσιμο διάστημα" value={`${decimal.format(comparison.freelancer.effectiveBillableMonths)} μήνες`} />
           <Assumption label="Άδεια" value={input.leaveIsBillable ? `${input.unpaidLeaveDays} ημέρες, τιμολογούνται` : `${input.unpaidLeaveDays} ημέρες, δεν τιμολογούνται`} />
           <Assumption label="Επαγγελματικά έξοδα" value={`${formatMoney(input.businessExpensesAnnual)} / έτος`} />
+          <Assumption label="Έτος δραστηριότητας freelancer" value={input.businessAge} />
           <Assumption label="Ασφάλιση freelancer" value={input.specialInsuranceScale ? "Ειδική κατηγορία" : `${input.insuranceScaleSelection}η κατηγορία`} />
           <Assumption label="Προκαταβολή φόρου" value={input.prePaidNextYearTax ? "Εμφανίζεται ως ταμειακή επίδραση" : "Δεν περιλαμβάνεται"} />
           <Assumption label="ΦΠΑ" value={`${input.vatRate * 100}% — εκτός καθαρών και εταιρικού κόστους`} />

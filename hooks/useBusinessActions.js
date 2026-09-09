@@ -67,6 +67,13 @@ export const useBusinessActions = () => {
     updateBusiness({ numberOfChildren: Number(value) });
   const onSelectAgeGroup = (e) =>
     updateBusiness({ ageGroup: e.target.value });
+  const updateMinimumPresumedIncome = (newState) =>
+    updateBusiness({
+      minimumPresumedIncome: {
+        ...userDetails.minimumPresumedIncome,
+        ...newState,
+      },
+    });
 
   return {
     onSelectTaxationYear,
@@ -79,5 +86,6 @@ export const useBusinessActions = () => {
     onChangePreviousYearTaxInAdvance,
     onChangeNumberOfChildren,
     onSelectAgeGroup,
+    updateMinimumPresumedIncome,
   };
 };

@@ -27,6 +27,9 @@ const BusinessTable = () => {
       previousYearTaxInAdvance,
       discountOptions,
       prePaidNextYearTax,
+      accountingProfit,
+      presumedIncome,
+      taxableIncome,
     } = userDetails.tableResults;
 
   return (
@@ -75,6 +78,62 @@ const BusinessTable = () => {
             <Td isNumeric border="none">
               <Text color="gray.700" fontSize="sm" textAlign="left">
                 {formatCellValue(grossIncome.year, !!finalIncome.year)}
+              </Text>
+            </Td>
+          </Tr>
+
+          <Tr>
+            <Td border="none">
+              <Text color="gray.700" fontWeight="500" fontSize="sm">
+                Λογιστικό κέρδος
+              </Text>
+            </Td>
+            <Td border="none">
+              <Text color="gray.700" fontSize="sm">
+                {formatCellValue(accountingProfit.month, !!finalIncome.year)}
+              </Text>
+            </Td>
+            <Td isNumeric border="none">
+              <Text color="gray.700" fontSize="sm" textAlign="left">
+                {formatCellValue(accountingProfit.year, !!finalIncome.year)}
+              </Text>
+            </Td>
+          </Tr>
+
+          {!!presumedIncome.year && (
+            <Tr>
+              <Td border="none">
+                <Text color="gray.700" fontWeight="500" fontSize="sm">
+                  Ελάχιστο τεκμαρτό εισόδημα
+                </Text>
+              </Td>
+              <Td border="none">
+                <Text color="gray.700" fontSize="sm">
+                  {formatCellValue(presumedIncome.month, !!finalIncome.year)}
+                </Text>
+              </Td>
+              <Td isNumeric border="none">
+                <Text color="gray.700" fontSize="sm" textAlign="left">
+                  {formatCellValue(presumedIncome.year, !!finalIncome.year)}
+                </Text>
+              </Td>
+            </Tr>
+          )}
+
+          <Tr>
+            <Td border="none">
+              <Text color="gray.700" fontWeight="500" fontSize="sm">
+                Εισόδημα που φορολογείται
+              </Text>
+            </Td>
+            <Td border="none">
+              <Text color="gray.700" fontSize="sm">
+                {formatCellValue(taxableIncome.month, !!finalIncome.year)}
+              </Text>
+            </Td>
+            <Td isNumeric border="none">
+              <Text color="gray.700" fontSize="sm" textAlign="left">
+                {formatCellValue(taxableIncome.year, !!finalIncome.year)}
               </Text>
             </Td>
           </Tr>

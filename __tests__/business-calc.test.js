@@ -23,6 +23,10 @@ describe("calculateBusinessResults", () => {
       previousYearTaxInAdvance: 0,
       numberOfChildren: 0,
       ageGroup: "A30P",
+      minimumPresumedIncome: {
+        businessAge: 6,
+        hasAdjustments: false,
+      },
     },
   };
 
@@ -66,7 +70,7 @@ describe("calculateBusinessResults", () => {
     expect(result.finalIncome.year).toBeCloseTo(16964.82, 2);
   });
 
-  it("treats a business loss as zero taxable income", () => {
+  it("preserves the accounting loss while taxing the presumed minimum", () => {
     const result = calculateBusinessResults({
       ...baseParams,
       userDetails: {
@@ -76,8 +80,33 @@ describe("calculateBusinessResults", () => {
       },
     });
 
-    expect(result.taxableIncome).toEqual({ month: 0, year: 0 });
-    expect(result.totalTax).toEqual({ month: 0, year: 0 });
+    expect(result.accountingProfit).toEqual({ month: 0, year: 0 });
+    expect(result.presumedIncome.year).toBe(12880);
+    expect(result.taxableIncome).toEqual({
+      month: 12880 / 12,
+      year: 12880,
+    });
+    expect(result.totalTax.year).toBe(1476);
     expect(result.finalIncome.year).toBeLessThan(0);
+  });
+
+  it("reproduces the reported 2025 sixth-year example", () => {
+    const result = calculateBusinessResults({
+      userDetails: {
+        ...baseParams.userDetails,
+        taxationYear: 2025,
+        grossIncome: { month: 500, year: 6000 },
+        minimumPresumedIncome: {
+          businessAge: 6,
+          hasAdjustments: false,
+        },
+      },
+    });
+
+    expect(result.nextBusinessTable.insurance.year).toBe(2935.8);
+    expect(result.accountingProfit.year).toBeCloseTo(3064.2, 2);
+    expect(result.presumedIncome.year).toBe(12320);
+    expect(result.taxableIncome.year).toBe(12320);
+    expect(result.totalTax.year).toBeCloseTo(1410.4, 2);
   });
 });

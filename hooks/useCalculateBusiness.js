@@ -21,6 +21,7 @@ export const useCalculateBusiness = () => {
     insuranceScaleSelection,
     discountOptions,
     prePaidNextYearTax,
+    minimumPresumedIncome,
   } = userDetails;
   const { specialInsuranceScale } = discountOptions;
 
@@ -36,7 +37,43 @@ export const useCalculateBusiness = () => {
   };
 
   const centralCalculation = () => {
-    const throwError = !grossIncome.year || !grossIncome.month;
+    const minimumIncomeRules = getBusinessRules(
+      taxationYear,
+    ).minimumPresumedIncome;
+    const businessAge = Number(minimumPresumedIncome?.businessAge);
+    const adjustmentsAnswered =
+      typeof minimumPresumedIncome?.hasAdjustments === "boolean";
+    const employeeInputsMissing =
+      minimumPresumedIncome?.hasAdjustments &&
+      minimumPresumedIncome.employeeAdjustment &&
+      (!(Number(minimumPresumedIncome.annualPayrollCost) > 0) ||
+        !(Number(minimumPresumedIncome.highestPaidEmployeeGross) > 0));
+    const turnoverInputMissing =
+      minimumPresumedIncome?.hasAdjustments &&
+      minimumPresumedIncome.turnoverAdjustment &&
+      !(Number(minimumPresumedIncome.kadAverageTurnover) > 0);
+    const otherIncomeMissing =
+      minimumPresumedIncome?.hasAdjustments &&
+      minimumPresumedIncome.otherIncomeAdjustment &&
+      !(Number(minimumPresumedIncome.otherIncome) > 0);
+    const reliefInputMissing =
+      minimumPresumedIncome?.hasAdjustments &&
+      minimumPresumedIncome.reliefAdjustment &&
+      (minimumPresumedIncome.reliefType === "none" ||
+        (minimumPresumedIncome.reliefType === "limited" &&
+          (!(Number(minimumPresumedIncome.eligibleOperatingDays) > 0) ||
+            Number(minimumPresumedIncome.eligibleOperatingDays) > 365)));
+    const minimumIncomeInputsMissing =
+      minimumIncomeRules.enabled &&
+      (!Number.isInteger(businessAge) ||
+        businessAge < 1 ||
+        !adjustmentsAnswered ||
+        employeeInputsMissing ||
+        turnoverInputMissing ||
+        otherIncomeMissing ||
+        reliefInputMissing);
+    const throwError =
+      !grossIncome.year || !grossIncome.month || minimumIncomeInputsMissing;
 
     if (throwError) {
       return showError();

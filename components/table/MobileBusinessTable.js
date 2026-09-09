@@ -26,6 +26,9 @@ const MobileBusinessTable = ({ onSubmitAction }) => {
       previousYearTaxInAdvance,
       prePaidNextYearTax,
       discountOptions,
+      accountingProfit,
+      presumedIncome,
+      taxableIncome,
     } = userDetails.tableResults;
 
   return (
@@ -73,6 +76,23 @@ const MobileBusinessTable = ({ onSubmitAction }) => {
               <Text>
                 {formatCellValue(insurance.month, !!finalIncome.year)}
               </Text>
+            </Flex>
+
+            <Flex padding={3} justifyContent="space-between">
+              <Text fontSize="sm">Λογιστικό κέρδος</Text>
+              <Text>{formatCellValue(accountingProfit.month, !!finalIncome.year)}</Text>
+            </Flex>
+
+            {!!presumedIncome.year && (
+              <Flex padding={3} justifyContent="space-between">
+                <Text fontSize="sm">Ελάχιστο τεκμαρτό εισόδημα</Text>
+                <Text>{formatCellValue(presumedIncome.month, !!finalIncome.year)}</Text>
+              </Flex>
+            )}
+
+            <Flex padding={3} justifyContent="space-between">
+              <Text fontSize="sm">Εισόδημα που φορολογείται</Text>
+              <Text>{formatCellValue(taxableIncome.month, !!finalIncome.year)}</Text>
             </Flex>
 
             {prePaidNextYearTax && (
@@ -152,6 +172,23 @@ const MobileBusinessTable = ({ onSubmitAction }) => {
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Ασφάλιση</Text>
               <Text>{formatCellValue(insurance.year, !!finalIncome.year)}</Text>
+            </Flex>
+
+            <Flex padding={3} justifyContent="space-between">
+              <Text fontSize="sm">Λογιστικό κέρδος</Text>
+              <Text>{formatCellValue(accountingProfit.year, !!finalIncome.year)}</Text>
+            </Flex>
+
+            {!!presumedIncome.year && (
+              <Flex padding={3} justifyContent="space-between">
+                <Text fontSize="sm">Ελάχιστο τεκμαρτό εισόδημα</Text>
+                <Text>{formatCellValue(presumedIncome.year, !!finalIncome.year)}</Text>
+              </Flex>
+            )}
+
+            <Flex padding={3} justifyContent="space-between">
+              <Text fontSize="sm">Εισόδημα που φορολογείται</Text>
+              <Text>{formatCellValue(taxableIncome.year, !!finalIncome.year)}</Text>
             </Flex>
 
             {prePaidNextYearTax && (
