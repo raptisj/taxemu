@@ -10,6 +10,8 @@ import { useStore } from "store";
 import FormElements from "components/input";
 import { getBusinessRules } from "../../rules";
 
+const includeZeroRate = (rates) => [...new Set([...rates, 0])];
+
 const FormFields = () => {
   const calculateRealGross = useStore((state) => state.userDetails.business.calculateRealGrossWidget);
   const updateBusinessQuickCalc = useStore(
@@ -22,7 +24,7 @@ const FormFields = () => {
 
   const onChangeGrossIncome = (value) => {
     updateBusinessQuickCalc({
-      grossIncomeYearly: parseInt(value),
+      grossIncomeMonthly: Number(value) || 0,
     });
   };
 
@@ -39,39 +41,43 @@ const FormFields = () => {
   };
 
   return (
-    <Grid gridTemplateColumns={["1fr 1fr", "2fr 1fr 1fr"]} gap="0 16px">
-      <GridItem gridColumn={["1 / -1"]} gridRow={1}>
+    <Grid gridTemplateColumns="1fr 1fr" gap="0 16px">
+      <GridItem gridColumn="1 / -1">
         <Text fontWeight="500" color="gray.700" mt={4}>
-          Ετήσιο μικτό εισόδημα
+          Μηνιαία αμοιβή (χωρίς ΦΠΑ)
         </Text>
         <FormControl>
           <NumberInput
             autoFocus
+            min={0}
+            precision={2}
             mt={2}
             onChange={(value) => onChangeGrossIncome(value)}
-            value={calculateRealGross.grossIncomeYearly || 0}
+            value={calculateRealGross.grossIncomeMonthly || ""}
           >
-            <NumberInputField />
+            <NumberInputField placeholder="π.χ. 1000" />
           </NumberInput>
         </FormControl>
       </GridItem>
-      <GridItem mt={4} gridRow={[2, 1]}>
+      <GridItem mt={4}>
         <FormElements.Select
           label="ΦΠΑ"
+          value={calculateRealGross.currentAdditionalValueTax}
           onChange={onSelectAdditionalValueTax}
-          options={invoiceRules.vatRates.map((rate) => ({
+          options={includeZeroRate(invoiceRules.vatRates).map((rate) => ({
             value: rate,
-            text: `${rate * 100}%`,
+            text: rate === 0 ? "0% / απαλλαγή" : `${rate * 100}%`,
           }))}
         />
       </GridItem>
-      <GridItem mt={4} gridRow={[2, 1]}>
+      <GridItem mt={4}>
         <FormElements.Select
-          label="Παρακρατηση"
+          label="Παρακράτηση"
+          value={calculateRealGross.currentWithholdingTax}
           onChange={onSelectWithholdingTax}
-          options={invoiceRules.withholdingRates.map((rate) => ({
+          options={includeZeroRate(invoiceRules.withholdingRates).map((rate) => ({
             value: rate,
-            text: `${rate * 100}%`,
+            text: rate === 0 ? "Δεν εφαρμόζεται" : `${rate * 100}%`,
           }))}
         />
       </GridItem>

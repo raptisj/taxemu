@@ -26,12 +26,12 @@ export const useBusinessActions = () => {
         ...quickCalc,
         currentAdditionalValueTax: invoiceRules.vatRates.includes(
           quickCalc.currentAdditionalValueTax,
-        )
+        ) || quickCalc.currentAdditionalValueTax === 0
           ? quickCalc.currentAdditionalValueTax
           : invoiceRules.vatRates[0],
         currentWithholdingTax: invoiceRules.withholdingRates.includes(
           quickCalc.currentWithholdingTax,
-        )
+        ) || quickCalc.currentWithholdingTax === 0
           ? quickCalc.currentWithholdingTax
           : invoiceRules.withholdingRates[0],
       },

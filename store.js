@@ -174,7 +174,7 @@ const initialState = {
     prePaidNextYearTax: false,
     withholdingTax: false,
     calculateRealGrossWidget: {
-      grossIncomeYearly: 0,
+      grossIncomeMonthly: 0,
       currentAdditionalValueTax: latestRules.business.invoice.vatRates[0],
       currentWithholdingTax:
         latestRules.business.invoice.withholdingRates[0],

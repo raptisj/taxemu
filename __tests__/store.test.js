@@ -21,13 +21,13 @@ describe("calculator store", () => {
 
   it("merges quick-calculation values", () => {
     useStore.getState().updateBusinessQuickCalc({
-      grossIncomeYearly: 36000,
+      grossIncomeMonthly: 3000,
     });
 
     expect(
       useStore.getState().userDetails.business.calculateRealGrossWidget,
     ).toEqual({
-      grossIncomeYearly: 36000,
+      grossIncomeMonthly: 3000,
       currentAdditionalValueTax: 0.24,
       currentWithholdingTax: 0.2,
     });
