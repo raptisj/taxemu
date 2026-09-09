@@ -97,7 +97,10 @@ export const MobileEmployeeInsights = () => {
               Τι σημαίνει το αποτέλεσμα για εσένα
             </Text>
           </DrawerHeader>
-          <DrawerBody py={5}>
+          <DrawerBody
+            pt={5}
+            pb="calc(env(safe-area-inset-bottom, 0px) + 6rem)"
+          >
             <EmployeeInsights />
           </DrawerBody>
         </DrawerContent>
