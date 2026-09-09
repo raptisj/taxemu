@@ -147,6 +147,24 @@ export {
 } from "./yearComparison";
 
 export {
+  AVERAGE_WORKING_DAYS_PER_MONTH,
+  OFFER_COMPARISON_MODES,
+  OFFER_PERIODS,
+  calculateEmployeeOffer,
+  calculateFreelancerOffer,
+  calculateOfferComparison,
+  createDefaultOfferComparisonInput,
+  getAnnualEmployeeOffer,
+  getAnnualFreelancerOffer,
+  getEffectiveBillableMonths,
+  parseOfferComparisonInput,
+  serializeOfferComparisonInput,
+  solveEmployeeGrossForCompanyCost,
+  solveEmployeeGrossForNet,
+  solveFreelancerRevenueForNet,
+} from "./offerComparison";
+
+export {
   calculateBinnedPercentile,
   calculateEmployerCostBreakdown,
   getInflationRatesBetween,

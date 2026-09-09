@@ -1,12 +1,45 @@
-import { Box, Flex, useMediaQuery, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Text,
+  useMediaQuery,
+} from "@chakra-ui/react";
 import { useStore } from "store";
 import logo from "../../assets/taxemu.svg";
 import Image from "next/image";
 import { useEffect } from "react";
-import { DownloadIcon } from "@chakra-ui/icons";
+import { DownloadIcon, HamburgerIcon } from "@chakra-ui/icons";
 import Link from "next/link";
 import { Wiki } from "../../features";
 import { useRouter } from "next/router";
+import { SHOW_OFFER_COMPARISON_LINKS } from "../../constants";
+
+const mobileNavigationItems = [
+  {
+    href: "/blog",
+    label: "Blog",
+    matches: (pathname) => pathname.includes("/blog"),
+  },
+  {
+    href: "/statistics",
+    label: "Στατιστικά",
+    matches: (pathname) => pathname === "/statistics",
+  },
+  ...(SHOW_OFFER_COMPARISON_LINKS
+    ? [
+        {
+          href: "/compare",
+          label: "Σύγκριση",
+          matches: (pathname) => pathname === "/compare",
+        },
+      ]
+    : []),
+];
 
 export const Navigation = () => {
   const router = useRouter();
@@ -61,8 +94,12 @@ export const Navigation = () => {
               <Image src={logo} alt="Taxemu" />
             </Flex>
           </Link>
-          {!router.pathname.includes("/welcome") && (
-            <Flex gap={{ base: 3, sm: 5 }} alignItems="center">
+          <Flex
+            display={{ base: "none", md: "flex" }}
+            gap={5}
+            alignItems="center"
+          >
+            {!router.pathname.includes("/welcome") && (
               <Link href="/blog">
                 <Text
                   color={
@@ -78,6 +115,8 @@ export const Navigation = () => {
                   Blog
                 </Text>
               </Link>
+            )}
+            {!router.pathname.includes("/welcome") && (
               <Link href="/statistics">
                 <Text
                   color={
@@ -93,8 +132,27 @@ export const Navigation = () => {
                   Στατιστικά
                 </Text>
               </Link>
-            </Flex>
-          )}
+            )}
+            {SHOW_OFFER_COMPARISON_LINKS && (
+              <Link href="/compare">
+                <Text
+                  color={
+                    router.pathname === "/compare"
+                      ? "purple.600"
+                      : "gray.500"
+                  }
+                  fontSize={{ base: "sm", sm: "md" }}
+                  fontWeight={
+                    router.pathname === "/compare" ? "600" : "400"
+                  }
+                  whiteSpace="nowrap"
+                  _hover={{ color: "gray.700" }}
+                >
+                  Σύγκριση
+                </Text>
+              </Link>
+            )}
+          </Flex>
         </Flex>
 
         <Flex gap={4} alignItems="center">
@@ -105,6 +163,34 @@ export const Navigation = () => {
           )}
 
           <Wiki />
+
+          <Menu placement="bottom-end">
+            <MenuButton
+              as={IconButton}
+              display={{ base: "inline-flex", md: "none" }}
+              aria-label="Άνοιγμα μενού πλοήγησης"
+              icon={<HamburgerIcon boxSize={5} />}
+              size="sm"
+              variant="ghost"
+            />
+            <MenuList minW="180px" zIndex={10}>
+              {mobileNavigationItems.map((item) => {
+                const isActive = item.matches(router.pathname);
+                return (
+                  <MenuItem
+                    as={Link}
+                    href={item.href}
+                    key={item.href}
+                    bg={isActive ? "purple.50" : "white"}
+                    color={isActive ? "purple.700" : "gray.700"}
+                    fontWeight={isActive ? "600" : "400"}
+                  >
+                    {item.label}
+                  </MenuItem>
+                );
+              })}
+            </MenuList>
+          </Menu>
         </Flex>
       </Flex>
     </>

@@ -12,6 +12,8 @@ import {
 import { useStore } from "store";
 import { QuestionIcon } from "@chakra-ui/icons";
 import { useRef } from "react";
+import Link from "next/link";
+import { SHOW_OFFER_COMPARISON_LINKS } from "../../constants";
 import { Results } from "./Results";
 import { FormFields } from "./FormFields";
 
@@ -54,6 +56,20 @@ const BusinessNegotiateWidget = () => {
           <Box mt={3} p={2}>
             <Results monthlyValue={monthlyValue} />
           </Box>
+          {SHOW_OFFER_COMPARISON_LINKS && (
+            <Link href="/compare">
+              <Text
+                color="purple.600"
+                display="inline-block"
+                fontSize="sm"
+                fontWeight="600"
+                mt={3}
+                textDecoration="underline"
+              >
+                Πλήρης σύγκριση μισθωτού και freelancer
+              </Text>
+            </Link>
+          )}
         </PopoverBody>
       </PopoverContent>
     </Popover>

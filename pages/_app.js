@@ -96,7 +96,8 @@ function MyApp({ Component, pageProps }) {
       />
 
       {!router.pathname.includes("/blog") &&
-        router.pathname !== "/statistics" && (
+        router.pathname !== "/statistics" &&
+        router.pathname !== "/compare" && (
         <Script
           id="structured-data"
           key="structured-data"

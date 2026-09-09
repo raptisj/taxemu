@@ -10,7 +10,9 @@ export const Layout = ({ children, ...rest }) => {
   const isMobile = !isLargerThan30;
   const router = useRouter();
   const hasPageSpecificMeta =
-    router.pathname.includes("/blog") || router.pathname === "/statistics";
+    router.pathname.includes("/blog") ||
+    router.pathname === "/statistics" ||
+    router.pathname === "/compare";
 
   return (
     <>

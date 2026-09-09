@@ -12,3 +12,6 @@ export const AGE_GROUPS = Object.freeze({
   A26_30: "A26_30",
   A30P: "A30P",
 });
+
+// Keep /compare accessible by direct URL until the feature is ready to launch.
+export const SHOW_OFFER_COMPARISON_LINKS = false;
