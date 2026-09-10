@@ -57,8 +57,9 @@ export const getInsuranceTotal = ({
   const insuranceScale = specialInsuranceScale
     ? businessRules.insurance.specialScale
     : insuranceScaleSelection;
-  const insurancePerMonth =
-    businessRules.insurance.monthlyAmounts[insuranceScale];
+  const insurancePerMonth = getInsuranceMonthlyAmounts({
+    rules: businessRules,
+  })[insuranceScale];
 
   if (insurancePerMonth === undefined) {
     throw new Error(
@@ -68,6 +69,16 @@ export const getInsuranceTotal = ({
 
   const isYear = businessExpensesMonthOrYear === "year" || type === "year";
   return isYear ? taxYearDuration * insurancePerMonth : insurancePerMonth;
+};
+
+export const getInsuranceMonthlyAmounts = ({ rules, taxationYear }) => {
+  const businessRules = rules ?? getBusinessRules(taxationYear);
+  const unemploymentContribution =
+    businessRules.insurance.monthlyUnemploymentContribution ?? 0;
+
+  return businessRules.insurance.monthlyAmounts.map((amount) =>
+    toFixedNumber(amount + unemploymentContribution, 2),
+  );
 };
 
 export const applyPrePaidDiscount = (

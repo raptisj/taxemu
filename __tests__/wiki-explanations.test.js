@@ -73,7 +73,9 @@ describe("dynamic calculation explanations", () => {
       ({ title }) => title === "Ασφαλιστική κατηγορία",
     );
 
-    expect(insurance.description).toContain("250,77 €");
+    expect(insurance.description).toContain("260,77 €");
+    expect(insurance.description).toContain("εισφορά ανεργίας");
+    expect(insurance.description).toContain("δεν περιλαμβάνει");
     expect(explanation.hasCalculation).toBe(true);
     expect(explanation.sources).toEqual(
       expect.arrayContaining([

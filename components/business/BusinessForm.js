@@ -574,6 +574,15 @@ const BusinessForm = ({ showCalculatorType = true }) => {
           }
         />
 
+        {rules.business.insurance.monthlyUnemploymentContribution > 0 && (
+          <Text mt={2} fontSize="xs" color="gray.500">
+            Το ποσό περιλαμβάνει εισφορά ανεργίας €
+            {rules.business.insurance.monthlyUnemploymentContribution} ανά
+            ασφαλισμένο μήνα. Δεν περιλαμβάνει τυχόν εισφορές επικουρικής
+            ασφάλισης, εφάπαξ παροχής ή Στέγης Υγειονομικών.
+          </Text>
+        )}
+
         <Box mt={4}>
           <Text fontWeight="500" color="gray.700">
             Πρόσθετα έξοδα επιχείρησης

@@ -1,5 +1,8 @@
 import { getTaxRules } from "../../rules";
-import { calculateBusinessResults } from "../../utils/business";
+import {
+  calculateBusinessResults,
+  getInsuranceMonthlyAmounts,
+} from "../../utils/business";
 import { calculateEmployeeForGrossMonth } from "../../utils/employeeCalculation";
 import {
   buildTaxBreakdown,
@@ -172,6 +175,11 @@ export const buildBusinessExplanation = (details) => {
   const selectedScale = details.discountOptions.specialInsuranceScale
     ? businessRules.insurance.specialScale
     : details.insuranceScaleSelection;
+  const insuranceMonthlyAmounts = getInsuranceMonthlyAmounts({
+    rules: businessRules,
+  });
+  const unemploymentContribution =
+    businessRules.insurance.monthlyUnemploymentContribution ?? 0;
   const taxWasDiscounted =
     hasCalculation && calculation.totalTax.year < tax.tax;
 
@@ -181,8 +189,8 @@ export const buildBusinessExplanation = (details) => {
     sections: [
       {
         title: "Ασφαλιστική κατηγορία",
-        description: `Η επιλεγμένη κατηγορία είναι η ${selectedScale === 0 ? "ειδική" : `${selectedScale}η`} και αντιστοιχεί σε ${formatExplanationMoney(businessRules.insurance.monthlyAmounts[selectedScale])} τον μήνα.`,
-        rules: businessRules.insurance.monthlyAmounts.map(
+        description: `Η επιλεγμένη κατηγορία είναι η ${selectedScale === 0 ? "ειδική" : `${selectedScale}η`} και αντιστοιχεί σε ${formatExplanationMoney(insuranceMonthlyAmounts[selectedScale])} τον μήνα.${unemploymentContribution > 0 ? ` Το ποσό περιλαμβάνει εισφορά ανεργίας ${formatExplanationMoney(unemploymentContribution)} ανά ασφαλισμένο μήνα και δεν περιλαμβάνει τυχόν εισφορές επικουρικής ασφάλισης, εφάπαξ παροχής ή Στέγης Υγειονομικών.` : ""}`,
+        rules: insuranceMonthlyAmounts.map(
           (amount, index) =>
             `${index === 0 ? "Ειδική" : `${index}η κατηγορία`}: ${formatExplanationMoney(amount)} / μήνα`,
         ),

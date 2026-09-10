@@ -130,6 +130,7 @@ export {
 
 export {
   calculateTax2026Entrepreneur,
+  getInsuranceMonthlyAmounts,
   getInsuranceTotal,
   applyPrePaidDiscount,
   calculateTaxPrepayment,

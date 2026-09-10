@@ -1282,6 +1282,7 @@
       },
       "insurance": {
         "specialScale": 0,
+        "monthlyUnemploymentContribution": 10,
         "monthlyAmounts": [
           150.46,
           250.77,

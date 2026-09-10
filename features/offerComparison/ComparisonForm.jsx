@@ -18,7 +18,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { getTaxRules, supportedTaxYears } from "../../rules";
-import { formatRatePercentage } from "../../utils";
+import { formatRatePercentage, getInsuranceMonthlyAmounts } from "../../utils";
 import {
   OFFER_COMPARISON_MODES,
   OFFER_PERIODS,
@@ -248,7 +248,7 @@ export const ComparisonForm = ({ input, setInput }) => {
               <FormControl>
                 <FormLabel fontSize="sm" fontWeight="600">Ασφαλιστική κατηγορία freelancer</FormLabel>
                 <Select isDisabled={input.specialInsuranceScale} value={input.insuranceScaleSelection} onChange={(event) => setField("insuranceScaleSelection", Number(event.target.value))}>
-                  {rules.business.insurance.monthlyAmounts.slice(1).map((amount, index) => <option key={index + 1} value={index + 1}>{index + 1}η · {amount.toLocaleString("el-GR")} € / μήνα</option>)}
+                  {getInsuranceMonthlyAmounts({ rules: rules.business }).slice(1).map((amount, index) => <option key={index + 1} value={index + 1}>{index + 1}η · {amount.toLocaleString("el-GR")} € / μήνα</option>)}
                 </Select>
               </FormControl>
               <FormControl>
@@ -258,6 +258,15 @@ export const ComparisonForm = ({ input, setInput }) => {
                 </Select>
               </FormControl>
             </SimpleGrid>
+
+            {rules.business.insurance.monthlyUnemploymentContribution > 0 && (
+              <Text mt={3} fontSize="xs" color="gray.500">
+                Τα ποσά ΕΦΚΑ περιλαμβάνουν εισφορά ανεργίας €
+                {rules.business.insurance.monthlyUnemploymentContribution} ανά
+                ασφαλισμένο μήνα. Δεν περιλαμβάνουν τυχόν επαγγελματικές
+                πρόσθετες εισφορές.
+              </Text>
+            )}
 
             <Stack spacing={1} mt={5}>
               <Checkbox colorScheme="purple" isChecked={input.returnBaseInland} onChange={(event) => setField("returnBaseInland", event.target.checked)}>Μεταφορά φορολογικής κατοικίας μισθωτού</Checkbox>

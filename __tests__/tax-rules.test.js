@@ -54,6 +54,9 @@ describe("annual tax rules", () => {
     expect(getBusinessRules(2026).insurance.monthlyAmounts).toEqual([
       150.46, 250.77, 300.93, 360.63, 433.47, 519.45, 675.87,
     ]);
+    expect(
+      getBusinessRules(2026).insurance.monthlyUnemploymentContribution,
+    ).toBe(10);
   });
 
   it("uses the completed 2026 employee age and children tables", () => {
@@ -84,6 +87,16 @@ describe("annual tax rules", () => {
 
     expect(() => validateTaxRules(malformedRules)).toThrow(
       "2026.employee.insurance.employeeRate",
+    );
+  });
+
+  it("rejects a negative monthly unemployment contribution", () => {
+    const malformedRules = JSON.parse(JSON.stringify(taxRulesByYear));
+    malformedRules[2026].business.insurance.monthlyUnemploymentContribution =
+      -1;
+
+    expect(() => validateTaxRules(malformedRules)).toThrow(
+      "2026.business.insurance.monthlyUnemploymentContribution",
     );
   });
 

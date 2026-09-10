@@ -34,16 +34,17 @@ describe("calculateBusinessResults", () => {
   it("calculates base totals for 2026", () => {
     const result = calculateBusinessResults(baseParams);
 
-    expect(result.totalTax.year).toBeCloseTo(3157.6, 2);
-    expect(result.finalIncome.year).toBeCloseTo(17833.16, 2);
-    expect(result.nextBusinessTable.insurance.year).toBeCloseTo(3009.24, 2);
+    expect(result.totalTax.year).toBeCloseTo(3126.4, 2);
+    expect(result.finalIncome.year).toBeCloseTo(17744.36, 2);
+    expect(result.nextBusinessTable.insurance.year).toBeCloseTo(3129.24, 2);
     expect(result.nextBusinessTable.grossIncome.year).toBeCloseTo(24000, 2);
-    expect(result.nextBusinessTable.finalTax.year).toBeCloseTo(3157.6, 2);
+    expect(result.nextBusinessTable.finalTax.year).toBeCloseTo(3126.4, 2);
   });
 
   it("halves the first-bracket rate for an eligible new business in 2026", () => {
     const rules = JSON.parse(JSON.stringify(getBusinessRules(2026)));
     rules.insurance.monthlyAmounts = rules.insurance.monthlyAmounts.map(() => 0);
+    rules.insurance.monthlyUnemploymentContribution = 0;
 
     const result = calculateBusinessResults({
       rules,
@@ -74,8 +75,8 @@ describe("calculateBusinessResults", () => {
       },
     });
 
-    expect(result.totalTax.year).toBeCloseTo(2717.97, 2);
-    expect(result.finalIncome.year).toBeCloseTo(18272.79, 2);
+    expect(result.totalTax.year).toBeCloseTo(2691.57, 2);
+    expect(result.finalIncome.year).toBeCloseTo(18179.19, 2);
   });
 
   it("updates tax in advance and final income when pre-paid tax is enabled", () => {
@@ -91,8 +92,8 @@ describe("calculateBusinessResults", () => {
       },
     });
 
-    expect(result.taxInAdvanceValue.year).toBeCloseTo(868.34, 2);
-    expect(result.finalIncome.year).toBeCloseTo(16964.82, 2);
+    expect(result.taxInAdvanceValue.year).toBeCloseTo(859.76, 2);
+    expect(result.finalIncome.year).toBeCloseTo(16884.6, 2);
   });
 
   it("deducts withholding from the advance in the reported €24,000 case", () => {
@@ -105,10 +106,10 @@ describe("calculateBusinessResults", () => {
       },
     });
 
-    expect(result.totalTax.year).toBeCloseTo(3157.6, 2);
+    expect(result.totalTax.year).toBeCloseTo(3126.4, 2);
     expect(result.nextBusinessTable.withholdingTaxAmount.year).toBe(4800);
     expect(result.taxInAdvanceValue).toEqual({ month: 0, year: 0 });
-    expect(result.finalIncome.year).toBeCloseTo(17833.16, 2);
+    expect(result.finalIncome.year).toBeCloseTo(17744.36, 2);
   });
 
   it("preserves the accounting loss while taxing the presumed minimum", () => {
@@ -170,12 +171,12 @@ describe("calculateBusinessResults", () => {
       month: 2000,
       year: 12000,
     });
-    expect(result.nextBusinessTable.insurance.year).toBeCloseTo(1504.62, 2);
-    expect(result.accountingProfit.year).toBeCloseTo(10495.38, 2);
-    expect(result.taxableIncome.year).toBeCloseTo(10495.38, 2);
-    expect(result.totalTax.year).toBeCloseTo(999.08, 2);
-    expect(result.finalIncome.year).toBeCloseTo(9496.3, 2);
-    expect(result.finalIncome.month).toBeCloseTo(1582.72, 2);
+    expect(result.nextBusinessTable.insurance.year).toBeCloseTo(1564.62, 2);
+    expect(result.accountingProfit.year).toBeCloseTo(10435.38, 2);
+    expect(result.taxableIncome.year).toBeCloseTo(10435.38, 2);
+    expect(result.totalTax.year).toBeCloseTo(987.08, 2);
+    expect(result.finalIncome.year).toBeCloseTo(9448.3, 2);
+    expect(result.finalIncome.month).toBeCloseTo(1574.72, 2);
   });
 
   it("produces identical six-month results from monthly and period-total income", () => {

@@ -2,14 +2,16 @@ import { Box, Text, Flex } from "@chakra-ui/react";
 import Stepper from "components/stepper";
 import { useStore } from "store";
 import { getBusinessRules } from "../../rules";
+import { getInsuranceMonthlyAmounts } from "../../utils/business";
 
 export const BusinessSecondStep = () => {
   const userDetails = useStore((state) => state.userDetails);
   const updateBusiness = useStore((state) => state.updateBusiness);
   const { taxationYear } = userDetails.business;
 
-  const currentInsuranceScales =
-    getBusinessRules(taxationYear).insurance.monthlyAmounts;
+  const currentInsuranceScales = getInsuranceMonthlyAmounts({
+    rules: getBusinessRules(taxationYear),
+  });
 
   const currentInsuranceScalesList = currentInsuranceScales.map(
     (amount, index) => ({ value: String(index), text: amount }),

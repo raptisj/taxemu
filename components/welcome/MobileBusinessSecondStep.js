@@ -2,12 +2,13 @@ import { Box, Text, Flex } from "@chakra-ui/react";
 import Stepper from "components/stepper";
 import { useStore } from "store";
 import { getBusinessRules } from "../../rules";
+import { getInsuranceMonthlyAmounts } from "../../utils/business";
 
 export const MobileBusinessSecondStep = () => {
   const userDetails = useStore((state) => state.userDetails);
   const updateBusiness = useStore((state) => state.updateBusiness);
   const businessRules = getBusinessRules(userDetails.business.taxationYear);
-  const insuranceAmounts = businessRules.insurance.monthlyAmounts;
+  const insuranceAmounts = getInsuranceMonthlyAmounts({ rules: businessRules });
 
   const handleInsurance = (value) => {
     updateBusiness({

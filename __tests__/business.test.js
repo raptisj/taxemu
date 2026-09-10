@@ -1,5 +1,6 @@
 import {
   calculateTax2026Entrepreneur,
+  getInsuranceMonthlyAmounts,
   getInsuranceTotal,
   applyPrePaidDiscount,
   calculateTaxPrepayment,
@@ -118,6 +119,14 @@ describe("calculateTax2026Entrepreneur", () => {
 });
 
 describe("getInsuranceTotal", () => {
+  it("adds the 2026 unemployment contribution to every displayed category", () => {
+    expect(
+      getInsuranceMonthlyAmounts({ rules: getBusinessRules(2026) }),
+    ).toEqual([
+      160.46, 260.77, 310.93, 370.63, 443.47, 529.45, 685.87,
+    ]);
+  });
+
   it("returns monthly or yearly insurance totals", () => {
     const rules = getBusinessRules(2026);
 
@@ -130,7 +139,7 @@ describe("getInsuranceTotal", () => {
       specialInsuranceScale: false,
     });
 
-    expect(monthly).toBe(300.93);
+    expect(monthly).toBe(310.93);
 
     const yearly = getInsuranceTotal({
       rules,
@@ -141,7 +150,7 @@ describe("getInsuranceTotal", () => {
       specialInsuranceScale: false,
     });
 
-    expect(yearly).toBe(11 * 300.93);
+    expect(yearly).toBe(11 * 310.93);
   });
 
   it("forces scale 0 when special insurance scale is enabled", () => {
@@ -156,7 +165,20 @@ describe("getInsuranceTotal", () => {
       specialInsuranceScale: true,
     });
 
-    expect(result).toBe(150.46);
+    expect(result).toBe(160.46);
+  });
+
+  it("does not apply the 2026 contribution to earlier rule sets", () => {
+    const result = getInsuranceTotal({
+      rules: getBusinessRules(2025),
+      taxationYear: 2025,
+      taxYearDuration: 12,
+      businessExpensesMonthOrYear: "month",
+      insuranceScaleSelection: 1,
+      specialInsuranceScale: false,
+    });
+
+    expect(result).toBe(244.65);
   });
 });
 

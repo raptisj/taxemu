@@ -40,7 +40,7 @@ describe("year-by-year calculation regressions", () => {
   // 2023: https://www.e-efka.gov.gr/sites/default/files/2023-02/egk_11_2023.pdf
   // 2024: https://www.e-efka.gov.gr/sites/default/files/2024-02/EGK_5_24.pdf
   // 2025: https://www.e-efka.gov.gr/sites/default/files/2025-02/EGK_3_2025.pdf
-  // 2026: https://www.e-efka.gov.gr/el/egkyklioi-kai-genika-eggrapha/egkyklios-52026
+  // 2026: https://www.e-efka.gov.gr/el/egkyklioi-kai-genika-eggrapha/egkyklios-62026
   test.each([
     [2021, 282, 4235, 3699, 1454, 20353],
     [2022, 277, 4255, 3720, 1457, 20402],
@@ -77,7 +77,7 @@ describe("year-by-year calculation regressions", () => {
     [2023, 2763, 3446.36, 17790.64],
     [2024, 2858.64, 3419.58, 17721.78],
     [2025, 2935.8, 3397.98, 17666.22],
-    [2026, 3009.24, 3157.6, 17833.16],
+    [2026, 3129.24, 3126.4, 17744.36],
   ])(
     "keeps the %s business result stable",
     (taxationYear, insuranceYear, taxYear, finalIncomeYear) => {

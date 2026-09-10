@@ -80,18 +80,18 @@ describe("year comparison", () => {
     const comparison = calculateYearComparison("business", business, [2025, 2026]);
 
     expect(comparison.results[0].metrics.insurance.year).toBeCloseTo(2935.8, 2);
-    expect(comparison.results[1].metrics.insurance.year).toBeCloseTo(3009.24, 2);
-    expect(comparison.results[1].metrics.taxableIncome.year).toBeCloseTo(20990.76, 2);
+    expect(comparison.results[1].metrics.insurance.year).toBeCloseTo(3129.24, 2);
+    expect(comparison.results[1].metrics.taxableIncome.year).toBeCloseTo(20870.76, 2);
     expect(comparison.results[0].metrics.adjustment.year).toBe(0);
-    expect(comparison.differences.tax.annual).toBeCloseTo(-240.38, 2);
-    expect(comparison.differences.netIncome.annual).toBeCloseTo(166.94, 2);
+    expect(comparison.differences.tax.annual).toBeCloseTo(-271.58, 2);
+    expect(comparison.differences.netIncome.annual).toBeCloseTo(78.14, 2);
 
     const withPrepayment = calculateYearComparison(
       "business",
       { ...business, prePaidNextYearTax: true },
       [2025, 2026],
     );
-    expect(withPrepayment.results[1].metrics.adjustment.year).toBeCloseTo(1736.68, 2);
+    expect(withPrepayment.results[1].metrics.adjustment.year).toBeCloseTo(1719.52, 2);
 
     const withWithholding = calculateYearComparison(
       "business",

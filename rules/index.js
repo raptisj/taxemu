@@ -237,6 +237,12 @@ export const validateTaxRules = (rulesByYear = taxRulesByYear) => {
         );
       }
     });
+    if (businessRules.insurance.monthlyUnemploymentContribution !== undefined) {
+      assertNonNegativeNumber(
+        businessRules.insurance.monthlyUnemploymentContribution,
+        `${yearKey}.business.insurance.monthlyUnemploymentContribution`,
+      );
+    }
     assertNonNegativeNumber(
       businessRules.insurance?.specialScale,
       `${yearKey}.business.insurance.specialScale`,
