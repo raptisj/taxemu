@@ -255,8 +255,8 @@ export const validateTaxRules = (rulesByYear = taxRulesByYear) => {
       `${yearKey}.business.firstYearsDiscount.taxMultiplier`,
     );
     assertNonNegativeNumber(
-      businessRules.firstYearsDiscount?.maximumTaxableIncome,
-      `${yearKey}.business.firstYearsDiscount.maximumTaxableIncome`,
+      businessRules.firstYearsDiscount?.maximumGrossIncome,
+      `${yearKey}.business.firstYearsDiscount.maximumGrossIncome`,
     );
     if (typeof businessRules.firstYearsDiscount?.enabled !== "boolean") {
       throw new Error(

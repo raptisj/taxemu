@@ -269,11 +269,11 @@ const BusinessForm = ({ showCalculatorType = true }) => {
             label={`${formatRatePercentage(1 - firstYearsDiscount.taxMultiplier)} έκπτωση για τα 3 πρώτα χρόνια άσκησης`}
             tootipText={`Για τα τρία πρώτα έτη άσκησης της δραστηριότητας, εφόσον
               το ετήσιο ακαθάριστο εισόδημα δεν υπερβαίνει τις
-              ${firstYearsDiscount.maximumTaxableIncome.toLocaleString("el-GR")} €,
+              ${firstYearsDiscount.maximumGrossIncome.toLocaleString("el-GR")} €,
               ο φόρος μειώνεται κατά ${formatRatePercentage(1 - firstYearsDiscount.taxMultiplier)}.`}
             isChecked={discountOptions.firstScaleDiscount}
             isDisabled={
-              grossIncome.year > firstYearsDiscount.maximumTaxableIncome ||
+              grossIncome.year > firstYearsDiscount.maximumGrossIncome ||
               !grossIncome.year
             }
             onChange={() =>

@@ -1,3 +1,4 @@
+import { getBusinessRules } from "../rules";
 import { calculateBusinessResults } from "../utils/business";
 
 describe("calculateBusinessResults", () => {
@@ -38,6 +39,30 @@ describe("calculateBusinessResults", () => {
     expect(result.nextBusinessTable.insurance.year).toBeCloseTo(3009.24, 2);
     expect(result.nextBusinessTable.grossIncome.year).toBeCloseTo(24000, 2);
     expect(result.nextBusinessTable.finalTax.year).toBeCloseTo(3157.6, 2);
+  });
+
+  it("halves the first-bracket rate for an eligible new business in 2026", () => {
+    const rules = JSON.parse(JSON.stringify(getBusinessRules(2026)));
+    rules.insurance.monthlyAmounts = rules.insurance.monthlyAmounts.map(() => 0);
+
+    const result = calculateBusinessResults({
+      rules,
+      userDetails: {
+        ...baseParams.userDetails,
+        grossIncome: { month: 8000 / 12, year: 8000 },
+        discountOptions: {
+          ...baseParams.userDetails.discountOptions,
+          firstScaleDiscount: true,
+        },
+        minimumPresumedIncome: {
+          businessAge: 1,
+          hasAdjustments: false,
+        },
+      },
+    });
+
+    expect(result.taxableIncome.year).toBe(8000);
+    expect(result.totalTax.year).toBe(360);
   });
 
   it("reduces total tax when children increase", () => {

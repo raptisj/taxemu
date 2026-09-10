@@ -109,24 +109,39 @@ export const applyFirstScaleDiscount = (
 
 export const calculateBusinessScalesTax = ({
   toBeTaxed,
+  grossIncome = toBeTaxed,
   firstScaleDiscount,
   policy = getBusinessRules(2025).incomeTax,
   discountRules = getBusinessRules(2025).firstYearsDiscount,
+  ageGroup = AGE_GROUPS.A30P,
+  children = 0,
 }) => {
-  const { tax } = calculateIncomeTaxFromPolicy({
+  const { brackets } = calculateIncomeTaxFromPolicy({
     taxableIncome: toBeTaxed,
     policy,
+    ageGroup,
+    children,
   });
   const canApplyDiscount =
     discountRules.enabled &&
     firstScaleDiscount &&
-    toBeTaxed <= discountRules.maximumTaxableIncome;
+    grossIncome <= discountRules.maximumGrossIncome;
+  const effectiveBrackets = canApplyDiscount
+    ? brackets.map((bracket, index) =>
+        index === 0
+          ? {
+              ...bracket,
+              rate: bracket.rate * discountRules.taxMultiplier,
+            }
+          : bracket,
+      )
+    : brackets;
+  const { tax } = calculateIncomeTaxFromPolicy({
+    taxableIncome: toBeTaxed,
+    policy: { kind: "progressive", brackets: effectiveBrackets },
+  });
 
-  return applyFirstScaleDiscount(
-    tax,
-    canApplyDiscount,
-    discountRules.taxMultiplier,
-  );
+  return toFixedNumber(tax, 2);
 };
 
 const getBusinessAgeFactor = (businessAge) => {
@@ -298,20 +313,15 @@ export const calculateBusinessResults = ({ userDetails, rules }) => {
   });
   const taxableIncome = Math.max(accountingProfit, presumedIncomeResult.amount);
 
-  const totalTax =
-    businessRules.incomeTax.kind === "progressive"
-      ? calculateBusinessScalesTax({
-          toBeTaxed: taxableIncome,
-          firstScaleDiscount,
-          policy: businessRules.incomeTax,
-          discountRules: businessRules.firstYearsDiscount,
-        })
-      : calculateIncomeTaxFromPolicy({
-          taxableIncome,
-          policy: businessRules.incomeTax,
-          ageGroup,
-          children: numberOfChildren,
-        }).tax;
+  const totalTax = calculateBusinessScalesTax({
+    toBeTaxed: taxableIncome,
+    grossIncome: periodGrossIncome,
+    firstScaleDiscount,
+    policy: businessRules.incomeTax,
+    discountRules: businessRules.firstYearsDiscount,
+    ageGroup,
+    children: numberOfChildren,
+  });
   const totalTaxValue = {
     month: findMonthAmount(totalTax),
     year: totalTax,

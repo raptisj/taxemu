@@ -70,6 +70,14 @@ describe("annual tax rules", () => {
     expect(result.brackets[2].rate).toBe(0.22);
   });
 
+  it("keeps the first-three-years business relief enabled for 2026", () => {
+    expect(getBusinessRules(2026).firstYearsDiscount).toEqual({
+      enabled: true,
+      maximumGrossIncome: 10000,
+      taxMultiplier: 0.5,
+    });
+  });
+
   it("rejects malformed yearly data before calculations run", () => {
     const malformedRules = JSON.parse(JSON.stringify(taxRulesByYear));
     malformedRules[2026].employee.insurance.employeeRate = 1.1;

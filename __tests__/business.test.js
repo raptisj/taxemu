@@ -229,6 +229,73 @@ describe("calculateBusinessScalesTax", () => {
     ).toBeCloseTo(900.22, 2);
   });
 
+  it("applies the first-years relief to the 2026 business policy", () => {
+    const rules = getBusinessRules(2026);
+
+    expect(
+      calculateBusinessScalesTax({
+        toBeTaxed: 8000,
+        grossIncome: 8000,
+        firstScaleDiscount: true,
+        policy: rules.incomeTax,
+        discountRules: { ...rules.firstYearsDiscount, enabled: true },
+      }),
+    ).toBe(360);
+  });
+
+  it.each([
+    [AGE_GROUPS.U25, 0, 0],
+    [AGE_GROUPS.A26_30, 0, 360],
+    [AGE_GROUPS.A30P, 4, 0],
+  ])(
+    "composes the first-years relief with the %s age group and %s children",
+    (ageGroup, children, expectedTax) => {
+      const rules = getBusinessRules(2026);
+
+      expect(
+        calculateBusinessScalesTax({
+          toBeTaxed: 8000,
+          grossIncome: 8000,
+          firstScaleDiscount: true,
+          policy: rules.incomeTax,
+          discountRules: { ...rules.firstYearsDiscount, enabled: true },
+          ageGroup,
+          children,
+        }),
+      ).toBe(expectedTax);
+    },
+  );
+
+  it("halves only the resolved first-bracket rate", () => {
+    const rules = getBusinessRules(2026);
+
+    expect(
+      calculateBusinessScalesTax({
+        toBeTaxed: 25000,
+        grossIncome: 10000,
+        firstScaleDiscount: true,
+        policy: rules.incomeTax,
+        discountRules: { ...rules.firstYearsDiscount, enabled: true },
+        ageGroup: AGE_GROUPS.A30P,
+        children: 2,
+      }),
+    ).toBe(3150);
+  });
+
+  it("uses gross business income for the €10,000 eligibility limit", () => {
+    const rules = getBusinessRules(2026);
+
+    expect(
+      calculateBusinessScalesTax({
+        toBeTaxed: 8000,
+        grossIncome: 10000.01,
+        firstScaleDiscount: true,
+        policy: rules.incomeTax,
+        discountRules: { ...rules.firstYearsDiscount, enabled: true },
+      }),
+    ).toBe(720);
+  });
+
   it("calculates multiple brackets correctly", () => {
     expect(
       calculateBusinessScalesTax({

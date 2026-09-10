@@ -111,7 +111,7 @@
       },
       "firstYearsDiscount": {
         "enabled": true,
-        "maximumTaxableIncome": 10000,
+        "maximumGrossIncome": 10000,
         "taxMultiplier": 0.5
       },
       "taxPrepayment": {
@@ -260,7 +260,7 @@
       },
       "firstYearsDiscount": {
         "enabled": true,
-        "maximumTaxableIncome": 10000,
+        "maximumGrossIncome": 10000,
         "taxMultiplier": 0.5
       },
       "taxPrepayment": {
@@ -418,7 +418,7 @@
       },
       "firstYearsDiscount": {
         "enabled": true,
-        "maximumTaxableIncome": 10000,
+        "maximumGrossIncome": 10000,
         "taxMultiplier": 0.5
       },
       "taxPrepayment": {
@@ -580,7 +580,7 @@
       },
       "firstYearsDiscount": {
         "enabled": true,
-        "maximumTaxableIncome": 10000,
+        "maximumGrossIncome": 10000,
         "taxMultiplier": 0.5
       },
       "taxPrepayment": {
@@ -742,7 +742,7 @@
       },
       "firstYearsDiscount": {
         "enabled": true,
-        "maximumTaxableIncome": 10000,
+        "maximumGrossIncome": 10000,
         "taxMultiplier": 0.5
       },
       "taxPrepayment": {
@@ -801,6 +801,10 @@
       {
         "name": "AADE guide — advance income tax from business activity",
         "url": "https://www.aade.gr/exypiretisi-enimerosi/hristikoi-odigoi/enarxi-epiheirimatikis-drastiriotitas/prokataboli-foroy-eisodimatos-apo-epiheirimatiki"
+      },
+      {
+        "name": "AADE guide — first-three-years business tax relief",
+        "url": "https://www.aade.gr/exypiretisi-enimerosi/hristikoi-odigoi/enarxi-epiheirimatikis-drastiriotitas/ypoboli-diloseon-forologias-eisodimatos"
       },
       {
         "name": "AADE basic VAT rates",
@@ -1351,8 +1355,8 @@
         }
       },
       "firstYearsDiscount": {
-        "enabled": false,
-        "maximumTaxableIncome": 10000,
+        "enabled": true,
+        "maximumGrossIncome": 10000,
         "taxMultiplier": 0.5
       },
       "taxPrepayment": {
