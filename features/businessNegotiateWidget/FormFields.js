@@ -9,6 +9,7 @@ import {
 import { useStore } from "store";
 import FormElements from "components/input";
 import { getBusinessRules } from "../../rules";
+import { formatRatePercentage } from "../../utils";
 
 const includeZeroRate = (rates) => [...new Set([...rates, 0])];
 
@@ -66,7 +67,10 @@ const FormFields = () => {
           onChange={onSelectAdditionalValueTax}
           options={includeZeroRate(invoiceRules.vatRates).map((rate) => ({
             value: rate,
-            text: rate === 0 ? "0% / απαλλαγή" : `${rate * 100}%`,
+            text:
+              rate === 0
+                ? "0% / απαλλαγή"
+                : formatRatePercentage(rate),
           }))}
         />
       </GridItem>
@@ -77,7 +81,10 @@ const FormFields = () => {
           onChange={onSelectWithholdingTax}
           options={includeZeroRate(invoiceRules.withholdingRates).map((rate) => ({
             value: rate,
-            text: rate === 0 ? "Δεν εφαρμόζεται" : `${rate * 100}%`,
+            text:
+              rate === 0
+                ? "Δεν εφαρμόζεται"
+                : formatRatePercentage(rate),
           }))}
         />
       </GridItem>

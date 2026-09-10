@@ -11,6 +11,17 @@ export const formatCellPercentage = (val, submitGuard = true) =>
       })}%`
     : "------";
 
+export const formatRatePercentage = (rate) => {
+  const percentage = Number(rate) * 100;
+
+  if (!Number.isFinite(percentage)) return "0%";
+
+  return `${percentage.toLocaleString("el-GR", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 3,
+  })}%`;
+};
+
 export const calcFinal = (obj, type) => {
   return Object.keys(obj)
     .map((p) => obj[p][type])
@@ -121,6 +132,7 @@ export {
   calculateTax2026Entrepreneur,
   getInsuranceTotal,
   applyPrePaidDiscount,
+  calculateTaxPrepayment,
   applyFirstScaleDiscount,
   calculateBusinessScalesTax,
   calculateMinimumPresumedBusinessIncome,
@@ -133,6 +145,7 @@ export {
   getCalculationInput,
   getCalculationDirtyFields,
   getDirtyFields,
+  isBusinessGrossIncomeMissing,
 } from "./formState";
 
 export { calculateIncomeTaxFromPolicy } from "./taxPolicy";

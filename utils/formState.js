@@ -2,6 +2,9 @@ import { getTaxRules } from "../rules";
 
 const serializeIncome = (source, amount) => `${source}:${Number(amount)}`;
 
+export const isBusinessGrossIncomeMissing = (grossIncome) =>
+  !grossIncome?.month || !grossIncome?.year;
+
 const getMinimumPresumedIncomeInput = (details = {}) => {
   const result = {
     businessAge: details.businessAge,

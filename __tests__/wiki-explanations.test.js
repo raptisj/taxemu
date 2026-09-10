@@ -85,6 +85,24 @@ describe("dynamic calculation explanations", () => {
     );
   });
 
+  it("explains withholding and the €30 advance-tax cutoff", () => {
+    const explanation = buildBusinessExplanation({
+      ...businessDetails(2026),
+      withholdingTax: true,
+    });
+    const advance = explanation.sections.find(
+      ({ title }) => title === "Προκαταβολή και παρακράτηση φόρου",
+    );
+
+    expect(advance.description).toContain("30 €");
+    expect(advance.items).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("Παρακράτηση που έχει ήδη αποδοθεί"),
+        expect.stringContaining("Προκαταβολή επόμενου έτους: 0 €"),
+      ]),
+    );
+  });
+
   it("still explains the selected rules before an amount is entered", () => {
     const explanation = buildEmployeeExplanation({
       ...employeeDetails(2026),

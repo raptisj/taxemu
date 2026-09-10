@@ -61,16 +61,17 @@ const buildEmployeeDetails = () => {
   };
 };
 
-const buildBusinessDetails = () => {
-  const calculation = calculateBusinessResults({ userDetails: businessInput });
+const buildBusinessDetails = (overrides = {}) => {
+  const calculationInput = { ...businessInput, ...overrides };
+  const calculation = calculateBusinessResults({ userDetails: calculationInput });
   return {
-    ...businessInput,
+    ...calculationInput,
     tableResults: {
       ...calculation.nextBusinessTable,
       taxableIncome: calculation.taxableIncome,
       totalTax: calculation.totalTax,
       taxInAdvance: calculation.taxInAdvanceValue,
-      calculationInput: getComparisonInput("business", businessInput),
+      calculationInput: getComparisonInput("business", calculationInput),
     },
   };
 };
@@ -138,6 +139,24 @@ describe("personal calculation PDF data", () => {
     expect(keys).toContain("taxPrepayment");
     expect(keys).toContain("taxDue");
     expect(data.comparison.results).toHaveLength(2);
+  });
+
+  it("exports the withholding-adjusted prepayment and its AADE source", () => {
+    const data = buildPersonalCalculationPdfData({
+      entity: "business",
+      details: buildBusinessDetails({ withholdingTax: true }),
+    });
+
+    expect(
+      data.results.find(({ key }) => key === "taxPrepayment").value.year,
+    ).toBe(0);
+    expect(data.sources).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          url: expect.stringContaining("prokataboli-foroy-eisodimatos"),
+        }),
+      ]),
+    );
   });
 
   it("rejects an unknown calculator entity", () => {

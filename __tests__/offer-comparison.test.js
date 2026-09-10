@@ -44,6 +44,17 @@ describe("offer comparison", () => {
     );
   });
 
+  test("removes the prepayment when withholding fully covers it", () => {
+    const result = calculateFreelancerOffer(
+      input({ prePaidNextYearTax: true, withholdingTax: true }),
+      30000,
+    );
+
+    expect(result.withholding).toBe(6000);
+    expect(result.taxPrepayment).toBe(0);
+    expect(result.cashAfterTaxSettlements).toBeCloseTo(result.annualNet, 2);
+  });
+
   test("an employee-only offer generates a net-equivalent freelancer offer", () => {
     const result = calculateOfferComparison(
       input({

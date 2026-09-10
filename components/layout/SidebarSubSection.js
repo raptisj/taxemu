@@ -13,13 +13,26 @@ export const SidebarSubSection = ({ children, title, ...rest }) => {
   );
 };
 
-export const SidebarSubSectionAccordion = ({ children, title, ...rest }) => {
-  const [showSection, setShowSection] = useState(false);
+export const SidebarSubSectionAccordion = ({
+  children,
+  title,
+  isOpen,
+  onToggle,
+  ...rest
+}) => {
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+  const isControlled = typeof isOpen === "boolean";
+  const showSection = isControlled ? isOpen : internalIsOpen;
+  const toggleSection = () => {
+    const nextIsOpen = !showSection;
+    if (!isControlled) setInternalIsOpen(nextIsOpen);
+    onToggle?.(nextIsOpen);
+  };
 
   return (
     <Box mt={6} {...rest}>
       <Flex
-        onClick={() => setShowSection(!showSection)}
+        onClick={toggleSection}
         justifyContent="space-between"
         alignItems="center"
         cursor="pointer"

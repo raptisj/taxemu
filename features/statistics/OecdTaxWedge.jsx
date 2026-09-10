@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { oecdTaxWedge2025 } from "../../constants/statistics";
+import { inlineLinkStyles } from "../../styles/inlineLink";
 
 const palette = {
   greece: "#6C63D5",
@@ -298,7 +299,7 @@ export const OecdTaxWedge = () => {
           <Link
             href={data.sources.greece}
             isExternal
-            color="purple.600"
+            {...inlineLinkStyles}
             fontWeight="600"
           >
             Στοιχεία για την Ελλάδα <ExternalLinkIcon mx="2px" />
@@ -306,7 +307,7 @@ export const OecdTaxWedge = () => {
           <Link
             href={data.sources.report}
             isExternal
-            color="purple.600"
+            {...inlineLinkStyles}
             fontWeight="600"
           >
             Ετήσια έκθεση ΟΟΣΑ <ExternalLinkIcon mx="2px" />
@@ -314,7 +315,7 @@ export const OecdTaxWedge = () => {
           <Link
             href={data.sources.methodology}
             isExternal
-            color="purple.600"
+            {...inlineLinkStyles}
             fontWeight="600"
           >
             Μεθοδολογία ΟΟΣΑ <ExternalLinkIcon mx="2px" />
@@ -322,7 +323,7 @@ export const OecdTaxWedge = () => {
           <Link
             href={data.sources.dataExplorer}
             isExternal
-            color="purple.600"
+            {...inlineLinkStyles}
             fontWeight="600"
           >
             Βάση δεδομένων ΟΟΣΑ <ExternalLinkIcon mx="2px" />

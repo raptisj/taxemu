@@ -15,6 +15,7 @@ import {
   calculateBinnedPercentile,
   getWageDistributionForYear,
 } from "utils";
+import { inlineLinkStyles } from "../../styles/inlineLink";
 
 export const WageComparisonChart = () => {
   const userDetails = useStore((state) => state.userDetails.employee);
@@ -90,8 +91,7 @@ export const WageComparisonChart = () => {
         display="inline-block"
         mt={1}
         fontSize="xs"
-        textDecoration="underline"
-        color="gray.400"
+        {...inlineLinkStyles}
         target="_blank"
         rel="noreferrer"
         href={distribution.sourceUrl}

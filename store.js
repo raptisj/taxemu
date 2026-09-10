@@ -153,8 +153,8 @@ const initialState = {
     numberOfChildren: 0,
     ageGroup: "A30P",
     minimumPresumedIncome: {
-      businessAge: null,
-      hasAdjustments: null,
+      businessAge: 1,
+      hasAdjustments: false,
       employeeAdjustment: false,
       annualPayrollCost: 0,
       highestPaidEmployeeGross: 0,

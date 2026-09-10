@@ -4,6 +4,7 @@ import {
   calculateInflationDetails,
   formatCellValue,
   formatEuroCurrency,
+  formatRatePercentage,
   roundNumberWithFixed,
   sortByMultiplier,
 } from "utils";
@@ -17,6 +18,11 @@ describe("Helper functions", () => {
     expect(formatCellValue()).toBe("------");
     expect(formatCellValue(null)).toBe("------");
     expect(formatCellValue(200, false)).toBe("------");
+  });
+
+  it("formats rate percentages without floating-point artifacts", () => {
+    expect(formatRatePercentage(0.55)).toBe("55%");
+    expect(formatRatePercentage(0.055)).toBe("5,5%");
   });
 
   it("subtracts table amounts from the first value", () => {

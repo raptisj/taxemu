@@ -15,6 +15,10 @@
         "url": "https://www.aade.gr/sites/default/files/2022-05/odigies_fefp_v2_2021.pdf"
       },
       {
+        "name": "AADE guide — advance income tax from business activity",
+        "url": "https://www.aade.gr/exypiretisi-enimerosi/hristikoi-odigoi/enarxi-epiheirimatikis-drastiriotitas/prokataboli-foroy-eisodimatos-apo-epiheirimatiki"
+      },
+      {
         "name": "AADE basic VAT rates",
         "url": "https://www.aade.gr/exypiretisi-enimerosi/hristikoi-odigoi/enarxi-epiheirimatikis-drastiriotitas/basikoi-syntelestes-fpa"
       }
@@ -112,7 +116,8 @@
       },
       "taxPrepayment": {
         "rate": 0.55,
-        "discountMultiplier": 0.5
+        "discountMultiplier": 0.5,
+        "minimumAssessmentAmount": 30
       },
       "withholding": {
         "rate": 0.2
@@ -157,6 +162,10 @@
       {
         "name": "AADE instructions for the 2022 personal income-tax return",
         "url": "https://www.aade.gr/sites/default/files/2023-05/odigies_symplirosifefp_fe2022.pdf"
+      },
+      {
+        "name": "AADE guide — advance income tax from business activity",
+        "url": "https://www.aade.gr/exypiretisi-enimerosi/hristikoi-odigoi/enarxi-epiheirimatikis-drastiriotitas/prokataboli-foroy-eisodimatos-apo-epiheirimatiki"
       },
       {
         "name": "AADE basic VAT rates",
@@ -256,7 +265,8 @@
       },
       "taxPrepayment": {
         "rate": 0.55,
-        "discountMultiplier": 0.5
+        "discountMultiplier": 0.5,
+        "minimumAssessmentAmount": 30
       },
       "withholding": {
         "rate": 0.2
@@ -301,6 +311,10 @@
       {
         "name": "AADE instructions for the 2023 personal income-tax return",
         "url": "https://www.aade.gr/sites/default/files/2024-06/odigies_E1_2024_2.pdf"
+      },
+      {
+        "name": "AADE guide — advance income tax from business activity",
+        "url": "https://www.aade.gr/exypiretisi-enimerosi/hristikoi-odigoi/enarxi-epiheirimatikis-drastiriotitas/prokataboli-foroy-eisodimatos-apo-epiheirimatiki"
       },
       {
         "name": "AADE basic VAT rates",
@@ -409,7 +423,8 @@
       },
       "taxPrepayment": {
         "rate": 0.55,
-        "discountMultiplier": 0.5
+        "discountMultiplier": 0.5,
+        "minimumAssessmentAmount": 30
       },
       "withholding": {
         "rate": 0.2
@@ -454,6 +469,10 @@
       {
         "name": "AADE instructions for the 2024 personal income-tax return",
         "url": "https://www.aade.gr/sites/default/files/2025-05/odigies_symplirosisFEFP-2024_16-05-2025.pdf"
+      },
+      {
+        "name": "AADE guide — advance income tax from business activity",
+        "url": "https://www.aade.gr/exypiretisi-enimerosi/hristikoi-odigoi/enarxi-epiheirimatikis-drastiriotitas/prokataboli-foroy-eisodimatos-apo-epiheirimatiki"
       },
       {
         "name": "AADE Circular O.3047/2023 — increased tax credits for dependent children",
@@ -566,7 +585,8 @@
       },
       "taxPrepayment": {
         "rate": 0.55,
-        "discountMultiplier": 0.5
+        "discountMultiplier": 0.5,
+        "minimumAssessmentAmount": 30
       },
       "withholding": {
         "rate": 0.2
@@ -611,6 +631,10 @@
       {
         "name": "AADE instructions for the 2025 personal income-tax return",
         "url": "https://www.aade.gr/sites/default/files/2026-03/Odigies_E1_2026_0.pdf"
+      },
+      {
+        "name": "AADE guide — advance income tax from business activity",
+        "url": "https://www.aade.gr/exypiretisi-enimerosi/hristikoi-odigoi/enarxi-epiheirimatikis-drastiriotitas/prokataboli-foroy-eisodimatos-apo-epiheirimatiki"
       },
       {
         "name": "AADE Circular O.3047/2023 — increased tax credits for dependent children",
@@ -723,7 +747,8 @@
       },
       "taxPrepayment": {
         "rate": 0.55,
-        "discountMultiplier": 0.5
+        "discountMultiplier": 0.5,
+        "minimumAssessmentAmount": 30
       },
       "withholding": {
         "rate": 0.2
@@ -772,6 +797,10 @@
       {
         "name": "AADE Circular O.3068/2025 — 2026 income-tax brackets and family relief",
         "url": "https://www.aade.gr/egkyklioi-kai-apofaseis/o-3068-18-11-2025"
+      },
+      {
+        "name": "AADE guide — advance income tax from business activity",
+        "url": "https://www.aade.gr/exypiretisi-enimerosi/hristikoi-odigoi/enarxi-epiheirimatikis-drastiriotitas/prokataboli-foroy-eisodimatos-apo-epiheirimatiki"
       },
       {
         "name": "AADE basic VAT rates",
@@ -1328,7 +1357,8 @@
       },
       "taxPrepayment": {
         "rate": 0.55,
-        "discountMultiplier": 0.5
+        "discountMultiplier": 0.5,
+        "minimumAssessmentAmount": 30
       },
       "withholding": {
         "rate": 0.2

@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { useStore } from "store";
 import { QuestionIcon } from "@chakra-ui/icons";
+import { inlineLinkStyles } from "../../styles/inlineLink";
 import { useRef } from "react";
 import { Results } from "./Results";
 import { FormFields } from "./FormFields";
@@ -33,7 +34,7 @@ const BusinessNegotiateWidget = () => {
       <PopoverTrigger>
         <Button
           variant="link"
-          color="purple.500"
+          {...inlineLinkStyles}
           fontWeight={500}
           fontSize=".9rem"
           rightIcon={<QuestionIcon />}

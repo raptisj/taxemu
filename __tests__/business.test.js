@@ -2,6 +2,7 @@ import {
   calculateTax2026Entrepreneur,
   getInsuranceTotal,
   applyPrePaidDiscount,
+  calculateTaxPrepayment,
   applyFirstScaleDiscount,
   calculateBusinessScalesTax,
   calculateMinimumPresumedBusinessIncome,
@@ -168,6 +169,37 @@ describe("discount helpers", () => {
   it("applies first scale discount", () => {
     expect(applyFirstScaleDiscount(900, false)).toBe(900);
     expect(applyFirstScaleDiscount(900, true)).toBe(450);
+  });
+});
+
+describe("calculateTaxPrepayment", () => {
+  const calculate = (overrides = {}) =>
+    calculateTaxPrepayment({
+      incomeTax: 1000,
+      withholdingTax: 0,
+      rate: 0.55,
+      prePaidTaxDiscount: false,
+      discountMultiplier: 0.5,
+      minimumAssessmentAmount: 30,
+      ...overrides,
+    });
+
+  it("deducts withholding from the 55% advance before assessment", () => {
+    expect(calculate({ withholdingTax: 200 })).toBe(350);
+    expect(calculate({ withholdingTax: 550 })).toBe(0);
+    expect(calculate({ withholdingTax: 800 })).toBe(0);
+  });
+
+  it("applies the first-years discount after withholding", () => {
+    expect(
+      calculate({ withholdingTax: 200, prePaidTaxDiscount: true }),
+    ).toBe(175);
+  });
+
+  it("does not assess an advance of €30 or less", () => {
+    expect(calculate({ withholdingTax: 520.01 })).toBe(0);
+    expect(calculate({ withholdingTax: 520 })).toBe(0);
+    expect(calculate({ withholdingTax: 519.99 })).toBe(30.01);
   });
 });
 

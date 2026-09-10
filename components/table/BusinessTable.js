@@ -182,18 +182,16 @@ const BusinessTable = () => {
               </Td>
               <Td border="none">
                 <Text color="gray.700" fontSize="sm">
-                  {formatCellValue(
-                    taxInAdvance.month > 0 ? taxInAdvance.month : null,
-                    !!finalIncome.year
-                  )}
+                  {taxInAdvance.month === 0 && !!finalIncome.year
+                    ? "€0"
+                    : formatCellValue(taxInAdvance.month, !!finalIncome.year)}
                 </Text>
               </Td>
               <Td isNumeric border="none">
                 <Text color="gray.700" fontSize="sm" textAlign="left">
-                  {formatCellValue(
-                    taxInAdvance.year > 0 ? taxInAdvance.year : null,
-                    !!finalIncome.year
-                  )}
+                  {taxInAdvance.year === 0 && !!finalIncome.year
+                    ? "€0"
+                    : formatCellValue(taxInAdvance.year, !!finalIncome.year)}
                 </Text>
               </Td>
             </Tr>

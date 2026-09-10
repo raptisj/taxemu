@@ -18,6 +18,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { getTaxRules, supportedTaxYears } from "../../rules";
+import { formatRatePercentage } from "../../utils";
 import {
   OFFER_COMPARISON_MODES,
   OFFER_PERIODS,
@@ -253,7 +254,7 @@ export const ComparisonForm = ({ input, setInput }) => {
               <FormControl>
                 <FormLabel fontSize="sm" fontWeight="600">ΦΠΑ τιμολογίου</FormLabel>
                 <Select value={input.vatRate} onChange={(event) => setField("vatRate", Number(event.target.value))}>
-                  {rules.business.invoice.vatRates.map((rate) => <option key={rate} value={rate}>{rate * 100}%</option>)}
+                  {rules.business.invoice.vatRates.map((rate) => <option key={rate} value={rate}>{formatRatePercentage(rate)}</option>)}
                 </Select>
               </FormControl>
             </SimpleGrid>

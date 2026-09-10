@@ -271,6 +271,10 @@ export const validateTaxRules = (rulesByYear = taxRulesByYear) => {
       businessRules.taxPrepayment?.discountMultiplier,
       `${yearKey}.business.taxPrepayment.discountMultiplier`,
     );
+    assertNonNegativeNumber(
+      businessRules.taxPrepayment?.minimumAssessmentAmount,
+      `${yearKey}.business.taxPrepayment.minimumAssessmentAmount`,
+    );
     assertRate(
       businessRules.withholding?.rate,
       `${yearKey}.business.withholding.rate`,

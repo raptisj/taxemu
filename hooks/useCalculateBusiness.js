@@ -1,6 +1,10 @@
 import { useStore } from "store";
 import { useToast } from "@chakra-ui/react";
-import { getInsuranceTotal, calculateBusinessResults } from "utils";
+import {
+  getInsuranceTotal,
+  calculateBusinessResults,
+  isBusinessGrossIncomeMissing,
+} from "utils";
 import { getBusinessRules } from "../rules";
 import { getComparisonInput } from "../utils/yearComparison";
 
@@ -73,7 +77,7 @@ export const useCalculateBusiness = () => {
         otherIncomeMissing ||
         reliefInputMissing);
     const throwError =
-      !grossIncome.year || !grossIncome.month || minimumIncomeInputsMissing;
+      isBusinessGrossIncomeMissing(grossIncome) || minimumIncomeInputsMissing;
 
     if (throwError) {
       return showError();

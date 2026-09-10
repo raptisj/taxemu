@@ -27,6 +27,14 @@ describe("annual tax rules", () => {
       expect(rules.employee.incomeTax).toBeDefined();
       expect(rules.business.insurance.monthlyAmounts.length).toBeGreaterThan(0);
       expect(rules.business.incomeTax).toBeDefined();
+      expect(rules.business.taxPrepayment.minimumAssessmentAmount).toBe(30);
+      expect(rules.sources).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            url: expect.stringContaining("prokataboli-foroy-eisodimatos"),
+          }),
+        ]),
+      );
       expect(rules.ui.employee).toBeDefined();
       expect(rules.ui.business).toBeDefined();
     });
@@ -68,6 +76,15 @@ describe("annual tax rules", () => {
 
     expect(() => validateTaxRules(malformedRules)).toThrow(
       "2026.employee.insurance.employeeRate",
+    );
+  });
+
+  it("rejects a malformed advance-tax minimum", () => {
+    const malformedRules = JSON.parse(JSON.stringify(taxRulesByYear));
+    malformedRules[2026].business.taxPrepayment.minimumAssessmentAmount = -1;
+
+    expect(() => validateTaxRules(malformedRules)).toThrow(
+      "2026.business.taxPrepayment.minimumAssessmentAmount",
     );
   });
 

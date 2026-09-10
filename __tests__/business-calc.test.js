@@ -70,6 +70,22 @@ describe("calculateBusinessResults", () => {
     expect(result.finalIncome.year).toBeCloseTo(16964.82, 2);
   });
 
+  it("deducts withholding from the advance in the reported €24,000 case", () => {
+    const result = calculateBusinessResults({
+      ...baseParams,
+      userDetails: {
+        ...baseParams.userDetails,
+        prePaidNextYearTax: true,
+        withholdingTax: true,
+      },
+    });
+
+    expect(result.totalTax.year).toBeCloseTo(3157.6, 2);
+    expect(result.nextBusinessTable.withholdingTaxAmount.year).toBe(4800);
+    expect(result.taxInAdvanceValue).toEqual({ month: 0, year: 0 });
+    expect(result.finalIncome.year).toBeCloseTo(17833.16, 2);
+  });
+
   it("preserves the accounting loss while taxing the presumed minimum", () => {
     const result = calculateBusinessResults({
       ...baseParams,

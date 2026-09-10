@@ -225,17 +225,17 @@ export const buildBusinessExplanation = (details) => {
       },
       {
         title: "Προκαταβολή και παρακράτηση φόρου",
-        description: `Η προκαταβολή επόμενου έτους είναι ${formatExplanationRate(businessRules.taxPrepayment.rate)} του φόρου. Η έκπτωση πρώτων ετών στην προκαταβολή χρησιμοποιεί συντελεστή ${formatExplanationRate(businessRules.taxPrepayment.discountMultiplier)}. Η παρακράτηση τιμολογίων είναι ${formatExplanationRate(businessRules.withholding.rate)}.`,
+        description: `Η αρχική προκαταβολή επόμενου έτους είναι ${formatExplanationRate(businessRules.taxPrepayment.rate)} του φόρου. Από αυτήν αφαιρείται η παρακράτηση και δεν βεβαιώνεται ποσό έως ${formatExplanationMoney(businessRules.taxPrepayment.minimumAssessmentAmount)}. Η έκπτωση πρώτων ετών στην προκαταβολή χρησιμοποιεί συντελεστή ${formatExplanationRate(businessRules.taxPrepayment.discountMultiplier)}. Η παρακράτηση τιμολογίων είναι ${formatExplanationRate(businessRules.withholding.rate)}.`,
         items: hasCalculation
           ? [
-              ...(details.prePaidNextYearTax
-                ? [
-                    `Προκαταβολή επόμενου έτους: ${formatExplanationMoney(calculation.taxInAdvanceValue.year)}`,
-                  ]
-                : []),
               ...(details.withholdingTax
                 ? [
                     `Παρακράτηση που έχει ήδη αποδοθεί: ${formatExplanationMoney(table.withholdingTaxAmount.year)}`,
+                  ]
+                : []),
+              ...(details.prePaidNextYearTax
+                ? [
+                    `Προκαταβολή επόμενου έτους: ${formatExplanationMoney(calculation.taxInAdvanceValue.year)}`,
                   ]
                 : []),
               `Καθαρό εισόδημα περιόδου: ${formatExplanationMoney(calculation.finalIncome.year)}`,

@@ -11,7 +11,9 @@ import {
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
+  Button,
 } from "@chakra-ui/react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useStore } from "store";
@@ -20,8 +22,16 @@ import FormElements from "../input";
 import { useCalculateBusiness, useBusinessActions } from "hooks";
 import { BusinessNegotiateWidget } from "../../features";
 import { getTaxRules, supportedTaxYears } from "../../rules";
+import { isBusinessGrossIncomeMissing } from "../../utils/formState";
+import { formatRatePercentage } from "../../utils";
+import { inlineLinkStyles } from "../../styles/inlineLink";
 
 const BusinessForm = ({ showCalculatorType = true }) => {
+  const [minimumIncomeSectionOpen, setMinimumIncomeSectionOpen] =
+    useState(false);
+  const [shouldScrollToBusinessAge, setShouldScrollToBusinessAge] =
+    useState(false);
+  const businessAgeFieldRef = useRef(null);
   const userDetails = useStore((state) => state.userDetails.business);
   const updateBusiness = useStore((state) => state.updateBusiness);
   const update = useStore((state) => state.update);
@@ -60,6 +70,26 @@ const BusinessForm = ({ showCalculatorType = true }) => {
   const rules = getTaxRules(taxationYear);
   const firstYearsDiscount = rules.business.firstYearsDiscount;
   const minimumIncomeRules = rules.business.minimumPresumedIncome;
+  const grossIncomeMissing = isBusinessGrossIncomeMissing(grossIncome);
+
+  useEffect(() => {
+    if (!minimumIncomeSectionOpen || !shouldScrollToBusinessAge) return;
+
+    const animationFrame = window.requestAnimationFrame(() => {
+      businessAgeFieldRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      setShouldScrollToBusinessAge(false);
+    });
+
+    return () => window.cancelAnimationFrame(animationFrame);
+  }, [minimumIncomeSectionOpen, shouldScrollToBusinessAge]);
+
+  const showBusinessAgeField = () => {
+    setMinimumIncomeSectionOpen(true);
+    setShouldScrollToBusinessAge(true);
+  };
 
   const onChange = (value) => {
     update({
@@ -159,7 +189,7 @@ const BusinessForm = ({ showCalculatorType = true }) => {
             )}
             <Box mt={3}>
               <Link href="/blog/forologia-atomikis-epixirisis-2026">
-                <Text color="blue.600" fontSize="sm" textDecoration="underline">
+                <Text fontSize="sm" {...inlineLinkStyles}>
                   Δες τι έχει αλλάξει για το 2026
                 </Text>
               </Link>
@@ -175,7 +205,7 @@ const BusinessForm = ({ showCalculatorType = true }) => {
             <Text fontWeight="500" color="gray.700" mt={4}>
               Μικτό εισόδημα
             </Text>
-            <FormControl isInvalid={hasError}>
+            <FormControl isInvalid={hasError && grossIncomeMissing}>
               <NumberInput
                 mt={2}
                 onChange={(value) =>
@@ -205,15 +235,39 @@ const BusinessForm = ({ showCalculatorType = true }) => {
               ]}
             />
           </GridItem>
+          {minimumIncomeRules.enabled && !grossIncomeMissing && (
+            <GridItem gridColumn="1 / -1">
+              <Button
+                mt={2}
+                p={0}
+                height="auto"
+                maxWidth="100%"
+                variant="link"
+                {...inlineLinkStyles}
+                fontSize="sm"
+                fontWeight="normal"
+                justifyContent="flex-start"
+                textAlign="left"
+                whiteSpace="normal"
+                onClick={showBusinessAgeField}
+              >
+                {minimumPresumedIncome.businessAge}ο έτος δραστηριότητας
+                {minimumPresumedIncome.businessAge === 1
+                  ? " (προεπιλογή)"
+                  : ""}
+                — Αλλαγή;
+              </Button>
+            </GridItem>
+          )}
         </Grid>
 
         {firstYearsDiscount.enabled && (
           <FormElements.CheckboxWithTooltip
-            label={`${(1 - firstYearsDiscount.taxMultiplier) * 100}% έκπτωση για τα 3 πρώτα χρόνια άσκησης`}
+            label={`${formatRatePercentage(1 - firstYearsDiscount.taxMultiplier)} έκπτωση για τα 3 πρώτα χρόνια άσκησης`}
             tootipText={`Για τα τρία πρώτα έτη άσκησης της δραστηριότητας, εφόσον
               το ετήσιο ακαθάριστο εισόδημα δεν υπερβαίνει τις
               ${firstYearsDiscount.maximumTaxableIncome.toLocaleString("el-GR")} €,
-              ο φόρος μειώνεται κατά ${(1 - firstYearsDiscount.taxMultiplier) * 100}%.`}
+              ο φόρος μειώνεται κατά ${formatRatePercentage(1 - firstYearsDiscount.taxMultiplier)}.`}
             isChecked={discountOptions.firstScaleDiscount}
             isDisabled={
               grossIncome.year > firstYearsDiscount.maximumTaxableIncome ||
@@ -234,12 +288,18 @@ const BusinessForm = ({ showCalculatorType = true }) => {
       {minimumIncomeRules.enabled && (
         <>
           <Divider pt={6} />
-          <SidebarSubSectionAccordion title="Ελάχιστο τεκμαρτό εισόδημα">
-            <Box mt={4}>
+          <SidebarSubSectionAccordion
+            title="Ελάχιστο τεκμαρτό εισόδημα"
+            isOpen={minimumIncomeSectionOpen}
+            onToggle={setMinimumIncomeSectionOpen}
+          >
+            <Box mt={4} ref={businessAgeFieldRef}>
               <Text fontWeight="500" color="gray.700">
                 Έτος άσκησης δραστηριότητας
               </Text>
-              <FormControl isInvalid={hasError && !minimumPresumedIncome.businessAge}>
+              <FormControl
+                isInvalid={hasError && !minimumPresumedIncome.businessAge}
+              >
                 <NumberInput
                   mt={2}
                   min={1}
@@ -253,7 +313,9 @@ const BusinessForm = ({ showCalculatorType = true }) => {
                 >
                   <NumberInputField />
                 </NumberInput>
-                <FormErrorMessage>Συμπλήρωσε το έτος δραστηριότητας</FormErrorMessage>
+                <FormErrorMessage>
+                  Συμπλήρωσε το έτος δραστηριότητας
+                </FormErrorMessage>
               </FormControl>
               <Text color="gray.500" fontSize="xs" mt={1}>
                 Από την πρώτη έναρξη, χωρίς τα διαστήματα διακοπής.
@@ -300,7 +362,9 @@ const BusinessForm = ({ showCalculatorType = true }) => {
                     })
                   }
                 >
-                  <Text fontSize="sm" color="gray.700">Ετήσιο κόστος μισθοδοσίας</Text>
+                  <Text fontSize="sm" color="gray.700">
+                    Ετήσιο κόστος μισθοδοσίας
+                  </Text>
                   <NumberInput
                     value={minimumPresumedIncome.annualPayrollCost || ""}
                     onChange={(value) =>
@@ -311,7 +375,9 @@ const BusinessForm = ({ showCalculatorType = true }) => {
                   >
                     <NumberInputField />
                   </NumberInput>
-                  <Text fontSize="sm" color="gray.700">Μικτές ετήσιες αποδοχές υψηλότερα αμειβόμενου</Text>
+                  <Text fontSize="sm" color="gray.700">
+                    Μικτές ετήσιες αποδοχές υψηλότερα αμειβόμενου
+                  </Text>
                   <NumberInput
                     value={minimumPresumedIncome.highestPaidEmployeeGross || ""}
                     onChange={(value) =>
@@ -335,7 +401,9 @@ const BusinessForm = ({ showCalculatorType = true }) => {
                     })
                   }
                 >
-                  <Text fontSize="sm" color="gray.700">Επίσημος μέσος ετήσιος τζίρος ΚΑΔ</Text>
+                  <Text fontSize="sm" color="gray.700">
+                    Επίσημος μέσος ετήσιος τζίρος ΚΑΔ
+                  </Text>
                   <NumberInput
                     value={minimumPresumedIncome.kadAverageTurnover || ""}
                     onChange={(value) =>
@@ -347,7 +415,7 @@ const BusinessForm = ({ showCalculatorType = true }) => {
                     <NumberInputField />
                   </NumberInput>
                   <Link href="https://www.aade.gr/shediasmos-apologismos/statistika/mesos-oros-etisioy-kykloy-ergasion-ana-kad">
-                    <Text color="blue.600" fontSize="xs" textDecoration="underline">
+                    <Text fontSize="xs" {...inlineLinkStyles}>
                       Πίνακες μέσου τζίρου ανά ΚΑΔ της ΑΑΔΕ
                     </Text>
                   </Link>
@@ -364,11 +432,15 @@ const BusinessForm = ({ showCalculatorType = true }) => {
                     })
                   }
                 >
-                  <Text fontSize="sm" color="gray.700">Συνολικό ετήσιο ποσό</Text>
+                  <Text fontSize="sm" color="gray.700">
+                    Συνολικό ετήσιο ποσό
+                  </Text>
                   <NumberInput
                     value={minimumPresumedIncome.otherIncome || ""}
                     onChange={(value) =>
-                      updateMinimumPresumedIncome({ otherIncome: Number(value) })
+                      updateMinimumPresumedIncome({
+                        otherIncome: Number(value),
+                      })
                     }
                   >
                     <NumberInputField />
@@ -402,11 +474,15 @@ const BusinessForm = ({ showCalculatorType = true }) => {
                   />
                   {minimumPresumedIncome.reliefType === "limited" && (
                     <Box>
-                      <Text fontSize="sm" color="gray.700">Επιλέξιμες ημέρες λειτουργίας</Text>
+                      <Text fontSize="sm" color="gray.700">
+                        Επιλέξιμες ημέρες λειτουργίας
+                      </Text>
                       <NumberInput
                         min={1}
                         max={365}
-                        value={minimumPresumedIncome.eligibleOperatingDays || ""}
+                        value={
+                          minimumPresumedIncome.eligibleOperatingDays || ""
+                        }
                         onChange={(value) =>
                           updateMinimumPresumedIncome({
                             eligibleOperatingDays: Number(value),
@@ -418,7 +494,7 @@ const BusinessForm = ({ showCalculatorType = true }) => {
                     </Box>
                   )}
                   <Link href="https://www.aade.gr/sites/default/files/2026-03/Odigies_E1_2026_0.pdf">
-                    <Text color="blue.600" fontSize="xs" textDecoration="underline">
+                    <Text fontSize="xs" {...inlineLinkStyles}>
                       Δες ποιες περιπτώσεις αναγνωρίζει η ΑΑΔΕ
                     </Text>
                   </Link>
@@ -528,7 +604,7 @@ const BusinessForm = ({ showCalculatorType = true }) => {
             </Text>
 
             <FormElements.CheckboxNested
-              label={`Προκαταβολή φόρου (${rules.business.taxPrepayment.rate * 100}% επί του συνολικού φόρου)`}
+              label={`Προκαταβολή φόρου (${formatRatePercentage(rules.business.taxPrepayment.rate)} με αφαίρεση παρακράτησης)`}
               isChecked={prePaidNextYearTax}
               show={prePaidNextYearTax}
               onChange={() =>
@@ -538,10 +614,10 @@ const BusinessForm = ({ showCalculatorType = true }) => {
               }
             >
               <FormElements.CheckboxWithTooltip
-                label={`Έκπτωση ${(1 - rules.business.taxPrepayment.discountMultiplier) * 100}% στην προκαταβολή`}
-                tootipText={`Ο συντελεστής προκαταβολής φόρου είναι ${rules.business.taxPrepayment.rate * 100}%.
-                    Για τα πρώτα τρία (3) έτη λειτουργίας υπάρχει
-                    έκπτωση ${(1 - rules.business.taxPrepayment.discountMultiplier) * 100}%.`}
+                label={`Έκπτωση ${formatRatePercentage(1 - rules.business.taxPrepayment.discountMultiplier)} στην προκαταβολή`}
+                tootipText={`Η προκαταβολή ξεκινά από το ${formatRatePercentage(rules.business.taxPrepayment.rate)} του φόρου και μειώνεται κατά την παρακράτηση.
+                    Ποσό έως ${rules.business.taxPrepayment.minimumAssessmentAmount}€ δεν βεβαιώνεται. Για τα πρώτα τρία (3) έτη λειτουργίας υπάρχει
+                    έκπτωση ${formatRatePercentage(1 - rules.business.taxPrepayment.discountMultiplier)}.`}
                 isChecked={discountOptions.prePaidTaxDiscount}
                 onChange={() =>
                   updateBusiness({

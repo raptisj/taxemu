@@ -17,6 +17,12 @@ describe("calculator store", () => {
     expect(state.employee.taxationYear).toBe(2026);
     expect(state.business.taxYearDuration).toBe(6);
     expect(state.business.taxationYear).toBe(2026);
+    expect(state.business.minimumPresumedIncome).toEqual(
+      expect.objectContaining({
+        businessAge: 1,
+        hasAdjustments: false,
+      }),
+    );
   });
 
   it("merges quick-calculation values", () => {
@@ -49,5 +55,7 @@ describe("calculator store", () => {
     const { employee, business } = useStore.getState().userDetails;
     expect(employee.grossIncomeMonthly).toBe(0);
     expect(business.taxYearDuration).toBe(12);
+    expect(business.minimumPresumedIncome.businessAge).toBe(1);
+    expect(business.minimumPresumedIncome.hasAdjustments).toBe(false);
   });
 });

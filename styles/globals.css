@@ -86,7 +86,8 @@ article li {
 
 article a {
   color: #805ad5;
-  text-decoration: none;
+  text-decoration: underline;
+  text-underline-offset: 2px;
   transition: color 0.2s ease;
   font-weight: 600;
 }

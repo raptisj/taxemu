@@ -23,6 +23,7 @@ import {
   getInflationRatesBetween,
 } from "utils";
 import { InflationWidgetContent } from "./InflationWidgetContent";
+import { inlineLinkStyles } from "../../styles/inlineLink";
 
 export const InflationDesktopWidget = () => {
   const userDetails = useStore((state) => state.userDetails.employee);
@@ -83,8 +84,7 @@ export const InflationDesktopWidget = () => {
         display="inline-block"
         mt={2}
         fontSize="xs"
-        textDecoration="underline"
-        color="gray.400"
+        {...inlineLinkStyles}
         target="_blank"
         rel="noreferrer"
         href={hicpSource.url}

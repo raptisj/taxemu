@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { Fragment, useMemo } from "react";
 import { useStore } from "store";
 import { buildExplanation } from "./explanations";
+import { inlineLinkStyles } from "../../styles/inlineLink";
 
 const ExplanationList = ({ items = [] }) =>
   items.length ? (
@@ -95,8 +96,7 @@ export const WikiContent = () => {
               <Link
                 href={source.url}
                 isExternal
-                color="purple.600"
-                textDecoration="underline"
+                {...inlineLinkStyles}
               >
                 {source.name}
               </Link>

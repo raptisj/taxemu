@@ -22,6 +22,7 @@ import FormElements from "components/input";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { useEmployeeActions, useCalculateEmployee } from "hooks";
 import { getTaxRules, supportedTaxYears } from "../../rules";
+import { inlineLinkStyles } from "../../styles/inlineLink";
 
 const EmployeeForm = ({ showCalculatorType = true }) => {
   const userDetails = useStore((state) => state.userDetails.employee);
@@ -187,7 +188,7 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
 
       <Box mt={3}>
         <Link href="/blog/forologia-misthoton-2026">
-          <Text color="blue.600" fontSize="sm" textDecoration="underline">
+          <Text fontSize="sm" {...inlineLinkStyles}>
             Δες τι έχει αλλάξει για το 2026
           </Text>
         </Link>

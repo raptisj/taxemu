@@ -92,6 +92,17 @@ describe("year comparison", () => {
       [2025, 2026],
     );
     expect(withPrepayment.results[1].metrics.adjustment.year).toBeCloseTo(1736.68, 2);
+
+    const withWithholding = calculateYearComparison(
+      "business",
+      {
+        ...business,
+        prePaidNextYearTax: true,
+        withholdingTax: true,
+      },
+      [2025, 2026],
+    );
+    expect(withWithholding.results[1].metrics.adjustment.year).toBe(0);
   });
 
   it("parses only supported URL years and handles zero-based percentages", () => {

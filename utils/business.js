@@ -77,6 +77,29 @@ export const applyPrePaidDiscount = (
 ) =>
   toFixedNumber(prePaidTaxDiscount ? value * multiplier : value, 2);
 
+export const calculateTaxPrepayment = ({
+  incomeTax,
+  withholdingTax,
+  rate,
+  prePaidTaxDiscount,
+  discountMultiplier,
+  minimumAssessmentAmount,
+}) => {
+  const advanceAfterWithholding = Math.max(
+    0,
+    incomeTax * rate - withholdingTax,
+  );
+  const discountedAdvance = applyPrePaidDiscount(
+    advanceAfterWithholding,
+    prePaidTaxDiscount,
+    discountMultiplier,
+  );
+
+  return discountedAdvance <= minimumAssessmentAmount
+    ? 0
+    : discountedAdvance;
+};
+
 export const applyFirstScaleDiscount = (
   value,
   firstScaleDiscount,
@@ -293,11 +316,20 @@ export const calculateBusinessResults = ({ userDetails, rules }) => {
     month: findMonthAmount(totalTax),
     year: totalTax,
   };
-  const taxInAdvance = applyPrePaidDiscount(
-    totalTax * businessRules.taxPrepayment.rate,
+  const prePaidTaxAmount = withholdingTax
+    ? findMonthAmount(calculationGrossIncome) * businessRules.withholding.rate
+    : 0;
+  const roundedPrePaidTaxAmount = roundMoney(prePaidTaxAmount);
+  const annualWithholdingTax = findYearAmount(roundedPrePaidTaxAmount);
+  const taxInAdvance = calculateTaxPrepayment({
+    incomeTax: totalTax,
+    withholdingTax: annualWithholdingTax,
+    rate: businessRules.taxPrepayment.rate,
     prePaidTaxDiscount,
-    businessRules.taxPrepayment.discountMultiplier,
-  );
+    discountMultiplier: businessRules.taxPrepayment.discountMultiplier,
+    minimumAssessmentAmount:
+      businessRules.taxPrepayment.minimumAssessmentAmount,
+  });
   const taxInAdvanceValue = {
     month: findMonthAmount(taxInAdvance),
     year: taxInAdvance,
@@ -309,16 +341,12 @@ export const calculateBusinessResults = ({ userDetails, rules }) => {
     nextYearTax -
     extraBusinessExpenses -
     insurancePerYear;
-  const prePaidTaxAmount = withholdingTax
-    ? grossIncome.month * businessRules.withholding.rate
-    : 0;
-  const roundedPrePaidTaxAmount = roundMoney(prePaidTaxAmount);
   const finalTaxAmount = {
     month: withholdingTax
       ? findMonthAmount(totalTax) - roundedPrePaidTaxAmount
       : findMonthAmount(totalTax),
     year: withholdingTax
-      ? totalTax - findYearAmount(roundedPrePaidTaxAmount)
+      ? totalTax - annualWithholdingTax
       : totalTax,
   };
   const finalTaxAmountWithPrePaid = {
@@ -352,7 +380,7 @@ export const calculateBusinessResults = ({ userDetails, rules }) => {
     presumedIncomeBreakdown: presumedIncomeResult.breakdown,
     withholdingTaxAmount: {
       month: roundedPrePaidTaxAmount,
-      year: findYearAmount(roundedPrePaidTaxAmount),
+      year: annualWithholdingTax,
     },
     withholdingTax,
     taxationYear,

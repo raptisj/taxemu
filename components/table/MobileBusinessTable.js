@@ -102,10 +102,9 @@ const MobileBusinessTable = ({ onSubmitAction }) => {
                   {discountOptions.prePaidTaxDiscount ? "(με έκπτωση)" : ""}
                 </Text>
                 <Text>
-                  {formatCellValue(
-                    taxInAdvance.month > 0 ? taxInAdvance.month : null,
-                    !!finalIncome.year
-                  )}
+                  {taxInAdvance.month === 0 && !!finalIncome.year
+                    ? "€0"
+                    : formatCellValue(taxInAdvance.month, !!finalIncome.year)}
                 </Text>
               </Flex>
             )}
@@ -198,10 +197,9 @@ const MobileBusinessTable = ({ onSubmitAction }) => {
                   {discountOptions.prePaidTaxDiscount ? "(με έκπτωση)" : ""}
                 </Text>
                 <Text>
-                  {formatCellValue(
-                    taxInAdvance.year > 0 ? taxInAdvance.year : null,
-                    !!finalIncome.year
-                  )}
+                  {taxInAdvance.year === 0 && !!finalIncome.year
+                    ? "€0"
+                    : formatCellValue(taxInAdvance.year, !!finalIncome.year)}
                 </Text>
               </Flex>
             )}

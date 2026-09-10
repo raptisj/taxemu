@@ -1,5 +1,8 @@
 import { useStore } from "../store";
-import { getCalculationDirtyFields } from "../utils/formState";
+import {
+  getCalculationDirtyFields,
+  isBusinessGrossIncomeMissing,
+} from "../utils/formState";
 
 const getEmployeeDirtyFields = () => {
   const employee = useStore.getState().userDetails.employee;
@@ -14,6 +17,14 @@ const getBusinessDirtyFields = () => {
 describe("calculation form state", () => {
   afterEach(() => {
     useStore.getState().removeUserDetails();
+  });
+
+  it("marks only an actually empty business gross-income pair as missing", () => {
+    expect(isBusinessGrossIncomeMissing({ month: 5833, year: 70000 })).toBe(
+      false,
+    );
+    expect(isBusinessGrossIncomeMissing({ month: 0, year: 0 })).toBe(true);
+    expect(isBusinessGrossIncomeMissing({ month: 1000, year: 0 })).toBe(true);
   });
 
   it("starts clean and removes a field when its value is reverted", () => {

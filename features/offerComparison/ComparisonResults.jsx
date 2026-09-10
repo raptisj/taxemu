@@ -11,8 +11,10 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { inlineLinkStyles } from "../../styles/inlineLink";
 import { getTaxRules } from "../../rules";
 import { OFFER_COMPARISON_MODES } from "../../utils/offerComparison";
+import { formatRatePercentage } from "../../utils";
 
 const money = new Intl.NumberFormat("el-GR", {
   style: "currency",
@@ -153,7 +155,7 @@ export const ComparisonResults = ({ comparison, input }) => {
           <Assumption label="Έτος δραστηριότητας freelancer" value={input.businessAge} />
           <Assumption label="Ασφάλιση freelancer" value={input.specialInsuranceScale ? "Ειδική κατηγορία" : `${input.insuranceScaleSelection}η κατηγορία`} />
           <Assumption label="Προκαταβολή φόρου" value={input.prePaidNextYearTax ? "Εμφανίζεται ως ταμειακή επίδραση" : "Δεν περιλαμβάνεται"} />
-          <Assumption label="ΦΠΑ" value={`${input.vatRate * 100}% — εκτός καθαρών και εταιρικού κόστους`} />
+          <Assumption label="ΦΠΑ" value={`${formatRatePercentage(input.vatRate)} — εκτός καθαρών και εταιρικού κόστους`} />
         </SimpleGrid>
       </Box>
 
@@ -168,7 +170,7 @@ export const ComparisonResults = ({ comparison, input }) => {
         <Text color="gray.500" fontSize="xs" mb={2}>Επίσημες πηγές κανόνων {input.taxationYear}</Text>
         <Flex wrap="wrap" columnGap={4} rowGap={2}>
           {rules.sources.map((source) => (
-            <Link key={source.url} href={source.url} isExternal color="purple.600" fontSize="xs" textDecoration="underline">{source.name} <ExternalLinkIcon mx="2px" /></Link>
+            <Link key={source.url} href={source.url} isExternal fontSize="xs" {...inlineLinkStyles}>{source.name} <ExternalLinkIcon mx="2px" /></Link>
           ))}
         </Flex>
       </Box>
