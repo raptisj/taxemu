@@ -230,7 +230,10 @@ const BusinessForm = ({ showCalculatorType = true }) => {
               label="Ανά"
               onChange={onSelectGrossIncomeMonthOfYear}
               options={[
-                { value: "year", text: "Έτος" },
+                {
+                  value: "year",
+                  text: taxYearDuration === 12 ? "Έτος" : "Περίοδο",
+                },
                 { value: "month", text: "Μήνα" },
               ]}
             />

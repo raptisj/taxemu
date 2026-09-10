@@ -37,8 +37,24 @@ export const useBusinessActions = () => {
       },
     });
   };
-  const onChangeTaxYearDuration = (value) =>
-    updateBusiness({ taxYearDuration: Number(value) });
+  const onChangeTaxYearDuration = (value) => {
+    const taxYearDuration = Number(value);
+    const grossIncome = isGrossMonthly
+      ? {
+          month: userDetails.grossIncome.month,
+          year: Math.round(
+            userDetails.grossIncome.month * taxYearDuration,
+          ),
+        }
+      : {
+          month: Math.round(
+            userDetails.grossIncome.year / taxYearDuration,
+          ),
+          year: userDetails.grossIncome.year,
+        };
+
+    updateBusiness({ taxYearDuration, grossIncome });
+  };
 
   const onChangeGrossIncome = (value, count) => {
     const grossIncome = {

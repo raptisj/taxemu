@@ -271,12 +271,12 @@ export const calculateBusinessResults = ({ userDetails, rules }) => {
   const { specialInsuranceScale, prePaidTaxDiscount, firstScaleDiscount } =
     discountOptions;
   const isGrossMonthly = grossMonthOrYear === "month";
-  const findYearAmount = (value) => value * taxYearDuration;
+  const findPeriodAmount = (value) => value * taxYearDuration;
   const findMonthAmount = (value) => value / taxYearDuration;
-  const grossPerYear = findYearAmount(grossIncome.year / 12);
-  const calculationGrossIncome = isGrossMonthly
-    ? findYearAmount(grossIncome.month)
-    : grossPerYear;
+  const periodGrossIncome = isGrossMonthly
+    ? findPeriodAmount(grossIncome.month)
+    : grossIncome.year;
+  const grossPerMonth = findMonthAmount(periodGrossIncome);
   const insurancePerYear = getInsuranceTotal({
     rules: businessRules,
     taxationYear,
@@ -288,11 +288,11 @@ export const calculateBusinessResults = ({ userDetails, rules }) => {
   });
   const accountingProfit = Math.max(
     0,
-    calculationGrossIncome - insurancePerYear - extraBusinessExpenses,
+    periodGrossIncome - insurancePerYear - extraBusinessExpenses,
   );
   const presumedIncomeResult = calculateMinimumPresumedBusinessIncome({
     taxationYear,
-    annualTurnover: calculationGrossIncome,
+    annualTurnover: periodGrossIncome,
     minimumPresumedIncome,
     rules: businessRules,
   });
@@ -317,10 +317,10 @@ export const calculateBusinessResults = ({ userDetails, rules }) => {
     year: totalTax,
   };
   const prePaidTaxAmount = withholdingTax
-    ? findMonthAmount(calculationGrossIncome) * businessRules.withholding.rate
+    ? grossPerMonth * businessRules.withholding.rate
     : 0;
   const roundedPrePaidTaxAmount = roundMoney(prePaidTaxAmount);
-  const annualWithholdingTax = findYearAmount(roundedPrePaidTaxAmount);
+  const annualWithholdingTax = findPeriodAmount(roundedPrePaidTaxAmount);
   const taxInAdvance = calculateTaxPrepayment({
     incomeTax: totalTax,
     withholdingTax: annualWithholdingTax,
@@ -336,7 +336,7 @@ export const calculateBusinessResults = ({ userDetails, rules }) => {
   };
   const nextYearTax = prePaidNextYearTax ? taxInAdvanceValue.year : 0;
   const final =
-    grossPerYear -
+    periodGrossIncome -
     (totalTax - previousYearTaxInAdvance) -
     nextYearTax -
     extraBusinessExpenses -
@@ -354,7 +354,7 @@ export const calculateBusinessResults = ({ userDetails, rules }) => {
     year: finalTaxAmount.year - previousYearTaxInAdvance,
   };
   const nextBusinessTable = {
-    grossIncome: { month: grossIncome.month, year: grossPerYear },
+    grossIncome: { month: grossPerMonth, year: periodGrossIncome },
     finalIncome: { month: findMonthAmount(final), year: final },
     insurance: {
       month: findMonthAmount(insurancePerYear),

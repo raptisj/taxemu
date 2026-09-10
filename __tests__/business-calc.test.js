@@ -125,4 +125,62 @@ describe("calculateBusinessResults", () => {
     expect(result.taxableIncome.year).toBe(12320);
     expect(result.totalTax.year).toBeCloseTo(1410.4, 2);
   });
+
+  it("uses the full selected-period revenue for a six-month monthly-income calculation", () => {
+    const result = calculateBusinessResults({
+      ...baseParams,
+      userDetails: {
+        ...baseParams.userDetails,
+        grossIncome: { month: 2000, year: 12000 },
+        grossMonthOrYear: "month",
+        taxYearDuration: 6,
+        minimumPresumedIncome: {
+          businessAge: 5,
+          hasAdjustments: false,
+        },
+      },
+    });
+
+    expect(result.nextBusinessTable.grossIncome).toEqual({
+      month: 2000,
+      year: 12000,
+    });
+    expect(result.nextBusinessTable.insurance.year).toBeCloseTo(1504.62, 2);
+    expect(result.accountingProfit.year).toBeCloseTo(10495.38, 2);
+    expect(result.taxableIncome.year).toBeCloseTo(10495.38, 2);
+    expect(result.totalTax.year).toBeCloseTo(999.08, 2);
+    expect(result.finalIncome.year).toBeCloseTo(9496.3, 2);
+    expect(result.finalIncome.month).toBeCloseTo(1582.72, 2);
+  });
+
+  it("produces identical six-month results from monthly and period-total income", () => {
+    const monthlyResult = calculateBusinessResults({
+      ...baseParams,
+      userDetails: {
+        ...baseParams.userDetails,
+        grossIncome: { month: 2000, year: 12000 },
+        grossMonthOrYear: "month",
+        taxYearDuration: 6,
+      },
+    });
+    const periodTotalResult = calculateBusinessResults({
+      ...baseParams,
+      userDetails: {
+        ...baseParams.userDetails,
+        grossIncome: { month: 2000, year: 12000 },
+        grossMonthOrYear: "year",
+        taxYearDuration: 6,
+      },
+    });
+
+    expect(periodTotalResult.nextBusinessTable.grossIncome).toEqual(
+      monthlyResult.nextBusinessTable.grossIncome,
+    );
+    expect(periodTotalResult.accountingProfit).toEqual(
+      monthlyResult.accountingProfit,
+    );
+    expect(periodTotalResult.taxableIncome).toEqual(monthlyResult.taxableIncome);
+    expect(periodTotalResult.totalTax).toEqual(monthlyResult.totalTax);
+    expect(periodTotalResult.finalIncome).toEqual(monthlyResult.finalIncome);
+  });
 });
