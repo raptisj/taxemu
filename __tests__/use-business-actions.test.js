@@ -50,4 +50,18 @@ describe("useBusinessActions partial-year income", () => {
     expect(business.taxYearDuration).toBe(3);
     expect(business.grossIncome).toEqual({ month: 4000, year: 12000 });
   });
+
+  it("preserves an uncapped 2026 child count and clamps it for older years", () => {
+    useStore.getState().updateBusiness({
+      taxationYear: 2026,
+      numberOfChildren: 6,
+    });
+    const { result } = renderHook(() => useBusinessActions());
+
+    act(() => result.current.onSelectTaxationYear({ target: { value: 2026 } }));
+    expect(useStore.getState().userDetails.business.numberOfChildren).toBe(6);
+
+    act(() => result.current.onSelectTaxationYear({ target: { value: 2025 } }));
+    expect(useStore.getState().userDetails.business.numberOfChildren).toBe(4);
+  });
 });

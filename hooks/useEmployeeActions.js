@@ -74,10 +74,13 @@ export const useEmployeeActions = () => {
     const rules = getTaxRules(taxationYear);
     updateEmployee({
       taxationYear,
-      numberOfChildren: Math.min(
-        userDetails.numberOfChildren,
-        rules.ui.employee.maximumChildren,
-      ),
+      numberOfChildren:
+        rules.ui.employee.maximumChildren === null
+          ? userDetails.numberOfChildren
+          : Math.min(
+              userDetails.numberOfChildren,
+              rules.ui.employee.maximumChildren,
+            ),
     });
   };
   const onSelectInsuranceCarrier = (e) =>

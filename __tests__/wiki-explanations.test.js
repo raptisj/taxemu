@@ -115,4 +115,17 @@ describe("dynamic calculation explanations", () => {
     expect(explanation.sections[1].description).toContain("13,33%");
     expect(explanation.sources.length).toBeGreaterThan(0);
   });
+
+  it("explains the uncapped credit and phase-down exemption", () => {
+    const explanation = buildEmployeeExplanation({
+      ...employeeDetails(2026),
+      numberOfChildren: 6,
+    });
+    const credit = explanation.sections.find(
+      ({ title }) => title === "Μείωση φόρου",
+    );
+
+    expect(credit.description).toContain("2.000 €");
+    expect(credit.description).toContain("δεν μειώνεται");
+  });
 });

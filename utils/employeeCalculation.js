@@ -3,6 +3,7 @@ import {
   applyReturnBaseInland,
   calculateChildrenDiscount,
   ceilMoney,
+  getEmployeeTaxCreditAmount,
   omitDiscountIfNegative,
   roundMoney,
   toFixedNumber,
@@ -50,8 +51,10 @@ export const calculateEmployeeForGrossMonth = (
     children: numberOfChildren,
   });
 
-  const childDiscountAmount =
-    rules.taxCredit.amountByChildren[String(numberOfChildren)];
+  const childDiscountAmount = getEmployeeTaxCreditAmount(
+    rules.taxCredit,
+    numberOfChildren,
+  );
   if (childDiscountAmount === undefined) {
     throw new Error(
       `No employee tax credit configured for ${numberOfChildren} children in ${taxationYear}`,
@@ -60,6 +63,9 @@ export const calculateEmployeeForGrossMonth = (
   const { discount } = calculateChildrenDiscount({
     amount: grossAfterInsuranceYearly,
     childDiscountAmount,
+    children: numberOfChildren,
+    reductionExemptAtOrAboveChildren:
+      rules.taxCredit.reductionExemptAtOrAboveChildren,
     reductionStartsAbove: rules.taxCredit.reductionStartsAbove,
     reductionRate: rules.taxCredit.reductionRate,
   });

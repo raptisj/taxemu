@@ -71,6 +71,17 @@ describe("annual tax rules", () => {
     expect(result.tax).toBe(2900);
     expect(result.brackets[1].rate).toBe(0.09);
     expect(result.brackets[2].rate).toBe(0.22);
+    expect(getTaxRules(2026).ui.employee.maximumChildren).toBeNull();
+    expect(getTaxRules(2026).ui.business.maximumChildren).toBeNull();
+  });
+
+  it("requires formula-based rules when a child-count UI is uncapped", () => {
+    const malformedRules = JSON.parse(JSON.stringify(taxRulesByYear));
+    delete malformedRules[2026].employee.incomeTax.additionalChildren;
+
+    expect(() => validateTaxRules(malformedRules)).toThrow(
+      "requires formula-based tax and credit rules",
+    );
   });
 
   it("keeps the first-three-years business relief enabled for 2026", () => {

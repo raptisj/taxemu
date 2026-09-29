@@ -49,6 +49,36 @@ const selectDemographicBrackets = (policy, ageGroup, children) => {
   const exact = group[String(children)];
   if (exact) return exact;
 
+  const additionalChildren = policy.additionalChildren;
+  if (additionalChildren && children > additionalChildren.baseChildren) {
+    const baseBrackets = group[String(additionalChildren.baseChildren)];
+    if (!baseBrackets) {
+      throw new Error(
+        `No base tax brackets configured for ${additionalChildren.baseChildren} children`,
+      );
+    }
+
+    const brackets = baseBrackets.map((bracket) => ({ ...bracket }));
+    const targetBracket = brackets.find(
+      (bracket) => bracket.upTo === additionalChildren.bracketUpTo,
+    );
+    if (!targetBracket) {
+      throw new Error(
+        `No tax bracket ending at ${additionalChildren.bracketUpTo}`,
+      );
+    }
+    targetBracket.rate = toFixedNumber(
+      Math.max(
+        additionalChildren.minimumRate,
+        additionalChildren.baseRate -
+          additionalChildren.decrementPerAdditionalChild *
+            (children - additionalChildren.baseChildren),
+      ),
+      10,
+    );
+    return brackets;
+  }
+
   const configuredCounts = Object.keys(group).map(Number);
   const highestCount = Math.max(...configuredCounts);
   if (children > highestCount) return group[String(highestCount)];
@@ -74,10 +104,13 @@ const resolveBusinessModifierBrackets = (
         bracket.rate = 0;
       }
     });
-    brackets[2].rate = Math.max(
-      childRules.fourOrMore.minimumRate,
-      childRules.fourOrMore.thirdBracketBaseRate -
-        childRules.fourOrMore.decrementPerAdditionalChild * (children - 4),
+    brackets[2].rate = toFixedNumber(
+      Math.max(
+        childRules.fourOrMore.minimumRate,
+        childRules.fourOrMore.thirdBracketBaseRate -
+          childRules.fourOrMore.decrementPerAdditionalChild * (children - 4),
+      ),
+      10,
     );
   } else {
     brackets[1].rate = Math.min(

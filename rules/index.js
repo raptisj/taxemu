@@ -162,6 +162,54 @@ export const validateTaxRules = (rulesByYear = taxRulesByYear) => {
       employeeRules.taxCredit?.reductionRate,
       `${yearKey}.employee.taxCredit.reductionRate`,
     );
+    const additionalChildAmount =
+      employeeRules.taxCredit?.additionalChildAmount;
+    const additionalChildrenStartAfter =
+      employeeRules.taxCredit?.additionalChildrenStartAfter;
+    if (
+      additionalChildAmount !== undefined ||
+      additionalChildrenStartAfter !== undefined
+    ) {
+      assertNonNegativeNumber(
+        additionalChildAmount,
+        `${yearKey}.employee.taxCredit.additionalChildAmount`,
+      );
+      assertNonNegativeNumber(
+        additionalChildrenStartAfter,
+        `${yearKey}.employee.taxCredit.additionalChildrenStartAfter`,
+      );
+      if (!Number.isInteger(additionalChildrenStartAfter)) {
+        throw new Error(
+          `${yearKey}.employee.taxCredit.additionalChildrenStartAfter must be an integer`,
+        );
+      }
+      if (
+        employeeRules.taxCredit.amountByChildren[
+          String(additionalChildrenStartAfter)
+        ] === undefined
+      ) {
+        throw new Error(
+          `${yearKey}.employee.taxCredit.amountByChildren.${additionalChildrenStartAfter} is required for additional children`,
+        );
+      }
+    }
+    if (
+      employeeRules.taxCredit?.reductionExemptAtOrAboveChildren !== undefined
+    ) {
+      assertNonNegativeNumber(
+        employeeRules.taxCredit.reductionExemptAtOrAboveChildren,
+        `${yearKey}.employee.taxCredit.reductionExemptAtOrAboveChildren`,
+      );
+      if (
+        !Number.isInteger(
+          employeeRules.taxCredit.reductionExemptAtOrAboveChildren,
+        )
+      ) {
+        throw new Error(
+          `${yearKey}.employee.taxCredit.reductionExemptAtOrAboveChildren must be an integer`,
+        );
+      }
+    }
     assertRate(
       employeeRules.returningResident?.taxableIncomeMultiplier,
       `${yearKey}.employee.returningResident.taxableIncomeMultiplier`,
@@ -185,6 +233,34 @@ export const validateTaxRules = (rulesByYear = taxRulesByYear) => {
     ) {
       throw new Error(
         `${yearKey}.employee.incomeTax.bracketsByAgeAndChildren is required`,
+      );
+    }
+    if (employeeRules.incomeTax.additionalChildren) {
+      const additionalChildren = employeeRules.incomeTax.additionalChildren;
+      assertNonNegativeNumber(
+        additionalChildren.baseChildren,
+        `${yearKey}.employee.incomeTax.additionalChildren.baseChildren`,
+      );
+      if (!Number.isInteger(additionalChildren.baseChildren)) {
+        throw new Error(
+          `${yearKey}.employee.incomeTax.additionalChildren.baseChildren must be an integer`,
+        );
+      }
+      assertNonNegativeNumber(
+        additionalChildren.bracketUpTo,
+        `${yearKey}.employee.incomeTax.additionalChildren.bracketUpTo`,
+      );
+      assertRate(
+        additionalChildren.baseRate,
+        `${yearKey}.employee.incomeTax.additionalChildren.baseRate`,
+      );
+      assertRate(
+        additionalChildren.decrementPerAdditionalChild,
+        `${yearKey}.employee.incomeTax.additionalChildren.decrementPerAdditionalChild`,
+      );
+      assertRate(
+        additionalChildren.minimumRate,
+        `${yearKey}.employee.incomeTax.additionalChildren.minimumRate`,
       );
     }
 
@@ -360,14 +436,16 @@ export const validateTaxRules = (rulesByYear = taxRulesByYear) => {
 
     ["employee", "business"].forEach((entity) => {
       const uiRules = rules.ui?.[entity];
-      assertNonNegativeNumber(
-        uiRules?.maximumChildren,
-        `${yearKey}.ui.${entity}.maximumChildren`,
-      );
-      if (!Number.isInteger(uiRules.maximumChildren)) {
-        throw new Error(
-          `${yearKey}.ui.${entity}.maximumChildren must be an integer`,
+      if (uiRules?.maximumChildren !== null) {
+        assertNonNegativeNumber(
+          uiRules?.maximumChildren,
+          `${yearKey}.ui.${entity}.maximumChildren`,
         );
+        if (!Number.isInteger(uiRules.maximumChildren)) {
+          throw new Error(
+            `${yearKey}.ui.${entity}.maximumChildren must be an integer or null`,
+          );
+        }
       }
       if (typeof uiRules.showAgeGroup !== "boolean") {
         throw new Error(`${yearKey}.ui.${entity}.showAgeGroup must be boolean`);
@@ -399,19 +477,40 @@ export const validateTaxRules = (rulesByYear = taxRulesByYear) => {
       throw new Error(`${yearKey}.ui.ageGroups must contain at least one option`);
     }
 
-    for (
-      let children = 0;
-      children <= rules.ui.employee.maximumChildren;
-      children++
-    ) {
+    if (rules.ui.employee.maximumChildren === null) {
       if (
-        employeeRules.taxCredit.amountByChildren[String(children)] ===
-        undefined
+        !employeeRules.incomeTax.additionalChildren ||
+        additionalChildAmount === undefined ||
+        additionalChildrenStartAfter === undefined
       ) {
         throw new Error(
-          `${yearKey}.employee.taxCredit.amountByChildren.${children} is required by the UI`,
+          `${yearKey}.employee requires formula-based tax and credit rules for an uncapped child count`,
         );
       }
+    } else {
+      for (
+        let children = 0;
+        children <= rules.ui.employee.maximumChildren;
+        children++
+      ) {
+        if (
+          employeeRules.taxCredit.amountByChildren[String(children)] ===
+          undefined
+        ) {
+          throw new Error(
+            `${yearKey}.employee.taxCredit.amountByChildren.${children} is required by the UI`,
+          );
+        }
+      }
+    }
+
+    if (
+      rules.ui.business.maximumChildren === null &&
+      businessRules.incomeTax.kind !== "progressiveWithAgeAndChildren"
+    ) {
+      throw new Error(
+        `${yearKey}.business requires formula-based tax rules for an uncapped child count`,
+      );
     }
 
     if (employeeRules.incomeTax.kind === "progressiveByAgeAndChildren") {
@@ -422,15 +521,31 @@ export const validateTaxRules = (rulesByYear = taxRulesByYear) => {
             `${yearKey}.employee.incomeTax.bracketsByAgeAndChildren.${ageGroup} is required by the UI`,
           );
         }
-        for (
-          let children = 0;
-          children <= rules.ui.employee.maximumChildren;
-          children++
-        ) {
-          if (!tables[String(children)]) {
+        if (rules.ui.employee.maximumChildren === null) {
+          const { baseChildren, bracketUpTo } =
+            employeeRules.incomeTax.additionalChildren;
+          const baseBrackets = tables[String(baseChildren)];
+          if (!baseBrackets) {
             throw new Error(
-              `${yearKey}.employee.incomeTax.bracketsByAgeAndChildren.${ageGroup}.${children} is required by the UI`,
+              `${yearKey}.employee.incomeTax.bracketsByAgeAndChildren.${ageGroup}.${baseChildren} is required for additional children`,
             );
+          }
+          if (!baseBrackets.some((bracket) => bracket.upTo === bracketUpTo)) {
+            throw new Error(
+              `${yearKey}.employee.incomeTax.bracketsByAgeAndChildren.${ageGroup} requires a bracket ending at ${bracketUpTo}`,
+            );
+          }
+        } else {
+          for (
+            let children = 0;
+            children <= rules.ui.employee.maximumChildren;
+            children++
+          ) {
+            if (!tables[String(children)]) {
+              throw new Error(
+                `${yearKey}.employee.incomeTax.bracketsByAgeAndChildren.${ageGroup}.${children} is required by the UI`,
+              );
+            }
           }
         }
       });

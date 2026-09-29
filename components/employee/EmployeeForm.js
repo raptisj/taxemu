@@ -242,7 +242,7 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
               <NumberInput
                 mt={2}
                 defaultValue={0}
-                max={rules.ui.employee.maximumChildren}
+                max={rules.ui.employee.maximumChildren ?? undefined}
                 min={0}
                 clampValueOnBlur={false}
                 onChange={onChangeNumberOfChildren}

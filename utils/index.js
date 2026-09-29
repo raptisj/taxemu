@@ -121,6 +121,7 @@ export {
   calculateIncomeTax,
   calculateEmployeeScalesTax,
   calculateChildrenDiscount,
+  getEmployeeTaxCreditAmount,
   applyReturnBaseInland,
   omitDiscountIfNegative,
   roundMoney,

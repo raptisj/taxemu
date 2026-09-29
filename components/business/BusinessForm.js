@@ -162,7 +162,7 @@ const BusinessForm = ({ showCalculatorType = true }) => {
                 <NumberInput
                   mt={2}
                   defaultValue={0}
-                  max={rules.ui.business.maximumChildren}
+                  max={rules.ui.business.maximumChildren ?? undefined}
                   min={0}
                   clampValueOnBlur={false}
                   onChange={onChangeNumberOfChildren}

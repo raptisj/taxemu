@@ -7,6 +7,7 @@ import {
   calculateIncomeTax,
   ceilMoney,
   getBrackets,
+  getEmployeeTaxCreditAmount,
   omitDiscountIfNegative,
   roundMoney,
   toFixedNumber,
@@ -148,6 +149,27 @@ describe("employee calculation utilities", () => {
     expect(
       calculateChildrenDiscount({ amount: 70000, childDiscountAmount: 777 }),
     ).toEqual({ discount: 0 });
+    expect(
+      calculateChildrenDiscount({
+        amount: 70000,
+        childDiscountAmount: 1780,
+        children: 5,
+        reductionExemptAtOrAboveChildren: 5,
+      }),
+    ).toEqual({ discount: 1780 });
+  });
+
+  it("derives the employee credit for every child after the fifth", () => {
+    const taxCredit = {
+      amountByChildren: { 5: 1780 },
+      additionalChildAmount: 220,
+      additionalChildrenStartAfter: 5,
+    };
+
+    expect(getEmployeeTaxCreditAmount(taxCredit, 5)).toBe(1780);
+    expect(getEmployeeTaxCreditAmount(taxCredit, 6)).toBe(2000);
+    expect(getEmployeeTaxCreditAmount(taxCredit, 10)).toBe(2880);
+    expect(getEmployeeTaxCreditAmount(taxCredit, 4)).toBeUndefined();
   });
 
   it("applies returning-resident and rounding policies", () => {

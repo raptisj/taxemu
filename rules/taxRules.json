@@ -799,6 +799,10 @@
         "url": "https://www.aade.gr/egkyklioi-kai-apofaseis/o-3068-18-11-2025"
       },
       {
+        "name": "AADE 2026 tax handbook — dependent-child tax credit",
+        "url": "https://www.aade.gr/sites/default/files/2026-05/egxeiridio_erotiseon_apantiseon_forologias_may_2026.pdf"
+      },
+      {
         "name": "AADE guide — advance income tax from business activity",
         "url": "https://www.aade.gr/exypiretisi-enimerosi/hristikoi-odigoi/enarxi-epiheirimatikis-drastiriotitas/prokataboli-foroy-eisodimatos-apo-epiheirimatiki"
       },
@@ -1250,6 +1254,13 @@
               }
             ]
           }
+        },
+        "additionalChildren": {
+          "baseChildren": 4,
+          "bracketUpTo": 30000,
+          "baseRate": 0.18,
+          "decrementPerAdditionalChild": 0.02,
+          "minimumRate": 0
         }
       },
       "taxCredit": {
@@ -1261,6 +1272,9 @@
           "4": 1580,
           "5": 1780
         },
+        "additionalChildAmount": 220,
+        "additionalChildrenStartAfter": 5,
+        "reductionExemptAtOrAboveChildren": 5,
         "reductionStartsAbove": 12000,
         "reductionRate": 0.02
       },
@@ -1398,11 +1412,11 @@
           14,
           14.5
         ],
-        "maximumChildren": 5,
+        "maximumChildren": null,
         "showAgeGroup": true
       },
       "business": {
-        "maximumChildren": 4,
+        "maximumChildren": null,
         "showAgeGroup": true,
         "showChildren": true
       }

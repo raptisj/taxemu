@@ -16,7 +16,7 @@ describe("calculateIncomeTaxFromPolicy", () => {
     ).toBe(13900);
   });
 
-  it("selects exact employee demographics and caps unsupported larger families", () => {
+  it("selects exact employee demographics and derives larger-family rates", () => {
     const policy = getEmployeeRules(2026).incomeTax;
     const exact = calculateIncomeTaxFromPolicy({
       taxableIncome: 25000,
@@ -30,11 +30,19 @@ describe("calculateIncomeTaxFromPolicy", () => {
       ageGroup: "A30P",
       children: 12,
     });
+    const sixChildren = calculateIncomeTaxFromPolicy({
+      taxableIncome: 25000,
+      policy,
+      ageGroup: "A30P",
+      children: 6,
+    });
 
     expect(exact.tax).toBe(2900);
     expect(exact.brackets[2].rate).toBe(0.22);
-    expect(capped.tax).toBe(800);
-    expect(capped.brackets[1].rate).toBe(0.16);
+    expect(sixChildren.tax).toBe(700);
+    expect(sixChildren.brackets[1].rate).toBe(0.14);
+    expect(capped.tax).toBe(100);
+    expect(capped.brackets[1].rate).toBe(0.02);
   });
 
   it("rejects invalid employee demographic context", () => {
@@ -97,6 +105,8 @@ describe("calculateIncomeTaxFromPolicy", () => {
     ["A30P", 2, 25000, 3600, 0.16, 0.22],
     ["A30P", 4, 25000, 900, 0, 0.18],
     ["A30P", 5, 25000, 800, 0, 0.16],
+    ["A30P", 6, 25000, 700, 0, 0.14],
+    ["A30P", 13, 25000, 0, 0, 0],
     ["A30P", 20, 25000, 0, 0, 0],
     ["U25", 0, 20000, 0, 0, 0.26],
     ["A26_30", 0, 20000, 1800, 0.09, 0.26],

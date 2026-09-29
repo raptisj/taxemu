@@ -18,10 +18,13 @@ export const useBusinessActions = () => {
         userDetails.insuranceScaleSelection,
         rules.business.insurance.monthlyAmounts.length - 1,
       ),
-      numberOfChildren: Math.min(
-        userDetails.numberOfChildren,
-        rules.ui.business.maximumChildren,
-      ),
+      numberOfChildren:
+        rules.ui.business.maximumChildren === null
+          ? userDetails.numberOfChildren
+          : Math.min(
+              userDetails.numberOfChildren,
+              rules.ui.business.maximumChildren,
+            ),
       calculateRealGrossWidget: {
         ...quickCalc,
         currentAdditionalValueTax: invoiceRules.vatRates.includes(

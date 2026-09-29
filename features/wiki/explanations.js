@@ -4,6 +4,7 @@ import {
   getInsuranceMonthlyAmounts,
 } from "../../utils/business";
 import { calculateEmployeeForGrossMonth } from "../../utils/employeeCalculation";
+import { getEmployeeTaxCreditAmount } from "../../utils/employee";
 import {
   buildTaxBreakdown,
   calculateIncomeTaxFromPolicy,
@@ -79,8 +80,16 @@ export const buildEmployeeExplanation = (details) => {
     ageGroup: details.ageGroup,
     children: details.numberOfChildren,
   });
-  const baseCredit =
-    employeeRules.taxCredit.amountByChildren[String(details.numberOfChildren)];
+  const baseCredit = getEmployeeTaxCreditAmount(
+    employeeRules.taxCredit,
+    details.numberOfChildren,
+  );
+  const creditDoesNotPhaseDown =
+    Number.isInteger(
+      employeeRules.taxCredit.reductionExemptAtOrAboveChildren,
+    ) &&
+    details.numberOfChildren >=
+      employeeRules.taxCredit.reductionExemptAtOrAboveChildren;
   const appliedCredit = calculated
     ? Math.max(0, calculated.initialTax.year - calculated.finalTax.year)
     : 0;
@@ -134,7 +143,9 @@ export const buildEmployeeExplanation = (details) => {
       },
       {
         title: "Μείωση φόρου",
-        description: `Η αρχική μείωση για ${details.numberOfChildren} τέκνα είναι ${formatExplanationMoney(baseCredit)}. Πάνω από ${formatExplanationMoney(employeeRules.taxCredit.reductionStartsAbove)} μειώνεται κατά ${formatExplanationRate(employeeRules.taxCredit.reductionRate)} του υπερβάλλοντος ποσού.`,
+        description: creditDoesNotPhaseDown
+          ? `Η μείωση για ${details.numberOfChildren} τέκνα είναι ${formatExplanationMoney(baseCredit)} και δεν μειώνεται λόγω ύψους εισοδήματος.`
+          : `Η αρχική μείωση για ${details.numberOfChildren} τέκνα είναι ${formatExplanationMoney(baseCredit)}. Πάνω από ${formatExplanationMoney(employeeRules.taxCredit.reductionStartsAbove)} μειώνεται κατά ${formatExplanationRate(employeeRules.taxCredit.reductionRate)} του υπερβάλλοντος ποσού.`,
         items: calculated
           ? [
               `Μείωση που εφαρμόστηκε: ${formatExplanationMoney(appliedCredit)}`,

@@ -108,6 +108,10 @@ export const ComparisonForm = ({ input, setInput }) => {
   const freelancerVisible = [OFFER_COMPARISON_MODES.FREELANCER, OFFER_COMPARISON_MODES.BOTH].includes(input.mode);
   const effectiveMonths = getEffectiveBillableMonths(input);
   const setField = (field, value) => setInput((current) => ({ ...current, [field]: value }));
+  const clampChildren = (children, maximumChildren) =>
+    maximumChildren === null
+      ? children
+      : Math.min(children, maximumChildren);
 
   const changeYear = (value) => {
     const taxationYear = Number(value);
@@ -115,7 +119,10 @@ export const ComparisonForm = ({ input, setInput }) => {
     setInput((current) => ({
       ...current,
       taxationYear,
-      numberOfChildren: Math.min(current.numberOfChildren, nextRules.ui.employee.maximumChildren),
+      numberOfChildren: clampChildren(
+        current.numberOfChildren,
+        nextRules.ui.employee.maximumChildren,
+      ),
       insuranceScaleSelection: Math.min(
         current.insuranceScaleSelection,
         nextRules.business.insurance.monthlyAmounts.length - 1,
@@ -236,7 +243,7 @@ export const ComparisonForm = ({ input, setInput }) => {
                   {rules.ui.employee.salaryMonthOptions.map((months) => <option key={months} value={months}>{months}</option>)}
                 </Select>
               </FormControl>
-              <NumberField label="Αριθμός τέκνων" value={input.numberOfChildren} onChange={(value) => setField("numberOfChildren", Math.min(rules.ui.employee.maximumChildren, Math.trunc(value)))} max={rules.ui.employee.maximumChildren} />
+              <NumberField label="Αριθμός τέκνων" value={input.numberOfChildren} onChange={(value) => setField("numberOfChildren", clampChildren(Math.trunc(value), rules.ui.employee.maximumChildren))} max={rules.ui.employee.maximumChildren ?? undefined} />
               {rules.ui.ageGroups?.length ? (
                 <FormControl>
                   <FormLabel fontSize="sm" fontWeight="600">Ηλικιακή ομάδα</FormLabel>

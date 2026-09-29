@@ -43,6 +43,21 @@ describe("calculateEmployeeForGrossMonth", () => {
     expect(result.finalIncomeYearly).toBe(22399);
   });
 
+  it("supports six or more children in the 2026 brackets and tax credit", () => {
+    const result = calculateEmployeeForGrossMonth(
+      createEmployeeInput({
+        taxationYear: 2026,
+        numberOfChildren: 6,
+        ageGroup: "A30P",
+      }),
+      2000,
+    );
+
+    expect(result.calculatedState.initialTax.year).toBe(597);
+    expect(result.calculatedState.childrenDiscountAmount.year).toBe(2000);
+    expect(result.calculatedState.finalTax.year).toBe(0);
+  });
+
   it("never reports a negative tax reduction after it phases out", () => {
     const result = calculateEmployeeForGrossMonth(createEmployeeInput(), 6000);
 

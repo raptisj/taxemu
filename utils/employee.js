@@ -152,15 +152,42 @@ export function calculateEmployeeScalesTax({
 export function calculateChildrenDiscount({
   amount,
   childDiscountAmount,
+  children = 0,
+  reductionExemptAtOrAboveChildren,
   reductionStartsAbove = 12000,
   reductionRate = 0.02,
 }) {
+  if (
+    Number.isInteger(reductionExemptAtOrAboveChildren) &&
+    children >= reductionExemptAtOrAboveChildren
+  ) {
+    return { discount: childDiscountAmount };
+  }
   if (amount > reductionStartsAbove) {
     const aboveThresholdAmount = amount - reductionStartsAbove;
     const result = aboveThresholdAmount * reductionRate;
     return { discount: Math.max(0, childDiscountAmount - result) };
   }
   return { discount: childDiscountAmount };
+}
+
+export function getEmployeeTaxCreditAmount(taxCredit, children) {
+  const exact = taxCredit.amountByChildren[String(children)];
+  if (exact !== undefined) return exact;
+
+  const startsAfter = taxCredit.additionalChildrenStartAfter;
+  const amountPerChild = taxCredit.additionalChildAmount;
+  const baseAmount = taxCredit.amountByChildren[String(startsAfter)];
+  if (
+    Number.isInteger(startsAfter) &&
+    children > startsAfter &&
+    Number.isFinite(amountPerChild) &&
+    baseAmount !== undefined
+  ) {
+    return baseAmount + amountPerChild * (children - startsAfter);
+  }
+
+  return undefined;
 }
 
 /**
