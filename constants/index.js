@@ -19,3 +19,5 @@ export const AGE_GROUPS = Object.freeze({
 
 // Keep /compare accessible by direct URL until the feature is ready to launch.
 export const SHOW_OFFER_COMPARISON_LINKS = false;
+
+export const FEEDBACK_FORM_URL = "https://forms.gle/DT6tNoR2VES57XrY7";

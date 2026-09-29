@@ -17,7 +17,10 @@ import { DownloadIcon, HamburgerIcon } from "@chakra-ui/icons";
 import Link from "next/link";
 import { Wiki } from "../../features";
 import { useRouter } from "next/router";
-import { SHOW_OFFER_COMPARISON_LINKS } from "../../constants";
+import {
+  FEEDBACK_FORM_URL,
+  SHOW_OFFER_COMPARISON_LINKS,
+} from "../../constants";
 
 const mobileNavigationItems = [
   {
@@ -34,6 +37,12 @@ const mobileNavigationItems = [
     href: "/changelog",
     label: "Ενημερώσεις",
     matches: (pathname) => pathname === "/changelog",
+  },
+  {
+    href: FEEDBACK_FORM_URL,
+    label: "Η γνώμη σου",
+    matches: () => false,
+    external: true,
   },
   ...(SHOW_OFFER_COMPARISON_LINKS
     ? [
@@ -155,6 +164,23 @@ export const Navigation = () => {
                 </Text>
               </Link>
             )}
+            {!router.pathname.includes("/welcome") && (
+              <Link
+                href={FEEDBACK_FORM_URL}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Text
+                  color="gray.500"
+                  fontSize={{ base: "sm", sm: "md" }}
+                  fontWeight="400"
+                  whiteSpace="nowrap"
+                  _hover={{ color: "gray.700" }}
+                >
+                  Η γνώμη σου
+                </Text>
+              </Link>
+            )}
             {SHOW_OFFER_COMPARISON_LINKS && (
               <Link href="/compare">
                 <Text
@@ -203,6 +229,8 @@ export const Navigation = () => {
                     as={Link}
                     href={item.href}
                     key={item.href}
+                    target={item.external ? "_blank" : undefined}
+                    rel={item.external ? "noreferrer" : undefined}
                     bg={isActive ? "purple.50" : "white"}
                     color={isActive ? "purple.700" : "gray.700"}
                     fontWeight={isActive ? "600" : "400"}
