@@ -5,7 +5,7 @@ import {
 
 describe("changelog data", () => {
   it("is newest-first with concise, unique entries", () => {
-    expect(CHANGELOG_LAST_INCLUDED_COMMIT).toBe("9ad058a");
+    expect(CHANGELOG_LAST_INCLUDED_COMMIT).toBe("e2f1bce");
     expect(changelogEntries.length).toBeGreaterThan(0);
 
     const dates = changelogEntries.map(({ date }) => date);
