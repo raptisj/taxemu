@@ -380,6 +380,33 @@ export const validateTaxRules = (rulesByYear = taxRulesByYear) => {
     businessRules.invoice.vatRates.forEach((rate, index) =>
       assertRate(rate, `${yearKey}.business.invoice.vatRates[${index}]`),
     );
+    if (
+      new Set(businessRules.invoice.vatRates).size !==
+      businessRules.invoice.vatRates.length
+    ) {
+      throw new Error(`${yearKey}.business.invoice.vatRates must be unique`);
+    }
+    if (
+      !businessRules.invoice.islandVatRates ||
+      typeof businessRules.invoice.islandVatRates !== "object" ||
+      Array.isArray(businessRules.invoice.islandVatRates)
+    ) {
+      throw new Error(
+        `${yearKey}.business.invoice.islandVatRates must be an object`,
+      );
+    }
+    businessRules.invoice.vatRates.forEach((rate) => {
+      const islandRate = businessRules.invoice.islandVatRates[String(rate)];
+      assertRate(
+        islandRate,
+        `${yearKey}.business.invoice.islandVatRates.${rate}`,
+      );
+      if (islandRate >= rate) {
+        throw new Error(
+          `${yearKey}.business.invoice.islandVatRates.${rate} must be lower than its base rate`,
+        );
+      }
+    });
     businessRules.invoice.withholdingRates.forEach((rate, index) =>
       assertRate(
         rate,

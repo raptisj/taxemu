@@ -124,8 +124,15 @@
       },
       "invoice": {
         "vatRates": [
-          0.24
+          0.24,
+          0.13,
+          0.06
         ],
+        "islandVatRates": {
+          "0.24": 0.17,
+          "0.13": 0.09,
+          "0.06": 0.04
+        },
         "withholdingRates": [
           0.2
         ]
@@ -273,8 +280,15 @@
       },
       "invoice": {
         "vatRates": [
-          0.24
+          0.24,
+          0.13,
+          0.06
         ],
+        "islandVatRates": {
+          "0.24": 0.17,
+          "0.13": 0.09,
+          "0.06": 0.04
+        },
         "withholdingRates": [
           0.2
         ]
@@ -431,8 +445,17 @@
       },
       "invoice": {
         "vatRates": [
-          0.24
+          0.24,
+          0.13,
+          0.06,
+          0.04
         ],
+        "islandVatRates": {
+          "0.24": 0.17,
+          "0.13": 0.09,
+          "0.06": 0.04,
+          "0.04": 0.03
+        },
         "withholdingRates": [
           0.2
         ]
@@ -593,8 +616,17 @@
       },
       "invoice": {
         "vatRates": [
-          0.24
+          0.24,
+          0.13,
+          0.06,
+          0.04
         ],
+        "islandVatRates": {
+          "0.24": 0.17,
+          "0.13": 0.09,
+          "0.06": 0.04,
+          "0.04": 0.03
+        },
         "withholdingRates": [
           0.2
         ]
@@ -755,8 +787,17 @@
       },
       "invoice": {
         "vatRates": [
-          0.24
+          0.24,
+          0.13,
+          0.06,
+          0.04
         ],
+        "islandVatRates": {
+          "0.24": 0.17,
+          "0.13": 0.09,
+          "0.06": 0.04,
+          "0.04": 0.03
+        },
         "withholdingRates": [
           0.2
         ]
@@ -813,6 +854,10 @@
       {
         "name": "AADE basic VAT rates",
         "url": "https://www.aade.gr/exypiretisi-enimerosi/hristikoi-odigoi/enarxi-epiheirimatikis-drastiriotitas/basikoi-syntelestes-fpa"
+      },
+      {
+        "name": "AADE Circular E.2113/2025 — 2026 island VAT reductions",
+        "url": "https://www.aade.gr/egkyklioi-kai-apofaseis/e-2113-31-12-2025"
       }
     ],
     "employee": {
@@ -1384,8 +1429,17 @@
       },
       "invoice": {
         "vatRates": [
-          0.24
+          0.24,
+          0.13,
+          0.06,
+          0.04
         ],
+        "islandVatRates": {
+          "0.24": 0.17,
+          "0.13": 0.09,
+          "0.06": 0.04,
+          "0.04": 0.03
+        },
         "withholdingRates": [
           0.2
         ]

@@ -10,6 +10,7 @@ import { useStore } from "store";
 import FormElements from "components/input";
 import { getBusinessRules } from "../../rules";
 import { formatRatePercentage } from "../../utils";
+import { getEffectiveVatRate } from "./calculateInvoice";
 
 const includeZeroRate = (rates) => [...new Set([...rates, 0])];
 
@@ -22,6 +23,11 @@ const FormFields = () => {
     (state) => state.userDetails.business.taxationYear,
   );
   const invoiceRules = getBusinessRules(taxationYear).invoice;
+  const effectiveVatRate = getEffectiveVatRate({
+    baseVatRate: calculateRealGross.currentAdditionalValueTax,
+    applyIslandVatReduction: calculateRealGross.applyIslandVatReduction,
+    islandVatRates: invoiceRules.islandVatRates,
+  });
 
   const onChangeGrossIncome = (value) => {
     updateBusinessQuickCalc({
@@ -30,8 +36,19 @@ const FormFields = () => {
   };
 
   const onSelectAdditionalValueTax = (event) => {
+    const currentAdditionalValueTax = Number(event.target.value);
     updateBusinessQuickCalc({
-      currentAdditionalValueTax: Number(event.target.value),
+      currentAdditionalValueTax,
+      ...(currentAdditionalValueTax === 0
+        ? { applyIslandVatReduction: false }
+        : {}),
+    });
+  };
+
+  const onChangeIslandVatReduction = () => {
+    updateBusinessQuickCalc({
+      applyIslandVatReduction:
+        !calculateRealGross.applyIslandVatReduction,
     });
   };
 
@@ -69,7 +86,7 @@ const FormFields = () => {
             value: rate,
             text:
               rate === 0
-                ? "0% / απαλλαγή"
+                ? "Χωρίς ΦΠΑ"
                 : formatRatePercentage(rate),
           }))}
         />
@@ -87,6 +104,24 @@ const FormFields = () => {
                 : formatRatePercentage(rate),
           }))}
         />
+      </GridItem>
+      <GridItem gridColumn="1 / -1">
+        <FormElements.CheckboxWithTooltip
+          label="Εφαρμογή νησιωτικής μείωσης −30%"
+          tootipText="Εφαρμόζεται μόνο όταν πληρούνται οι νόμιμες γεωγραφικές και συναλλακτικές προϋποθέσεις."
+          isChecked={calculateRealGross.applyIslandVatReduction}
+          isDisabled={calculateRealGross.currentAdditionalValueTax === 0}
+          onChange={onChangeIslandVatReduction}
+        />
+        {calculateRealGross.applyIslandVatReduction && (
+          <Text color="gray.600" fontSize="xs" mt={1}>
+            Ισχύων συντελεστής ΦΠΑ:{" "}
+            {formatRatePercentage(effectiveVatRate)} από{" "}
+            {formatRatePercentage(
+              calculateRealGross.currentAdditionalValueTax,
+            )}
+          </Text>
+        )}
       </GridItem>
     </Grid>
   );

@@ -92,6 +92,29 @@ describe("annual tax rules", () => {
     });
   });
 
+  it("configures nationwide and island VAT rates", () => {
+    expect(getBusinessRules(2026).invoice).toEqual(
+      expect.objectContaining({
+        vatRates: [0.24, 0.13, 0.06, 0.04],
+        islandVatRates: {
+          "0.24": 0.17,
+          "0.13": 0.09,
+          "0.06": 0.04,
+          "0.04": 0.03,
+        },
+      }),
+    );
+  });
+
+  it("rejects an incomplete island VAT mapping", () => {
+    const malformedRules = JSON.parse(JSON.stringify(taxRulesByYear));
+    delete malformedRules[2026].business.invoice.islandVatRates["0.24"];
+
+    expect(() => validateTaxRules(malformedRules)).toThrow(
+      "2026.business.invoice.islandVatRates.0.24",
+    );
+  });
+
   it("rejects malformed yearly data before calculations run", () => {
     const malformedRules = JSON.parse(JSON.stringify(taxRulesByYear));
     malformedRules[2026].employee.insurance.employeeRate = 1.1;

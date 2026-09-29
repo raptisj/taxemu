@@ -176,6 +176,7 @@ const initialState = {
     calculateRealGrossWidget: {
       grossIncomeMonthly: 0,
       currentAdditionalValueTax: latestRules.business.invoice.vatRates[0],
+      applyIslandVatReduction: false,
       currentWithholdingTax:
         latestRules.business.invoice.withholdingRates[0],
     },

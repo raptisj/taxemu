@@ -1,6 +1,11 @@
 import { Box, Divider, Flex, Text } from "@chakra-ui/react";
 import { useStore } from "store";
-import { calculateInvoice } from "./calculateInvoice";
+import { getBusinessRules } from "../../rules";
+import { formatRatePercentage } from "../../utils";
+import {
+  calculateInvoice,
+  getEffectiveVatRate,
+} from "./calculateInvoice";
 
 const money = new Intl.NumberFormat("el-GR", {
   style: "currency",
@@ -22,17 +27,33 @@ const Results = ({ monthlyValue }) => {
   const calculateRealGross = useStore(
     (state) => state.userDetails.business.calculateRealGrossWidget,
   );
-  const { currentWithholdingTax, currentAdditionalValueTax } = calculateRealGross;
+  const taxationYear = useStore(
+    (state) => state.userDetails.business.taxationYear,
+  );
+  const {
+    currentWithholdingTax,
+    currentAdditionalValueTax,
+    applyIslandVatReduction,
+  } = calculateRealGross;
+  const invoiceRules = getBusinessRules(taxationYear).invoice;
+  const effectiveVatRate = getEffectiveVatRate({
+    baseVatRate: currentAdditionalValueTax,
+    applyIslandVatReduction,
+    islandVatRates: invoiceRules.islandVatRates,
+  });
   const result = calculateInvoice({
     fee: monthlyValue,
-    vatRate: currentAdditionalValueTax,
+    vatRate: effectiveVatRate,
     withholdingRate: currentWithholdingTax,
   });
 
   return (
     <Box fontSize={["14px", "16px"]}>
       <ResultRow label="Καθαρή αξία" value={result.fee} />
-      <ResultRow label="ΦΠΑ" value={result.vat} />
+      <ResultRow
+        label={`ΦΠΑ (${formatRatePercentage(effectiveVatRate)})`}
+        value={result.vat}
+      />
       <Divider my={1} />
       <ResultRow label="Σύνολο τιμολογίου" value={result.invoiceTotal} strong />
       <ResultRow

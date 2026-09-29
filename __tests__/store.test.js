@@ -35,6 +35,7 @@ describe("calculator store", () => {
     ).toEqual({
       grossIncomeMonthly: 3000,
       currentAdditionalValueTax: 0.24,
+      applyIslandVatReduction: false,
       currentWithholdingTax: 0.2,
     });
   });
