@@ -77,7 +77,7 @@ export const MobileEmployeeInsights = () => {
                 <Badge colorScheme="purple">3</Badge>
               </Flex>
               <Text fontSize="sm" color="gray.600">
-                Θέση μισθού, αγοραστική δύναμη και διάσπαση κόστους
+                Θέση μισθού, προσαρμογή λόγω πληθωρισμού και διάσπαση κόστους
               </Text>
             </Box>
             <Button size="sm" colorScheme="purple" onClick={handleOpen} flexShrink={0}>

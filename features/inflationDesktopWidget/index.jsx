@@ -49,15 +49,18 @@ export const InflationDesktopWidget = () => {
 
   return (
     <Box borderWidth="1px" borderRadius="xl" bg="white" p={{ base: 4, md: 5 }}>
-      <Badge colorScheme="orange" mb={2}>ΑΓΟΡΑΣΤΙΚΗ ΔΥΝΑΜΗ</Badge>
+      <Badge colorScheme="orange" mb={2}>
+        ΑΝΑΠΡΟΣΑΡΜΟΓΗ ΛΟΓΩ ΠΛΗΘΩΡΙΣΜΟΥ
+      </Badge>
       <Heading as="h3" fontSize={{ base: "lg", md: "xl" }} color="gray.700">
-        +{totalResultDetails.increasePercentage}% από το {purchasingPowerBaseYear}{" "}
-        έως το {latestActualInflationYear}
+        +{totalResultDetails.increasePercentage}% απαιτούμενη αύξηση από το{" "}
+        {purchasingPowerBaseYear} έως το {latestActualInflationYear}
       </Heading>
       <Text color="gray.600" fontSize="sm" mt={2}>
         Εισόδημα {formatEuroCurrency(grossIncomeYearly)} το {purchasingPowerBaseYear}{" "}
-        αντιστοιχεί περίπου σε {formatEuroCurrency(totalResultDetails.finalAmount)} το{" "}
-        {latestActualInflationYear}.
+        θα έπρεπε να έχει αυξηθεί σε περίπου{" "}
+        {formatEuroCurrency(totalResultDetails.finalAmount)} το {latestActualInflationYear},{" "}
+        ώστε να ακολουθήσει τη μεταβολή του γενικού επιπέδου τιμών.
       </Text>
 
       <Accordion allowToggle mt={3}>
