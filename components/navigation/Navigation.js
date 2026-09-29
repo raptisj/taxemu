@@ -30,6 +30,11 @@ const mobileNavigationItems = [
     label: "Στατιστικά",
     matches: (pathname) => pathname === "/statistics",
   },
+  {
+    href: "/changelog",
+    label: "Ενημερώσεις",
+    matches: (pathname) => pathname === "/changelog",
+  },
   ...(SHOW_OFFER_COMPARISON_LINKS
     ? [
         {
@@ -130,6 +135,23 @@ export const Navigation = () => {
                   _hover={{ color: "gray.700" }}
                 >
                   Στατιστικά
+                </Text>
+              </Link>
+            )}
+            {!router.pathname.includes("/welcome") && (
+              <Link href="/changelog">
+                <Text
+                  color={
+                    router.pathname === "/changelog"
+                      ? "purple.600"
+                      : "gray.500"
+                  }
+                  fontSize={{ base: "sm", sm: "md" }}
+                  fontWeight={router.pathname === "/changelog" ? "600" : "400"}
+                  whiteSpace="nowrap"
+                  _hover={{ color: "gray.700" }}
+                >
+                  Ενημερώσεις
                 </Text>
               </Link>
             )}

@@ -6,6 +6,10 @@ export {
   wageDistributions,
 } from "./insights";
 export { oecdTaxWedge2025 } from "./statistics";
+export {
+  CHANGELOG_LAST_INCLUDED_COMMIT,
+  changelogEntries,
+} from "./changelog";
 
 export const AGE_GROUPS = Object.freeze({
   U25: "U25",

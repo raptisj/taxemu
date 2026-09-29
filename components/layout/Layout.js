@@ -12,6 +12,7 @@ export const Layout = ({ children, ...rest }) => {
   const hasPageSpecificMeta =
     router.pathname.includes("/blog") ||
     router.pathname === "/statistics" ||
+    router.pathname === "/changelog" ||
     router.pathname === "/compare";
 
   return (
