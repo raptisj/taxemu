@@ -1,5 +1,4 @@
 import {
-  Box,
   Flex,
   IconButton,
   Menu,
@@ -7,7 +6,6 @@ import {
   MenuItem,
   MenuList,
   Text,
-  useMediaQuery,
 } from "@chakra-ui/react";
 import { useStore } from "store";
 import logo from "../../assets/taxemu.svg";
@@ -58,7 +56,6 @@ const mobileNavigationItems = [
 export const Navigation = () => {
   const router = useRouter();
 
-  const [isLargerThan30] = useMediaQuery("(min-width: 30em)");
   const update = useStore((state) => state.update);
   const canInstallPWA = useStore((state) => state.userDetails.canInstallPWA);
   const deferredPrompt = useStore((state) => state.userDetails.deferredPrompt);
@@ -204,12 +201,6 @@ export const Navigation = () => {
         </Flex>
 
         <Flex gap={4} alignItems="center">
-          {canInstallPWA && (
-            <Box onClick={onClickInstallApp}>
-              {!isLargerThan30 && <DownloadIcon />}
-            </Box>
-          )}
-
           <Wiki />
 
           <Menu placement="bottom-end">
@@ -239,6 +230,11 @@ export const Navigation = () => {
                   </MenuItem>
                 );
               })}
+              {canInstallPWA && (
+                <MenuItem icon={<DownloadIcon />} onClick={onClickInstallApp}>
+                  Download
+                </MenuItem>
+              )}
             </MenuList>
           </Menu>
         </Flex>
