@@ -34,7 +34,6 @@ const MobileBusinessTable = ({ onSubmitAction }) => {
   return (
     <>
       <MobileTableHeader
-        entity="ελεύθερου επαγγελματία"
         calculatorEntity="business"
         onSubmitAction={onSubmitAction}
       />

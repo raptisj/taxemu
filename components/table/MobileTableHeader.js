@@ -1,15 +1,61 @@
 import { Text, Heading, Flex } from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { useStore } from "store";
+import Stepper from "components/stepper";
 import KeyboardShortcutsButton from "../keyboard/KeyboardShortcutsButton";
 import { MobileResultsActionsMenu } from "./ResultsActions";
 
-const MobileTableHeader = ({ entity = "", calculatorEntity, onSubmitAction }) => {
+const calculatorLabels = {
+  business: "ελεύθερου επαγγελματία",
+  employee: "μισθωτού",
+};
+
+const MobileTableHeader = ({ calculatorEntity, onSubmitAction }) => {
+  const router = useRouter();
+  const update = useStore((state) => state.update);
+
+  const handleCalculatorTypeChange = (value) => {
+    if (value === calculatorEntity) return;
+
+    update({ calculatorType: value });
+    router.push(`/${value}`);
+  };
+
   return (
     <>
       <Flex justify="space-between" align="flex-start" gap={2}>
-        <Heading as="h2" size="lg" fontWeight="500" color="gray.600">
-          Υπολογισμός εισοδήματος {entity}
-        </Heading>
-        <Flex align="center" gap={1}>
+        <Flex
+          align="baseline"
+          columnGap={2}
+          flex="1"
+          flexWrap="wrap"
+          minW={0}
+        >
+          <Heading as="h2" size="lg" fontWeight="500" color="gray.600">
+            Υπολογισμός εισοδήματος
+          </Heading>
+          <Stepper.MenuDrawer
+            name={calculatorEntity}
+            label={calculatorLabels[calculatorEntity]}
+            onChange={handleCalculatorTypeChange}
+            options={[
+              { value: "employee", text: "Μισθωτός" },
+              { value: "business", text: "Ελεύθερος επαγγελματίας" },
+            ]}
+            aria-label="Επιλογή κατηγορίας υπολογισμού"
+            ml={0}
+            p={0}
+            headingProps={{
+              as: "span",
+              color: "gray.600",
+              fontWeight: "500",
+              lineHeight: "shorter",
+              minW: 0,
+              size: "lg",
+            }}
+          />
+        </Flex>
+        <Flex align="center" flexShrink={0} gap={1}>
           <KeyboardShortcutsButton
             onCalculate={onSubmitAction}
             hideTrigger

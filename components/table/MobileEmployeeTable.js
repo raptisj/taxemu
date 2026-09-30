@@ -31,7 +31,6 @@ const MobileEmployeeTable = ({ onSubmitAction }) => {
   return (
     <>
       <MobileTableHeader
-        entity="μισθωτού"
         calculatorEntity="employee"
         onSubmitAction={onSubmitAction}
       />
