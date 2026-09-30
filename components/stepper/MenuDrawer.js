@@ -15,7 +15,14 @@ import {
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
-export const MenuDrawer = ({ name, label = '', options = [], onChange, ...rest }) => {
+export const MenuDrawer = ({
+  name,
+  label = "",
+  options = [],
+  onChange,
+  headingProps = {},
+  ...rest
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleOnChange = (value) => {
@@ -54,6 +61,7 @@ export const MenuDrawer = ({ name, label = '', options = [], onChange, ...rest }
           fontWeight="600"
           color="gray.700"
           minW="100px"
+          {...headingProps}
         >
           {label.toLowerCase()}
         </Heading>
