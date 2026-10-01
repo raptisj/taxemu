@@ -164,7 +164,8 @@ export {
 
 export {
   AVERAGE_WORKING_DAYS_PER_MONTH,
-  OFFER_COMPARISON_MODES,
+  COMPARISON_PERSPECTIVES,
+  OFFER_TYPES,
   OFFER_PERIODS,
   calculateEmployeeOffer,
   calculateFreelancerOffer,
