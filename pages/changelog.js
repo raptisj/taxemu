@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react";
 import Head from "next/head";
 import {
+  Badge,
   Box,
   Heading,
   ListItem,
@@ -9,20 +11,39 @@ import {
 } from "@chakra-ui/react";
 import { Layout } from "components/layout";
 import { Navigation } from "components/navigation";
-import { changelogEntries } from "constants/changelog";
+import { changelogEntries, isNewChangelogEntry } from "constants/changelog";
 
 const title = "Ενημερώσεις - Taxemu";
 const description = "Οι σημαντικότερες αλλαγές και βελτιώσεις του Taxemu.";
 
-const formatDate = (date) =>
+const formatMonth = (date) =>
   new Intl.DateTimeFormat("el-GR", {
-    day: "numeric",
     month: "long",
     year: "numeric",
     timeZone: "UTC",
-  }).format(new Date(`${date}T00:00:00Z`));
+  }).format(new Date(`${date}-01T00:00:00Z`));
 
 export default function ChangelogPage() {
+  const [today, setToday] = useState(null);
+
+  useEffect(() => {
+    let timer;
+
+    const updateToday = () => {
+      const now = new Date();
+      setToday(now);
+      const nextDay = Date.UTC(
+        now.getUTCFullYear(),
+        now.getUTCMonth(),
+        now.getUTCDate() + 1
+      );
+      timer = setTimeout(updateToday, nextDay - now.getTime());
+    };
+
+    updateToday();
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <Layout>
       <Head>
@@ -55,11 +76,18 @@ export default function ChangelogPage() {
           {changelogEntries.map((entry) => (
             <Box as="section" key={entry.date}>
               <Heading as="h2" fontSize="lg" mb={3}>
-                <time dateTime={entry.date}>{formatDate(entry.date)}</time>
+                <time dateTime={entry.date}>{formatMonth(entry.date)}</time>
               </Heading>
               <UnorderedList spacing={2} ml={5} color="gray.700">
                 {entry.items.map((item) => (
-                  <ListItem key={item}>{item}</ListItem>
+                  <ListItem key={`${item.date}-${item.text}`}>
+                    {item.text}
+                    {today && isNewChangelogEntry(item, today) && (
+                      <Badge colorScheme="green" ml={2} verticalAlign="middle">
+                        Νέο
+                      </Badge>
+                    )}
+                  </ListItem>
                 ))}
               </UnorderedList>
             </Box>

@@ -5,8 +5,12 @@ description: Maintain Taxemu's user-facing changelog from local Git history. Use
 
 # Update Taxemu Changelog
 
-Maintain `constants/changelog.js`; `pages/changelog.js` renders it without
-additional page edits.
+Maintain the product updates in `constants/changelog.js` for nontechnical
+readers. Keep monthly sections as `{ date: "YYYY-MM", items: [...] }` and give
+each item its own `{ date: "YYYY-MM-DD", text: "..." }`. The section month is
+displayed on `/changelog`; the item date is hidden and determines whether its
+"Νέο" badge appears for the first seven days. Keep the original day for each
+existing item when consolidating sections by month.
 
 ## Workflow
 
@@ -15,13 +19,18 @@ additional page edits.
 2. Inspect commits after that marker in chronological order with local Git.
    Use commit subjects only for discovery; read the relevant diffs before
    deciding what changed for users.
-3. Add only noteworthy user-facing features, calculation corrections, data
-   updates, or reliability improvements. Omit tests, refactors, formatting,
-   wording-only changes, and implementation detail unless they materially
-   changed behavior.
-4. Write each item as one short Greek sentence. Consolidate commits that form
-   one feature or correction, group items by commit date, and keep date groups
-   newest-first. Preserve existing entries unless the user requests a rewrite.
+3. Add an item only if a person using Taxemu would notice or benefit from the
+   product change: a meaningful new capability, improved result or usability,
+   corrected calculation, updated tax data, or reliability fix with a clear
+   user impact. Exclude test fixes, typo and copy edits, refactors, build and
+   tooling work, dependency updates, and unrelated repository changes. A
+   commit being recent or labeled "fix" is not enough to include it.
+4. Write each item as one short, plain Greek sentence about the benefit or
+   changed behavior. Avoid implementation terms and vague claims such as
+   "fixed a bug". Combine commits that deliver one change, give each item its
+   own product-change date, group items under its month, and keep sections and
+   items newest-first. Preserve existing product items and their dates unless
+   the user requests a rewrite.
 5. Update `CHANGELOG_LAST_INCLUDED_COMMIT` to the newest reviewed commit only
    after every commit through it has been considered. Do not include
    uncommitted work unless the user explicitly asks for it.
@@ -31,5 +40,6 @@ If the marker is missing or is not an ancestor of `HEAD`, stop and inspect the
 history before editing. Prefer local Git; use the GitHub commit history only
 when the local checkout is incomplete or the user specifically requests it.
 
-Preserve unrelated working-tree changes and report the covered commit range and
-the entries added.
+Preserve unrelated working-tree changes. If asked to commit, stage only files
+related to the changelog work and inspect the staged diff before committing.
+Report the covered commit range and the entries added or deliberately omitted.
