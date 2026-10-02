@@ -107,12 +107,19 @@ describe("2026 salaried engineer, full-year coverage code 1022", () => {
     expect(calculateOfferComparison({ ...input, taxationYear: 2025 })).toBeNull();
   });
 
-  test("fits the supplied employer cost in budget mode and rejects an infeasible fixed-charge budget", () => {
-    const input = { ...createDefaultOfferComparisonInput(), ...engineer(), mode: "budget", companyBudget: 33540.62 };
+  test("fits the supplied employer cost in company perspective and rejects an infeasible fixed-charge budget", () => {
+    const input = { ...createDefaultOfferComparisonInput(), ...engineer(), perspective: "company", companyBudget: 33540.62 };
     const result = calculateOfferComparison(input);
     expect(result.employee.annualGross).toBe(28000);
     expect(result.employee.companyCost).toBe(33540.62);
     expect(calculateOfferComparison({ ...input, companyBudget: 100 })).toBeNull();
+  });
+
+  test("omits an infeasible engineer salary benchmark for a small freelancer offer", () => {
+    const input = { ...createDefaultOfferComparisonInput(), ...engineer(), offerType: "freelancer", freelancerOfferAmount: 100, freelancerOfferPeriod: "year" };
+    const result = calculateOfferComparison(input);
+    expect(result.benchmarks.employeeAtFreelancerCost).toBeNull();
+    expect(result.employee.employeeInsurance).toBeGreaterThan(0);
   });
 
   test("exports committed assumptions and the breakdown even after form edits", () => {
