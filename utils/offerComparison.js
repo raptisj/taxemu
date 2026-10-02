@@ -3,11 +3,14 @@ import { calculateBusinessResults } from "./business";
 import { calculateEmployeeForGrossMonth } from "./employeeCalculation";
 import { roundMoney } from "./employee";
 
-export const OFFER_COMPARISON_MODES = Object.freeze({
-  BUDGET: "budget",
+export const COMPARISON_PERSPECTIVES = Object.freeze({
+  PERSONAL: "personal",
+  COMPANY: "company",
+});
+
+export const OFFER_TYPES = Object.freeze({
   EMPLOYEE: "employee",
   FREELANCER: "freelancer",
-  BOTH: "both",
 });
 
 export const OFFER_PERIODS = Object.freeze({
@@ -18,7 +21,9 @@ export const OFFER_PERIODS = Object.freeze({
 export const AVERAGE_WORKING_DAYS_PER_MONTH = 21.75;
 
 export const createDefaultOfferComparisonInput = () => ({
-  mode: OFFER_COMPARISON_MODES.EMPLOYEE,
+  perspective: COMPARISON_PERSPECTIVES.PERSONAL,
+  offerType: OFFER_TYPES.EMPLOYEE,
+  hasSecondOffer: false,
   taxationYear: latestTaxYear,
   companyBudget: 0,
   employeeOfferAmount: 0,
@@ -221,66 +226,47 @@ export const solveFreelancerRevenueForNet = (input, annualNet) =>
 const hasPositive = (value) => finiteNonNegative(value) > 0;
 
 export const calculateOfferComparison = (input) => {
-  const mode = input.mode;
+  const { perspective, offerType, hasSecondOffer } = input;
   const employeeAnnualOffer = getAnnualEmployeeOffer(input);
   const freelancerAnnualOffer = getAnnualFreelancerOffer(input);
   const companyBudget = finiteNonNegative(input.companyBudget);
   const effectiveBillableMonths = getEffectiveBillableMonths(input);
+  const company = perspective === COMPARISON_PERSPECTIVES.COMPANY;
+  const knownOffer = offerType === OFFER_TYPES.EMPLOYEE
+    ? employeeAnnualOffer
+    : freelancerAnnualOffer;
 
   if (
-    (mode === OFFER_COMPARISON_MODES.BUDGET && !hasPositive(companyBudget)) ||
-    (mode === OFFER_COMPARISON_MODES.EMPLOYEE &&
-      !hasPositive(employeeAnnualOffer)) ||
-    (mode === OFFER_COMPARISON_MODES.FREELANCER &&
-      (!hasPositive(freelancerAnnualOffer) || !effectiveBillableMonths)) ||
-    (mode === OFFER_COMPARISON_MODES.BOTH &&
-      (!hasPositive(employeeAnnualOffer) ||
-        !hasPositive(freelancerAnnualOffer) ||
-        !effectiveBillableMonths))
-  ) {
-    return null;
-  }
+    !Object.values(COMPARISON_PERSPECTIVES).includes(perspective) ||
+    !Object.values(OFFER_TYPES).includes(offerType) ||
+    !hasPositive(input.salaryMonthCount) ||
+    !effectiveBillableMonths ||
+    !Number.isFinite(knownOffer) ||
+    (company ? !hasPositive(companyBudget) : !hasPositive(knownOffer)) ||
+    (!company && hasSecondOffer &&
+      (!hasPositive(employeeAnnualOffer) || !hasPositive(freelancerAnnualOffer)))
+  ) return null;
 
-  let employee;
-  let freelancer;
-  let employeeSource = "provided";
-  let freelancerSource = "provided";
-
-  if (mode === OFFER_COMPARISON_MODES.BUDGET) {
-    employee = calculateEmployeeOffer(
-      input,
-      solveEmployeeGrossForCompanyCost(input, companyBudget),
-    );
-    freelancer = calculateFreelancerOffer(input, companyBudget);
-    employeeSource = "budget";
-    freelancerSource = "budget";
-  } else if (mode === OFFER_COMPARISON_MODES.EMPLOYEE) {
-    employee = calculateEmployeeOffer(input, employeeAnnualOffer);
-    freelancer = calculateFreelancerOffer(
-      input,
-      solveFreelancerRevenueForNet(input, employee.annualNet),
-    );
-    freelancerSource = "generated-net-match";
-  } else if (mode === OFFER_COMPARISON_MODES.FREELANCER) {
-    freelancer = calculateFreelancerOffer(input, freelancerAnnualOffer);
-    employee = calculateEmployeeOffer(
-      input,
-      solveEmployeeGrossForNet(input, freelancer.annualNet),
-    );
-    employeeSource = "generated-net-match";
-  } else {
-    employee = calculateEmployeeOffer(input, employeeAnnualOffer);
-    freelancer = calculateFreelancerOffer(input, freelancerAnnualOffer);
-  }
-
-  const requiredFreelancerRevenue = solveFreelancerRevenueForNet(
+  const employee = calculateEmployeeOffer(
     input,
-    employee.annualNet,
+    company
+      ? solveEmployeeGrossForCompanyCost(input, companyBudget)
+      : hasSecondOffer ? employeeAnnualOffer : knownOffer,
   );
-  const requiredEmployeeGross = solveEmployeeGrossForNet(
+  const freelancer = calculateFreelancerOffer(
     input,
-    freelancer.annualNet,
+    company ? companyBudget : hasSecondOffer ? freelancerAnnualOffer : knownOffer,
   );
+  const basis = company ? "same-company-cost" : hasSecondOffer ? "actual-offers" : "same-annual-offer";
+  const employeeSource = company ? "budget" : !hasSecondOffer && offerType !== OFFER_TYPES.EMPLOYEE ? "assumed" : "provided";
+  const freelancerSource = company ? "budget" : !hasSecondOffer && offerType !== OFFER_TYPES.FREELANCER ? "assumed" : "provided";
+
+  const requiredFreelancerRevenue = employee.annualNet > 0
+    ? solveFreelancerRevenueForNet(input, employee.annualNet)
+    : null;
+  const requiredEmployeeGross = freelancer.annualNet > 0
+    ? solveEmployeeGrossForNet(input, freelancer.annualNet)
+    : null;
   const freelancerAtEmployeeCost = calculateFreelancerOffer(
     input,
     employee.companyCost,
@@ -291,7 +277,8 @@ export const calculateOfferComparison = (input) => {
   );
 
   return {
-    mode,
+    perspective,
+    basis,
     employee: { ...employee, source: employeeSource },
     freelancer: { ...freelancer, source: freelancerSource },
     difference: {
@@ -301,7 +288,7 @@ export const calculateOfferComparison = (input) => {
     benchmarks: {
       requiredFreelancerRevenue,
       requiredFreelancerInvoice:
-        requiredFreelancerRevenue / effectiveBillableMonths,
+        requiredFreelancerRevenue === null ? null : requiredFreelancerRevenue / effectiveBillableMonths,
       requiredEmployeeGross,
       freelancerAtEmployeeCost,
       employeeAtFreelancerCost,
@@ -313,7 +300,7 @@ const serializedFields = Object.keys(createDefaultOfferComparisonInput());
 
 export const serializeOfferComparisonInput = (input) =>
   JSON.stringify({
-    version: 1,
+    version: 2,
     input: Object.fromEntries(
       serializedFields.map((field) => [field, input[field]]),
     ),
@@ -324,7 +311,7 @@ export const parseOfferComparisonInput = (value) => {
   try {
     const payload = JSON.parse(value);
     if (
-      payload?.version !== 1 ||
+      ![1, 2].includes(payload?.version) ||
       !payload.input ||
       typeof payload.input !== "object" ||
       Array.isArray(payload.input)
@@ -341,8 +328,31 @@ export const parseOfferComparisonInput = (value) => {
         .map((field) => [field, payload.input[field]]),
     );
     const result = { ...defaults, ...parsed };
+    if (payload.version === 1) {
+      const mode = payload.input.mode;
+      if (!["budget", "employee", "freelancer", "both"].includes(mode)) return null;
+      result.perspective = mode === "budget" ? COMPARISON_PERSPECTIVES.COMPANY : COMPARISON_PERSPECTIVES.PERSONAL;
+      result.offerType = mode === "freelancer" ? OFFER_TYPES.FREELANCER : OFFER_TYPES.EMPLOYEE;
+      result.hasSecondOffer = mode === "both";
+    }
 
-    if (!Object.values(OFFER_COMPARISON_MODES).includes(result.mode)) return null;
+    if (!Object.values(COMPARISON_PERSPECTIVES).includes(result.perspective)) return null;
+    if (!Object.values(OFFER_TYPES).includes(result.offerType)) return null;
+    for (const [field, defaultValue] of Object.entries(defaults)) {
+      if (typeof defaultValue === "boolean" && typeof result[field] !== "boolean") return null;
+      if (typeof defaultValue === "number" &&
+        (typeof result[field] !== "number" || !Number.isFinite(result[field]) || result[field] < 0)) return null;
+    }
+    const rules = getTaxRules(result.taxationYear);
+    if (!rules.ui.employee.salaryMonthOptions.includes(result.salaryMonthCount)) return null;
+    if (!Number.isInteger(result.numberOfChildren) ||
+      (rules.ui.employee.maximumChildren !== null && result.numberOfChildren > rules.ui.employee.maximumChildren)) return null;
+    if (!Number.isInteger(result.businessAge) || result.businessAge < 1 || result.businessAge > 60) return null;
+    if (!Number.isInteger(result.insuranceScaleSelection) || result.insuranceScaleSelection < 1 ||
+      result.insuranceScaleSelection >= rules.business.insurance.monthlyAmounts.length) return null;
+    if (result.billableMonths > 12 || result.unpaidLeaveDays > 260) return null;
+    if (rules.ui.ageGroups?.length && !rules.ui.ageGroups.some((group) => group.value === result.ageGroup)) return null;
+    if (!rules.business.invoice.vatRates.includes(result.vatRate)) return null;
     if (!Object.values(OFFER_PERIODS).includes(result.employeeOfferPeriod)) return null;
     if (!Object.values(OFFER_PERIODS).includes(result.freelancerOfferPeriod)) return null;
     if (!supportedTaxYears.includes(Number(result.taxationYear))) return null;

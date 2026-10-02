@@ -64,9 +64,16 @@ export const OfferComparison = () => {
         <Button leftIcon={copied ? <CheckIcon /> : <CopyIcon />} colorScheme="purple" variant="outline" onClick={share} flexShrink={0}>{copied ? "Αντιγράφηκε" : "Κοινοποίηση"}</Button>
       </Flex>
 
-      <Grid templateColumns={{ base: "1fr", xl: "minmax(340px, 430px) minmax(0, 1fr)" }} gap={6} alignItems="start">
-        <ComparisonForm input={input} setInput={setInput} />
-        <ComparisonResults comparison={comparison} input={input} />
+      <Grid
+        templateColumns={{ base: "1fr", xl: "minmax(340px, 430px) minmax(0, 1fr)" }}
+        templateAreas={{ base: '"inputs" "results" "settings"', xl: '"inputs results" "settings results"' }}
+        templateRows={{ xl: "auto 1fr" }}
+        gap={6}
+        alignItems="start"
+      >
+        <Box gridArea="inputs"><ComparisonForm input={input} setInput={setInput} /></Box>
+        <Box gridArea="results"><ComparisonResults comparison={comparison} input={input} /></Box>
+        <Box gridArea="settings"><ComparisonForm input={input} setInput={setInput} settings /></Box>
       </Grid>
     </Box>
   );
