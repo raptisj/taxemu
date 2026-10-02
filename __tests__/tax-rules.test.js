@@ -46,7 +46,7 @@ describe("annual tax rules", () => {
       employerRate: 0.2179,
       monthlyContributionCap: 7572.62,
     });
-    expect(getEmployeeRules(2026).insurance).toEqual({
+    expect(getEmployeeRules(2026).insurance).toMatchObject({
       employeeRate: 0.1333,
       employerRate: 0.2179,
       monthlyContributionCap: 7761.94,

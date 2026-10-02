@@ -10,6 +10,7 @@ import {
   Flex,
   Text,
 } from "@chakra-ui/react";
+import { formatContributionMoney } from "../../utils/employeeContributions";
 import { useStore } from "store";
 import { formatCellPercentage, formatCellValue } from "utils";
 import TaxWedgeInfoPopover from "./TaxWedgeInfoPopover";
@@ -18,6 +19,7 @@ const EmployeeTable = () => {
   const userDetails = useStore((state) => state.userDetails.employee);
 
   const {
+    monthlyAmountsAreAverages,
     grossIncome,
     finalIncome,
     finalTax,
@@ -30,6 +32,10 @@ const EmployeeTable = () => {
     taxableIncome,
   } = userDetails.tableResults;
 
+  const formatValue = monthlyAmountsAreAverages
+    ? (value) => value === null || value === undefined ? "------" : formatContributionMoney(Math.round(value * 100) / 100)
+    : formatCellValue;
+
   return (
     <TableContainer mt={6} background="#ffffff70">
       <Table variant="simple">
@@ -40,7 +46,7 @@ const EmployeeTable = () => {
         <Thead>
           <Tr>
             <Th border="none"></Th>
-            <Th border="none">ΑΝΑ ΜΗΝΑ</Th>
+            <Th border="none">{monthlyAmountsAreAverages ? "ΜΕΣΟΣ ΟΡΟΣ ΑΝΑ ΜΙΣΘΟ" : "ΑΝΑ ΜΗΝΑ"}</Th>
             <Th border="none">ΑΝΑ ΕΤΟΣ</Th>
           </Tr>
         </Thead>
@@ -53,12 +59,12 @@ const EmployeeTable = () => {
             </Td>
             <Td borderBottomWidth={1} borderColor="gray.500">
               <Text fontWeight="600" fontSize="sm">
-                {formatCellValue(finalIncome.month)}
+                {formatValue(finalIncome.month)}
               </Text>
             </Td>
             <Td isNumeric borderBottomWidth={1} borderColor="gray.500">
               <Text fontWeight="600" fontSize="sm" textAlign="left">
-                {formatCellValue(finalIncome.year)}
+                {formatValue(finalIncome.year)}
               </Text>
             </Td>
           </Tr>
@@ -70,12 +76,12 @@ const EmployeeTable = () => {
             </Td>
             <Td border="none">
               <Text color="gray.700" fontSize="sm">
-                {formatCellValue(grossIncome.month)}
+                {formatValue(grossIncome.month)}
               </Text>
             </Td>
             <Td isNumeric border="none">
               <Text color="gray.700" fontSize="sm" textAlign="left">
-                {formatCellValue(grossIncome.year)}
+                {formatValue(grossIncome.year)}
               </Text>
             </Td>
           </Tr>
@@ -88,12 +94,12 @@ const EmployeeTable = () => {
             </Td>
             <Td border="none">
               <Text color="gray.700" fontSize="sm">
-                {formatCellValue(insurance.month)}
+                {formatValue(insurance.month)}
               </Text>
             </Td>
             <Td isNumeric border="none">
               <Text color="gray.700" fontSize="sm" textAlign="left">
-                {formatCellValue(insurance.year)}
+                {formatValue(insurance.year)}
               </Text>
             </Td>
           </Tr>
@@ -106,12 +112,12 @@ const EmployeeTable = () => {
             </Td>
             <Td border="none">
               <Text color="gray.700" fontSize="sm">
-                {formatCellValue(taxableIncome.month)}
+                {formatValue(taxableIncome.month)}
               </Text>
             </Td>
             <Td isNumeric border="none">
               <Text color="gray.700" fontSize="sm" textAlign="left">
-                {formatCellValue(taxableIncome.year)}
+                {formatValue(taxableIncome.year)}
               </Text>
             </Td>
           </Tr>
@@ -124,7 +130,7 @@ const EmployeeTable = () => {
             </Td>
             <Td border="none">
               <Text color="gray.700" fontSize="sm">
-                {formatCellValue(
+                {formatValue(
                   grossIncome.month > finalTax.month && finalTax.month > 0
                     ? finalTax.month
                     : null,
@@ -133,7 +139,7 @@ const EmployeeTable = () => {
             </Td>
             <Td isNumeric border="none">
               <Text color="gray.700" fontSize="sm" textAlign="left">
-                {formatCellValue(
+                {formatValue(
                   grossIncome.year > finalTax.year && finalTax.year > 0
                     ? finalTax.year
                     : null,
@@ -150,12 +156,12 @@ const EmployeeTable = () => {
             </Td>
             <Td border="none">
               <Text color="gray.700" fontSize="sm">
-                {formatCellValue(childrenDiscountAmount.month)}
+                {formatValue(childrenDiscountAmount.month)}
               </Text>
             </Td>
             <Td isNumeric border="none">
               <Text color="gray.700" fontSize="sm" textAlign="left">
-                {formatCellValue(childrenDiscountAmount.year)}
+                {formatValue(childrenDiscountAmount.year)}
               </Text>
             </Td>
           </Tr>
@@ -168,12 +174,12 @@ const EmployeeTable = () => {
             </Td>
             <Td border="none">
               <Text color="gray.700" fontSize="sm">
-                {formatCellValue(employerObligations.month)}
+                {formatValue(employerObligations.month)}
               </Text>
             </Td>
             <Td isNumeric border="none">
               <Text color="gray.700" fontSize="sm" textAlign="left">
-                {formatCellValue(employerObligations.year)}
+                {formatValue(employerObligations.year)}
               </Text>
             </Td>
           </Tr>
@@ -185,7 +191,7 @@ const EmployeeTable = () => {
             </Td>
             <Td border="none">
               <Text color="purple.800" fontWeight="600" fontSize="sm">
-                {formatCellValue(totalEmployerCost.month)}
+                {formatValue(totalEmployerCost.month)}
               </Text>
             </Td>
             <Td isNumeric border="none">
@@ -195,7 +201,7 @@ const EmployeeTable = () => {
                 fontSize="sm"
                 textAlign="left"
               >
-                {formatCellValue(totalEmployerCost.year)}
+                {formatValue(totalEmployerCost.year)}
               </Text>
             </Td>
           </Tr>
@@ -210,7 +216,7 @@ const EmployeeTable = () => {
             </Td>
             <Td border="none">
               <Flex align="baseline" gap={1} color="purple.800" fontWeight="600">
-                <Text fontSize="sm">{formatCellValue(taxWedge.month)}</Text>
+                <Text fontSize="sm">{formatValue(taxWedge.month)}</Text>
                 <Text fontSize="xs">
                   (
                   {formatCellPercentage(
@@ -223,7 +229,7 @@ const EmployeeTable = () => {
             </Td>
             <Td isNumeric border="none">
               <Flex align="baseline" gap={1} color="purple.800" fontWeight="600">
-                <Text fontSize="sm">{formatCellValue(taxWedge.year)}</Text>
+                <Text fontSize="sm">{formatValue(taxWedge.year)}</Text>
                 <Text fontSize="xs">
                   (
                   {formatCellPercentage(

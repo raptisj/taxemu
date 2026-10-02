@@ -134,6 +134,33 @@ describe("useCalculateEmployee", () => {
     expect(commitEmployeeCalculation).not.toHaveBeenCalled();
   });
 
+  it("commits engineer selections and the annual contribution breakdown", () => {
+    employee = createEmployee({ taxationYear: 2026, insuranceProfile: "engineer", supplementaryCategory: 1, lumpSumCategory: 1, supplementaryFund: "teka" });
+    const { result } = renderHook(() => useCalculateEmployee());
+    act(() => result.current.centralCalculation());
+    const committed = commitEmployeeCalculation.mock.calls[0][0];
+    expect(committed.tableResults.insurance.year).toBe(3555.62);
+    expect(committed.tableResults.contributionBreakdown.supplementaryFund).toBe("teka");
+    expect(committed.tableResults.calculationInput).toMatchObject({ insuranceProfile: "engineer", supplementaryCategory: 1, lumpSumCategory: 1, supplementaryFund: "teka" });
+  });
+
+  it("uses the requested annual engineer net rather than a rounded monthly counterpart", () => {
+    employee = createEmployee({ taxationYear: 2026, insuranceProfile: "engineer", activeInput: "final", finalMonthOrYear: "year", finalIncomeYearly: 20916.95, finalIncomeMonthly: 1494 });
+    const { result } = renderHook(() => useCalculateEmployee());
+    act(() => result.current.reverseCentralCalculation());
+    const committed = commitEmployeeCalculation.mock.calls[0][0];
+    expect(committed.newState.grossIncomeMonthly).toBe(2000);
+    expect(committed.tableResults.finalIncome.year).toBe(20916.95);
+  });
+
+  it("reports unsupported engineer years without committing a generic result", () => {
+    employee = createEmployee({ insuranceProfile: "engineer" });
+    const { result } = renderHook(() => useCalculateEmployee());
+    act(() => result.current.centralCalculation());
+    expect(mockToast).toHaveBeenCalledWith(expect.objectContaining({ title: expect.stringContaining("2025") }));
+    expect(commitEmployeeCalculation).not.toHaveBeenCalled();
+  });
+
   it("finds and commits the gross income for a requested final income", () => {
     employee = createEmployee({
       activeInput: "final",

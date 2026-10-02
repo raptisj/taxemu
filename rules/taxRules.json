@@ -858,13 +858,104 @@
       {
         "name": "AADE Circular E.2113/2025 — 2026 island VAT reductions",
         "url": "https://www.aade.gr/egkyklioi-kai-apofaseis/e-2113-31-12-2025"
+      },
+      {
+        "name": "e-EFKA Circular 4/2026 — salaried engineer ceiling and categories, §§1–3, pp. 2–3",
+        "url": "https://www.e-efka.gov.gr/el/egkyklioi-kai-genika-eggrapha/egkyklios-42026"
+      },
+      {
+        "name": "e-EFKA Circular 38/2024 — healthcare and coverage code 1022, §§1–2 and PDF p. 11",
+        "url": "https://www.e-efka.gov.gr/el/egkyklioi-kai-genika-eggrapha/egkyklios-38-24122024"
+      },
+      {
+        "name": "e-EFKA Circular 8/2021 — engineer categories and gifts, §§1–2 and 4.3",
+        "url": "https://www.e-efka.gov.gr/sites/default/files/2021-01/%CE%95%CE%93%CE%9A.%208_2021.pdf"
+      },
+      {
+        "name": "e-EFKA Circular 6/2017 — engineer coverage and pension, §§1–2, pp. 2–3",
+        "url": "https://www.e-efka.gov.gr/sites/default/files/2018-05/EGK_6_14-02-2017.pdf"
+      },
+      {
+        "name": "e-EFKA General Document 17 September 2024 — fixed contributions and gifts, p. 9",
+        "url": "https://www.efka.gov.gr/sites/default/files/2024-09/1283148_17092024.pdf"
+      },
+      {
+        "name": "TEKA — salaried engineer contributions",
+        "url": "https://teka.gov.gr/eisfores/"
+      },
+      {
+        "name": "TEKA — eligibility",
+        "url": "https://teka.gov.gr/ypagogi/"
       }
     ],
     "employee": {
       "insurance": {
         "employeeRate": 0.1333,
         "employerRate": 0.2179,
-        "monthlyContributionCap": 7761.94
+        "monthlyContributionCap": 7761.94,
+        "engineer": {
+          "coverageCode": "1022",
+          "insuredMonths": 12,
+          "defaultCategory": 1,
+          "components": [
+            {
+              "id": "pension",
+              "label": "Κύρια σύνταξη",
+              "employeeRate": 0.0667,
+              "employerRate": 0.1333,
+              "sourceUrls": [
+                "https://www.e-efka.gov.gr/sites/default/files/2018-05/EGK_6_14-02-2017.pdf"
+              ]
+            },
+            {
+              "id": "healthKind",
+              "label": "Υγεία — παροχές σε είδος",
+              "employeeRate": 0.0165,
+              "employerRate": 0.038,
+              "sourceUrls": [
+                "https://www.e-efka.gov.gr/el/egkyklioi-kai-genika-eggrapha/egkyklios-38-24122024"
+              ]
+            },
+            {
+              "id": "healthCash",
+              "label": "Υγεία — παροχές σε χρήμα",
+              "employeeRate": 0.004,
+              "employerRate": 0.0025,
+              "sourceUrls": [
+                "https://www.e-efka.gov.gr/el/egkyklioi-kai-genika-eggrapha/egkyklios-38-24122024"
+              ]
+            },
+            {
+              "id": "other",
+              "label": "Λοιπές υποχρεωτικές εισφορές",
+              "employeeRate": 0.0165,
+              "employerRate": 0.0141,
+              "sourceUrls": [
+                "https://www.e-efka.gov.gr/el/egkyklioi-kai-genika-eggrapha/egkyklios-38-24122024"
+              ]
+            }
+          ],
+          "supplementaryMonthlyAmounts": [
+            46.57,
+            56.13,
+            66.88
+          ],
+          "supplementaryEmployeeShare": 0.5,
+          "lumpSumMonthlyAmounts": [
+            31.05,
+            37.02,
+            44.18
+          ],
+          "sourceUrls": [
+            "https://www.e-efka.gov.gr/el/egkyklioi-kai-genika-eggrapha/egkyklios-42026",
+            "https://www.e-efka.gov.gr/el/egkyklioi-kai-genika-eggrapha/egkyklios-38-24122024",
+            "https://www.e-efka.gov.gr/sites/default/files/2021-01/%CE%95%CE%93%CE%9A.%208_2021.pdf",
+            "https://www.e-efka.gov.gr/sites/default/files/2018-05/EGK_6_14-02-2017.pdf",
+            "https://www.efka.gov.gr/sites/default/files/2024-09/1283148_17092024.pdf",
+            "https://teka.gov.gr/eisfores/",
+            "https://teka.gov.gr/ypagogi/"
+          ]
+        }
       },
       "incomeTax": {
         "kind": "progressiveByAgeAndChildren",

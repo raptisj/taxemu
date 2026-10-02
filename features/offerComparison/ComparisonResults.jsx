@@ -10,10 +10,12 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
+import EmployeeContributionBreakdown from "../../components/employee/EmployeeContributionBreakdown";
+import { isEngineer, supportsEngineer, engineerUnsupportedMessage } from "../../utils/employeeContributions";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { inlineLinkStyles } from "../../styles/inlineLink";
 import { getTaxRules } from "../../rules";
-import { OFFER_COMPARISON_MODES } from "../../utils/offerComparison";
+import { OFFER_COMPARISON_MODES, getEngineerMinimumEmployerCost } from "../../utils/offerComparison";
 import { formatRatePercentage } from "../../utils";
 
 const money = new Intl.NumberFormat("el-GR", {
@@ -31,7 +33,7 @@ const sourceLabel = {
   "generated-net-match": "ΙΣΟΔΥΝΑΜΗ ΠΡΟΤΑΣΗ",
 };
 
-const ResultCard = ({ type, result }) => {
+const ResultCard = ({ type, result, taxationYear }) => {
   const employee = type === "employee";
   return (
     <Box borderWidth="1px" borderColor="gray.200" borderRadius="xl" bg="white" p={{ base: 4, md: 5 }} minW={0}>
@@ -57,6 +59,7 @@ const ResultCard = ({ type, result }) => {
         {!employee && result.withholding > 0 && <Metric label="Παρακράτηση που έχει αποδοθεί" value={result.withholding} muted />}
       </Stack>
 
+      {employee && <EmployeeContributionBreakdown breakdown={result.contributionBreakdown} taxationYear={taxationYear} />}
       <Divider my={4} />
       <Flex justify="space-between" gap={3}>
         <Box>
@@ -64,7 +67,7 @@ const ResultCard = ({ type, result }) => {
           <Text fontWeight="700">{formatMoney(result.monthlyNet)}</Text>
         </Box>
         <Box textAlign="right">
-          <Text color="gray.500" fontSize="xs">{employee ? "Καθαρά / μισθό" : "Τιμολόγιο / χρεώσιμο μήνα"}</Text>
+          <Text color="gray.500" fontSize="xs">{employee ? result.monthlyAmountsAreAverages ? "Μέσα καθαρά / μισθό" : "Καθαρά / μισθό" : "Τιμολόγιο / χρεώσιμο μήνα"}</Text>
           <Text fontWeight="700">{formatMoney(employee ? result.netPerSalary : result.invoicePerBillableMonth)}</Text>
         </Box>
       </Flex>
@@ -101,6 +104,11 @@ const Headline = ({ comparison }) => {
 
 export const ComparisonResults = ({ comparison, input }) => {
   const rules = getTaxRules(input.taxationYear);
+  if (isEngineer(input) && !supportsEngineer(input.taxationYear)) return <Box role="alert" p={4} bg="orange.50" color="orange.800">{engineerUnsupportedMessage(input.taxationYear)}</Box>;
+  if (!comparison && isEngineer(input) && input.mode === OFFER_COMPARISON_MODES.BUDGET &&
+      input.companyBudget > 0 && input.companyBudget <= getEngineerMinimumEmployerCost(input)) {
+    return <Box role="status" p={4} bg="orange.50" color="orange.800">Το ετήσιο budget δεν επαρκεί για τις πάγιες εργοδοτικές εισφορές μηχανικού και θετική αμοιβή.</Box>;
+  }
   if (!comparison) {
     return (
       <Box borderWidth="1px" borderStyle="dashed" borderColor="purple.200" borderRadius="xl" bg="purple.50" p={{ base: 5, md: 8 }} position={{ md: "sticky" }} top={8}>
@@ -118,7 +126,7 @@ export const ComparisonResults = ({ comparison, input }) => {
       </Box>
 
       <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={4}>
-        <ResultCard type="employee" result={comparison.employee} />
+        <ResultCard type="employee" result={comparison.employee} taxationYear={input.taxationYear} />
         <ResultCard type="freelancer" result={comparison.freelancer} />
       </SimpleGrid>
 

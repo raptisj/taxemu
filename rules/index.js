@@ -150,6 +150,47 @@ export const validateTaxRules = (rulesByYear = taxRulesByYear) => {
       employeeRules.insurance?.monthlyContributionCap,
       `${employeeInsurancePath}.monthlyContributionCap`,
     );
+    const engineer = employeeRules.insurance.engineer;
+    if (engineer !== undefined) {
+      const path = `${employeeInsurancePath}.engineer`;
+      if (engineer.coverageCode !== "1022" || engineer.insuredMonths !== 12) {
+        throw new Error(`${path} must describe full-year coverage code 1022`);
+      }
+      if (!Array.isArray(engineer.components) || engineer.components.length === 0) {
+        throw new Error(`${path}.components must not be empty`);
+      }
+      const ids = new Set();
+      engineer.components.forEach((component, index) => {
+        const componentPath = `${path}.components[${index}]`;
+        if (!component.id || ids.has(component.id) || !component.label?.trim()) {
+          throw new Error(`${componentPath} requires a unique id and label`);
+        }
+        ids.add(component.id);
+        assertRate(component.employeeRate, `${componentPath}.employeeRate`);
+        assertRate(component.employerRate, `${componentPath}.employerRate`);
+        if (!Array.isArray(component.sourceUrls) || component.sourceUrls.length === 0 ||
+          component.sourceUrls.some((url) => !rules.sources.some((source) => source.url === url))) {
+          throw new Error(`${componentPath}.sourceUrls must reference official sources`);
+        }
+      });
+      for (const payer of ["employeeRate", "employerRate"]) {
+        assertRate(engineer.components.reduce((sum, component) => sum + component[payer], 0), `${path}.${payer}`);
+      }
+      for (const field of ["supplementaryMonthlyAmounts", "lumpSumMonthlyAmounts"]) {
+        if (!Array.isArray(engineer[field]) || engineer[field].length !== 3) {
+          throw new Error(`${path}.${field} requires three categories`);
+        }
+        engineer[field].forEach((amount, index) => assertNonNegativeNumber(amount, `${path}.${field}[${index}]`));
+      }
+      if (!Number.isInteger(engineer.defaultCategory) || engineer.defaultCategory < 1 || engineer.defaultCategory > 3) {
+        throw new Error(`${path}.defaultCategory must reference a category`);
+      }
+      if (engineer.supplementaryEmployeeShare !== 0.5) throw new Error(`${path}.supplementaryEmployeeShare must be 0.5`);
+      if (!Array.isArray(engineer.sourceUrls) || engineer.sourceUrls.length === 0 ||
+        engineer.sourceUrls.some((url) => !rules.sources.some((source) => source.url === url))) {
+        throw new Error(`${path}.sourceUrls must reference official sources`);
+      }
+    }
     assertNonEmptyNumberMap(
       employeeRules.taxCredit?.amountByChildren,
       `${yearKey}.employee.taxCredit.amountByChildren`,

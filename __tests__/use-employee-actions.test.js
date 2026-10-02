@@ -34,4 +34,15 @@ describe("useEmployeeActions child-count limits", () => {
     act(() => result.current.onSelectTaxationYear({ target: { value: 2025 } }));
     expect(useStore.getState().userDetails.employee.numberOfChildren).toBe(4);
   });
+
+  it("preserves cents and the annual gross input for an engineer", () => {
+    useStore.getState().updateEmployee({ insuranceProfile: "engineer", grossMonthOrYear: "year" });
+    const { result } = renderHook(() => useEmployeeActions());
+    act(() => result.current.onChangeGrossIncome("28000.14", 14));
+    const details = useStore.getState().userDetails.employee;
+    expect(details.grossIncomeYearly).toBe(28000.14);
+    expect(details.grossIncomeMonthly).toBeCloseTo(2000.01, 6);
+    act(() => result.current.onChangeInsuranceOptions({ supplementaryCategory: 3 }));
+    expect(useStore.getState().userDetails.employee.supplementaryCategory).toBe(3);
+  });
 });

@@ -99,6 +99,26 @@ describe("year-by-year calculation regressions", () => {
     },
   );
 
+  // Engineer fixture: Circular 4/2026 §§1–3 pp. 2–3, Circular 38/2024 PDF p. 11,
+  // and Circular 8/2021 §4.3; expected figures from the user-supplied source research.
+  test("matches the 2026 salaried-engineer €28,000 annual example without counting ordinary supplementary twice", () => {
+    const result = calculateEmployeeForGrossMonth(createEmployeeInput(2026, { insuranceProfile: "engineer", supplementaryCategory: 1, lumpSumCategory: 1, supplementaryFund: "efka" }), 2000);
+    const state = result.calculatedState;
+    expect(state.insurance.year).toBe(3555.62);
+    expect(state.employerObligations.year).toBe(5540.62);
+    expect(state.taxableIncome.year).toBe(24444.38);
+    expect(state.totalEmployerCost.year).toBe(33540.62);
+    const breakdown = state.contributionBreakdown;
+    expect(breakdown.employee.ordinaryMonth).toBe(261.735);
+    expect(breakdown.employer.ordinaryMonth).toBe(399.085);
+    expect(state.monthlyAmountsAreAverages).toBe(true);
+    expect(state.insurance.month * 14).toBeCloseTo(state.insurance.year, 6);
+    expect(breakdown.employee.ordinaryMonth * 14).not.toBeCloseTo(state.insurance.year, 2);
+    // 2026 tax: 900 + 2000 + 4444.38 × .26; credit: 777 - 12444.38 × .02.
+    expect(state.finalTax.year).toBe(3527.43);
+    expect(result.finalIncomeYearly).toBe(20916.95);
+  });
+
   it("applies the returning-resident multiplier from the selected year", () => {
     const regular = calculateEmployeeForGrossMonth(
       createEmployeeInput(2025),

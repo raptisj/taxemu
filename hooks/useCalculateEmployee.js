@@ -1,6 +1,7 @@
 import { useToast } from "@chakra-ui/react";
 import { useStore } from "store";
-import { calculateEmployeeForGrossMonth } from "../utils/employeeCalculation";
+import { isEngineer, supportsEngineer, engineerUnsupportedMessage } from "../utils/employeeContributions";
+import { calculateEmployeeForGrossMonth, solveEngineerGrossForNet } from "../utils/employeeCalculation";
 import { getComparisonInput } from "../utils/yearComparison";
 
 export { calculateEmployeeForGrossMonth } from "../utils/employeeCalculation";
@@ -14,9 +15,9 @@ export const useCalculateEmployee = () => {
   const setHasError = useStore((state) => state.setHasError);
   const toast = useToast();
 
-  const showError = () => {
+  const showError = (title = "Λείπουν απαιτούμενα πεδία!") => {
     toast({
-      title: "Λείπουν απαιτούμενα πεδία!",
+      title,
       position: "top",
       isClosable: true,
       status: "warning",
@@ -80,6 +81,7 @@ export const useCalculateEmployee = () => {
   };
 
   const centralCalculation = () => {
+    if (isEngineer(userDetails) && !supportsEngineer(userDetails.taxationYear)) return showError(engineerUnsupportedMessage(userDetails.taxationYear));
     if (!userDetails.grossIncomeYearly || !userDetails.grossIncomeMonthly) {
       return showError();
     }
@@ -96,8 +98,16 @@ export const useCalculateEmployee = () => {
   };
 
   const reverseCentralCalculation = () => {
+    if (isEngineer(userDetails) && !supportsEngineer(userDetails.taxationYear)) return showError(engineerUnsupportedMessage(userDetails.taxationYear));
     if (!userDetails.finalIncomeMonthly || !userDetails.finalIncomeYearly) {
       return showError();
+    }
+
+    if (isEngineer(userDetails)) {
+      const period = userDetails.finalMonthOrYear;
+      const target = period === "year" ? userDetails.finalIncomeYearly : userDetails.finalIncomeMonthly;
+      const { grossIncomeMonthly, result } = solveEngineerGrossForNet(userDetails, target, period);
+      return commitResult({ result, grossIncomeMonthly, grossIncomeYearly: grossIncomeMonthly * userDetails.salaryMonthCount });
     }
 
     let grossIncomeMonthly = 0;

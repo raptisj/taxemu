@@ -17,6 +17,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
+import EmployeeInsuranceFields from "../../components/employee/EmployeeInsuranceFields";
 import { getTaxRules, supportedTaxYears } from "../../rules";
 import { formatRatePercentage, getInsuranceMonthlyAmounts } from "../../utils";
 import {
@@ -265,6 +266,8 @@ export const ComparisonForm = ({ input, setInput }) => {
                 </Select>
               </FormControl>
             </SimpleGrid>
+
+            <EmployeeInsuranceFields details={input} idPrefix="offer-employee" onChange={(options) => setInput((current) => ({ ...current, ...options }))} />
 
             {rules.business.insurance.monthlyUnemploymentContribution > 0 && (
               <Text mt={3} fontSize="xs" color="gray.500">

@@ -1,3 +1,4 @@
+import { employeeInsuranceDefaults, isEngineer } from "./employeeContributions";
 import { getTaxRules } from "../rules";
 
 const serializeIncome = (source, amount) => `${source}:${Number(amount)}`;
@@ -41,6 +42,13 @@ export const getEmployeeCalculationInput = (employee) => ({
       : employee.finalIncomeYearly,
   ),
   salaryMonthCount: employee.salaryMonthCount,
+  insuranceProfile: employee.insuranceProfile ?? employeeInsuranceDefaults.insuranceProfile,
+  ...(isEngineer(employee) ? {
+    supplementaryCategory: employee.supplementaryCategory ?? 1,
+    lumpSumCategory: employee.lumpSumCategory ?? 1,
+    supplementaryFund: employee.supplementaryFund ?? "efka",
+    ...(employee.activeInput === "final" ? { finalMonthOrYear: employee.finalMonthOrYear ?? "month" } : {}),
+  } : {}),
   taxationYear: employee.taxationYear,
   numberOfChildren: employee.numberOfChildren,
   ageGroup: employee.ageGroup,

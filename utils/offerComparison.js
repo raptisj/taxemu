@@ -1,6 +1,7 @@
 import { getTaxRules, latestTaxYear, supportedTaxYears } from "../rules";
 import { calculateBusinessResults } from "./business";
 import { calculateEmployeeForGrossMonth } from "./employeeCalculation";
+import { employeeInsuranceDefaults, isEngineer, supportsEngineer, validateEmployeeInsuranceInput, moneyToCents } from "./employeeContributions";
 import { roundMoney } from "./employee";
 
 export const OFFER_COMPARISON_MODES = Object.freeze({
@@ -18,6 +19,7 @@ export const OFFER_PERIODS = Object.freeze({
 export const AVERAGE_WORKING_DAYS_PER_MONTH = 21.75;
 
 export const createDefaultOfferComparisonInput = () => ({
+  ...employeeInsuranceDefaults,
   mode: OFFER_COMPARISON_MODES.EMPLOYEE,
   taxationYear: latestTaxYear,
   companyBudget: 0,
@@ -74,6 +76,11 @@ export const getAnnualFreelancerOffer = (input) => {
 };
 
 const employeeDetails = (input) => ({
+  ...employeeInsuranceDefaults,
+  insuranceProfile: input.insuranceProfile ?? "general",
+  supplementaryCategory: input.supplementaryCategory ?? 1,
+  lumpSumCategory: input.lumpSumCategory ?? 1,
+  supplementaryFund: input.supplementaryFund ?? "efka",
   salaryMonthCount: finiteNonNegative(input.salaryMonthCount),
   taxationYear: Number(input.taxationYear),
   numberOfChildren: Math.trunc(finiteNonNegative(input.numberOfChildren)),
@@ -95,6 +102,8 @@ export const calculateEmployeeOffer = (input, annualGross) => {
     annualGross: grossIncome,
     grossPerSalary: grossIncome / salaryMonthCount,
     salaryMonthCount,
+    contributionBreakdown: state.contributionBreakdown,
+    monthlyAmountsAreAverages: state.monthlyAmountsAreAverages,
     employeeInsurance: state.insurance.year,
     employerInsurance: state.employerObligations.year,
     incomeTax: state.finalTax.year,
@@ -174,7 +183,7 @@ export const calculateFreelancerOffer = (input, annualRevenue) => {
   };
 };
 
-const solveMinimum = ({ target, calculate, select }) => {
+const solveMinimum = ({ target, calculate, select, cents = false }) => {
   const wanted = finiteNonNegative(target);
   if (!wanted) return 0;
 
@@ -193,12 +202,14 @@ const solveMinimum = ({ target, calculate, select }) => {
     else low = middle;
   }
 
-  return roundMoney(high);
+  // Keep the minimum solution on or above the target after currency rounding.
+  return cents ? Math.ceil(high * 100) / 100 : roundMoney(high);
 };
 
 export const solveEmployeeGrossForCompanyCost = (input, companyBudget) =>
   solveMinimum({
     target: companyBudget,
+    cents: isEngineer(input),
     calculate: (annualGross) => calculateEmployeeOffer(input, annualGross),
     select: (result) => result.companyCost,
   });
@@ -206,6 +217,7 @@ export const solveEmployeeGrossForCompanyCost = (input, companyBudget) =>
 export const solveEmployeeGrossForNet = (input, annualNet) =>
   solveMinimum({
     target: annualNet,
+    cents: isEngineer(input),
     calculate: (annualGross) => calculateEmployeeOffer(input, annualGross),
     select: (result) => result.annualNet,
   });
@@ -220,12 +232,26 @@ export const solveFreelancerRevenueForNet = (input, annualNet) =>
 
 const hasPositive = (value) => finiteNonNegative(value) > 0;
 
+export const getEngineerMinimumEmployerCost = (input) => {
+  if (!isEngineer(input) || !supportsEngineer(input.taxationYear)) return 0;
+  const rules = getTaxRules(input.taxationYear).employee.insurance.engineer;
+  return moneyToCents(
+    rules.supplementaryMonthlyAmounts[(input.supplementaryCategory ?? rules.defaultCategory) - 1] *
+    (1 - rules.supplementaryEmployeeShare) * rules.insuredMonths,
+  );
+};
+
 export const calculateOfferComparison = (input) => {
+  if (isEngineer(input) && !supportsEngineer(input.taxationYear)) return null;
   const mode = input.mode;
   const employeeAnnualOffer = getAnnualEmployeeOffer(input);
   const freelancerAnnualOffer = getAnnualFreelancerOffer(input);
   const companyBudget = finiteNonNegative(input.companyBudget);
   const effectiveBillableMonths = getEffectiveBillableMonths(input);
+  // A positive full-year engineer salary cannot fit a budget below its fixed
+  // employer supplementary contributions. Do not return a zero-pay match.
+  if (isEngineer(input) && mode === OFFER_COMPARISON_MODES.BUDGET &&
+      companyBudget <= getEngineerMinimumEmployerCost(input)) return null;
 
   if (
     (mode === OFFER_COMPARISON_MODES.BUDGET && !hasPositive(companyBudget)) ||
@@ -347,6 +373,7 @@ export const parseOfferComparisonInput = (value) => {
     if (!Object.values(OFFER_PERIODS).includes(result.freelancerOfferPeriod)) return null;
     if (!supportedTaxYears.includes(Number(result.taxationYear))) return null;
 
+    validateEmployeeInsuranceInput(result);
     return result;
   } catch {
     return null;

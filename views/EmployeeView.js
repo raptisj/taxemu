@@ -14,6 +14,7 @@ import { Sidebar } from "components/layout";
 import Table from "components/table";
 import { useCalculateEmployee } from "hooks";
 import EmployeeForm from "components/employee/EmployeeForm";
+import EmployeeContributionBreakdown from "components/employee/EmployeeContributionBreakdown";
 import { EmployeeInsights } from "features/employeeInsights";
 import { YearComparison } from "features/yearComparison";
 import { useRouter } from "next/router";
@@ -95,6 +96,7 @@ const EmployeeView = () => {
                   }
                 />
                 <Table.Employee />
+                <EmployeeContributionBreakdown breakdown={userDetails.tableResults.contributionBreakdown} taxationYear={userDetails.tableResults.taxationYear} />
                 <YearComparison entity="employee" />
               </TabPanel>
               <TabPanel p={0} pr={4}>

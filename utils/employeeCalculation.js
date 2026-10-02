@@ -8,6 +8,7 @@ import {
   roundMoney,
   toFixedNumber,
 } from "./employee";
+import { calculateEngineerContributions, isEngineer, moneyToCents, validateEmployeeInsuranceInput } from "./employeeContributions";
 import { calculateIncomeTaxFromPolicy } from "./taxPolicy";
 
 export const calculateEmployeeForGrossMonth = (
@@ -22,23 +23,27 @@ export const calculateEmployeeForGrossMonth = (
     ageGroup,
   } = userDetails;
   const rules = getEmployeeRules(taxationYear);
+  validateEmployeeInsuranceInput(userDetails);
+  const engineer = isEngineer(userDetails);
+  const contributionBreakdown = engineer ? calculateEngineerContributions(userDetails, currentGrossMonth) : null;
 
   const contributionBase = Math.min(
     currentGrossMonth,
     rules.insurance.monthlyContributionCap,
   );
-  const insuranceMonthly = roundMoney(
-    contributionBase * rules.insurance.employeeRate,
-  );
-  const employerMonthlyDues = roundMoney(
-    contributionBase * rules.insurance.employerRate,
-  );
-  const sumToBeTaxed =
-    (currentGrossMonth - insuranceMonthly) * salaryMonthCount;
+  const insuranceMonthly = engineer
+    ? contributionBreakdown.employee.year / salaryMonthCount
+    : roundMoney(contributionBase * rules.insurance.employeeRate);
+  const employerMonthlyDues = engineer
+    ? contributionBreakdown.employer.year / salaryMonthCount
+    : roundMoney(contributionBase * rules.insurance.employerRate);
+  const employeeAnnualDues = engineer ? contributionBreakdown.employee.year : insuranceMonthly * salaryMonthCount;
+  const employerAnnualDues = engineer ? contributionBreakdown.employer.year : employerMonthlyDues * salaryMonthCount;
+  const sumToBeTaxed = engineer
+    ? Math.max(0, moneyToCents(currentGrossMonth * salaryMonthCount - employeeAnnualDues))
+    : (currentGrossMonth - insuranceMonthly) * salaryMonthCount;
   const grossAfterInsuranceMonthly = currentGrossMonth - insuranceMonthly;
-  const grossAfterInsuranceYearly = ceilMoney(
-    grossAfterInsuranceMonthly * salaryMonthCount,
-  );
+  const grossAfterInsuranceYearly = engineer ? sumToBeTaxed : ceilMoney(grossAfterInsuranceMonthly * salaryMonthCount);
   const taxableSum = applyReturnBaseInland(
     sumToBeTaxed,
     discountOptions.returnBaseInland,
@@ -70,19 +75,22 @@ export const calculateEmployeeForGrossMonth = (
     reductionRate: rules.taxCredit.reductionRate,
   });
   const canApplyDiscount = ceilMoney(taxBeforeDiscount) > childDiscountAmount;
-  const taxAfterDiscount = canApplyDiscount
-    ? omitDiscountIfNegative(taxBeforeDiscount, discount)
-    : 0;
+  const taxAfterDiscount = engineer
+    ? moneyToCents(Math.max(0, taxBeforeDiscount - discount))
+    : canApplyDiscount
+      ? omitDiscountIfNegative(taxBeforeDiscount, discount)
+      : 0;
   const finalIncomeBeforeRounding =
     grossAfterInsuranceMonthly - taxAfterDiscount / salaryMonthCount;
-  const finalIncomeMonthly = toFixedNumber(finalIncomeBeforeRounding, 0);
+  const finalIncomeMonthly = toFixedNumber(finalIncomeBeforeRounding, engineer ? 2 : 0);
   const finalIncomeYearly = toFixedNumber(
     finalIncomeBeforeRounding * salaryMonthCount,
-    0,
+    engineer ? 2 : 0,
   );
   const totalEmployerCostMonthly = currentGrossMonth + employerMonthlyDues;
-  const totalEmployerCostYearly =
-    totalEmployerCostMonthly * salaryMonthCount;
+  const totalEmployerCostYearly = engineer
+    ? moneyToCents(currentGrossMonth * salaryMonthCount + employerAnnualDues)
+    : totalEmployerCostMonthly * salaryMonthCount;
   const taxWedgeMonthly = totalEmployerCostMonthly - finalIncomeMonthly;
   const taxWedgeYearly = totalEmployerCostYearly - finalIncomeYearly;
   const asPercentageOfEmployerCost = (amount, employerCost) =>
@@ -92,13 +100,15 @@ export const calculateEmployeeForGrossMonth = (
     finalIncomeMonthly,
     finalIncomeYearly,
     calculatedState: {
+      contributionBreakdown,
+      monthlyAmountsAreAverages: engineer,
       initialTax: {
-        month: ceilMoney(taxBeforeDiscount) / salaryMonthCount,
-        year: ceilMoney(taxBeforeDiscount),
+        month: (engineer ? moneyToCents(taxBeforeDiscount) : ceilMoney(taxBeforeDiscount)) / salaryMonthCount,
+        year: engineer ? moneyToCents(taxBeforeDiscount) : ceilMoney(taxBeforeDiscount),
       },
       employerObligations: {
         month: employerMonthlyDues,
-        year: employerMonthlyDues * salaryMonthCount,
+        year: employerAnnualDues,
       },
       totalEmployerCost: {
         month: totalEmployerCostMonthly,
@@ -123,14 +133,14 @@ export const calculateEmployeeForGrossMonth = (
         year: discount,
       },
       taxableIncome: {
-        month: ceilMoney(taxableSum / salaryMonthCount),
+        month: engineer ? taxableSum / salaryMonthCount : ceilMoney(taxableSum / salaryMonthCount),
         year: taxableSum,
       },
       taxAfterDiscount,
       currentInsuranceDiscount: ceilMoney(discount),
       insurance: {
         month: insuranceMonthly,
-        year: insuranceMonthly * salaryMonthCount,
+        year: employeeAnnualDues,
       },
       finalTax: {
         month: taxAfterDiscount / salaryMonthCount,
@@ -138,4 +148,25 @@ export const calculateEmployeeForGrossMonth = (
       },
     },
   };
+};
+
+// Search the shared forward formula so reverse estimates use the same fixed charges
+// and annual tax basis. The requested monthly amount is an average per salary.
+export const solveEngineerGrossForNet = (details, target, period = "month") => {
+  if (!Number.isFinite(target) || target <= 0) throw new Error("A positive net income is required");
+  const wanted = period === "year" ? target : target * details.salaryMonthCount;
+  let low = 0;
+  let high = Math.max(1000, wanted / details.salaryMonthCount * 2);
+  let attempts = 0;
+  while (calculateEmployeeForGrossMonth(details, high).finalIncomeYearly < wanted) {
+    high *= 2;
+    if (++attempts > 40) throw new Error("Could not bracket engineer net income");
+  }
+  for (let index = 0; index < 60; index++) {
+    const middle = (low + high) / 2;
+    if (calculateEmployeeForGrossMonth(details, middle).finalIncomeYearly >= wanted) high = middle;
+    else low = middle;
+  }
+  const grossIncomeMonthly = moneyToCents(high);
+  return { grossIncomeMonthly, result: calculateEmployeeForGrossMonth(details, grossIncomeMonthly) };
 };

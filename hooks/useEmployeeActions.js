@@ -1,4 +1,5 @@
 import { useStore } from "store";
+import { isEngineer, moneyToCents } from "../utils/employeeContributions";
 import { getEmployeeRules, getTaxRules } from "../rules";
 
 export const useEmployeeActions = () => {
@@ -15,10 +16,10 @@ export const useEmployeeActions = () => {
 
   const isGrossMonthly = grossMonthOrYear === "month";
   const isFinalMonthly = finalMonthOrYear === "month";
-  const findMonthlyAmount = (amount, months) =>
-    Math.round(Number(amount) / Number(months));
+  const normalizeIncome = (amount) => isEngineer(userDetails) ? moneyToCents(Number(amount)) : Math.round(Number(amount));
+  const findMonthlyAmount = (amount, months) => isEngineer(userDetails) ? Number(amount) / Number(months) : Math.round(Number(amount) / Number(months));
   const findYearlyAmount = (amount, months) =>
-    Math.round(Number(amount) * Number(months));
+    normalizeIncome(Number(amount) * Number(months));
   const findInsurancePerMonth = (amount, months, insurancePercentage) =>
     Math.round(findMonthlyAmount(amount, months) * insurancePercentage);
 
@@ -38,9 +39,7 @@ export const useEmployeeActions = () => {
 
   const onChangeGrossIncome = (value, count) => {
     updateEmployee({
-      [isGrossMonthly ? "grossIncomeMonthly" : "grossIncomeYearly"]: Math.round(
-        Number(value),
-      ),
+      [isGrossMonthly ? "grossIncomeMonthly" : "grossIncomeYearly"]: normalizeIncome(value),
       [isGrossMonthly ? "grossIncomeYearly" : "grossIncomeMonthly"]:
         isGrossMonthly
           ? findYearlyAmount(value, count)
@@ -55,9 +54,7 @@ export const useEmployeeActions = () => {
 
   const onChangeFinalIncome = (value, count) => {
     updateEmployee({
-      [isFinalMonthly ? "finalIncomeMonthly" : "finalIncomeYearly"]: Math.round(
-        Number(value),
-      ),
+      [isFinalMonthly ? "finalIncomeMonthly" : "finalIncomeYearly"]: normalizeIncome(value),
       [isFinalMonthly ? "finalIncomeYearly" : "finalIncomeMonthly"]:
         isFinalMonthly
           ? findYearlyAmount(value, count)
@@ -83,6 +80,15 @@ export const useEmployeeActions = () => {
             ),
     });
   };
+  const onChangeInsuranceOptions = (options) => {
+    updateEmployee({
+      ...options,
+      ...(options.insuranceProfile === "engineer" && grossMonthOrYear === "year" ? {
+        grossIncomeMonthly: grossIncomeYearly / userDetails.salaryMonthCount,
+      } : {}),
+    });
+    setHasError({ entity: "employee", value: false });
+  };
   const onSelectInsuranceCarrier = (e) =>
     updateEmployee({ insuranceCarrier: e.target.value });
   const onChangeNumberOfChildren = (value) =>
@@ -91,6 +97,7 @@ export const useEmployeeActions = () => {
     updateEmployee({ ageGroup: e.target.value });
 
   return {
+    onChangeInsuranceOptions,
     onSelectSalaryMonthCount,
     onChangeGrossIncome,
     onSelectGrossMonthOrYear,
