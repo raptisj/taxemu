@@ -1,3 +1,4 @@
+import { engineerEstimateNote, isEngineer, supportsEngineer, engineerUnsupportedMessage, formatContributionMoney } from "../../utils/employeeContributions";
 import { getTaxRules } from "../../rules";
 import {
   calculateBusinessResults,
@@ -68,6 +69,11 @@ export const buildEmployeeExplanation = (details) => {
   const rules = getTaxRules(details.taxationYear);
   const employeeRules = rules.employee;
   const grossMonthly = asNumber(details.grossIncomeMonthly);
+  const engineer = isEngineer(details);
+  if (engineer && !supportsEngineer(details.taxationYear)) return {
+    year: rules.year, intro: engineerUnsupportedMessage(details.taxationYear),
+    sections: [], sources: rules.sources, hasCalculation: false,
+  };
   const hasCalculation = grossMonthly > 0;
   const calculation = hasCalculation
     ? calculateEmployeeForGrossMonth(details, grossMonthly)
@@ -97,7 +103,7 @@ export const buildEmployeeExplanation = (details) => {
 
   return {
     year: rules.year,
-    intro: `Οι παρακάτω συντελεστές και τα παραδείγματα προκύπτουν από τους κανόνες του ${rules.year} και τις τρέχουσες τιμές της φόρμας.`,
+    intro: `${engineer ? "Τα μηνιαία ποσά είναι μέσοι όροι ανά μισθολογική ισοδυναμία. " : ""}Οι παρακάτω συντελεστές και τα παραδείγματα προκύπτουν από τους κανόνες του ${rules.year} και τις τρέχουσες τιμές της φόρμας.`,
     sections: [
       {
         title: "Παράμετροι υπολογισμού",
@@ -105,10 +111,12 @@ export const buildEmployeeExplanation = (details) => {
       },
       {
         title: "Ασφαλιστικές και εργοδοτικές εισφορές",
-        description: `Οι εισφορές εργαζομένου είναι ${formatExplanationRate(employeeRules.insurance.employeeRate)} και οι εργοδοτικές ${formatExplanationRate(employeeRules.insurance.employerRate)}. Και οι δύο εφαρμόζονται έως το μηνιαίο όριο ασφαλιστέων αποδοχών των ${formatExplanationMoney(employeeRules.insurance.monthlyContributionCap)}.`,
+        description: engineer ? `${engineerEstimateNote} Τα ποσοστιαία στοιχεία και οι κατηγορίες εμφανίζονται στην ανάλυση εισφορών· η κανονική μηνιαία χρέωση διαφέρει από τον μέσο όρο ανά μισθό.` : `Οι εισφορές εργαζομένου είναι ${formatExplanationRate(employeeRules.insurance.employeeRate)} και οι εργοδοτικές ${formatExplanationRate(employeeRules.insurance.employerRate)}. Και οι δύο εφαρμόζονται έως το μηνιαίο όριο ασφαλιστέων αποδοχών των ${formatExplanationMoney(employeeRules.insurance.monthlyContributionCap)}.`,
+        rules: calculated?.contributionBreakdown?.rows.map((row) =>
+          `${row.label}: εργαζόμενος ${formatContributionMoney(row.employee.year)}, εργοδότης ${formatContributionMoney(row.employer.year)} / έτος${row.kind === "fixed" ? ` · ${row.category}η κατηγορία, 12 μήνες` : ` · ${(row.employeeRate * 100).toLocaleString("el-GR")}% / ${(row.employerRate * 100).toLocaleString("el-GR")}%`}`),
         items: calculated
           ? [
-              `Εισφορές εργαζομένου: ${formatExplanationMoney(calculated.insurance.month)} ανά μισθό, ${formatExplanationMoney(calculated.insurance.year)} ετησίως`,
+              `Εισφορές εργαζομένου: ${formatExplanationMoney(calculated.insurance.month)} ${engineer ? "κατά μέσο όρο ανά μισθό" : "ανά μισθό"}, ${formatExplanationMoney(calculated.insurance.year)} ετησίως`,
               `Εργοδοτικές εισφορές: ${formatExplanationMoney(calculated.employerObligations.month)} ανά μισθό, ${formatExplanationMoney(calculated.employerObligations.year)} ετησίως`,
               `Συνολικό εργοδοτικό κόστος: ${formatExplanationMoney(calculated.totalEmployerCost.month)} ανά μισθό, ${formatExplanationMoney(calculated.totalEmployerCost.year)} ετησίως`,
               `Φορολογική επιβάρυνση: ${formatExplanationMoney(calculated.taxWedge.month)} (${formatExplanationRate(calculated.taxWedgePercentage.month / 100)}) ανά μισθό, ${formatExplanationMoney(calculated.taxWedge.year)} (${formatExplanationRate(calculated.taxWedgePercentage.year / 100)}) ετησίως`,

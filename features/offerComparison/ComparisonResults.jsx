@@ -14,10 +14,12 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
+import EmployeeContributionBreakdown from "../../components/employee/EmployeeContributionBreakdown";
+import { isEngineer, supportsEngineer, engineerUnsupportedMessage } from "../../utils/employeeContributions";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { inlineLinkStyles } from "../../styles/inlineLink";
 import { getTaxRules } from "../../rules";
-import { COMPARISON_PERSPECTIVES, OFFER_TYPES, getEffectiveBillableMonths } from "../../utils/offerComparison";
+import { COMPARISON_PERSPECTIVES, OFFER_TYPES, getEffectiveBillableMonths, getEngineerMinimumEmployerCost } from "../../utils/offerComparison";
 import { formatRatePercentage } from "../../utils";
 
 const money = new Intl.NumberFormat("el-GR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
@@ -49,7 +51,7 @@ const Metric = ({ label, value, negative = false }) => (
   </Flex>
 );
 
-const ResultCard = ({ type, result, company }) => {
+const ResultCard = ({ type, result, company, taxationYear }) => {
   const employee = type === OFFER_TYPES.EMPLOYEE;
   return (
     <Box borderWidth="1px" borderColor={employee ? "blue.200" : "purple.200"} borderRadius="xl" bg="white" p={{ base: 4, md: 5 }} minW={0}>
@@ -64,7 +66,7 @@ const ResultCard = ({ type, result, company }) => {
         <Text fontWeight={company ? "800" : "600"} fontSize={company ? "lg" : "sm"}>{formatMoney(result.companyCost)}</Text>
       </Box>
       {employee ? (
-        <Text color="gray.600" fontSize="xs" mt={3}>{formatMoney(result.netPerSalary)} καθαρά ανά μισθό · {result.salaryMonthCount} μισθοί / έτος</Text>
+        <Text color="gray.600" fontSize="xs" mt={3}>{formatMoney(result.netPerSalary)} {result.monthlyAmountsAreAverages ? "μέσα καθαρά ανά μισθό" : "καθαρά ανά μισθό"} · {result.salaryMonthCount} μισθοί / έτος</Text>
       ) : (
         <>
           <Text color="gray.600" fontSize="xs" mt={3}>{formatMoney(result.invoicePerBillableMonth)} τιμολόγιο / χρεώσιμο μήνα, χωρίς ΦΠΑ · {decimal.format(result.effectiveBillableMonths)} μήνες</Text>
@@ -75,6 +77,7 @@ const ResultCard = ({ type, result, company }) => {
           </Box>
         </>
       )}
+      {employee && <EmployeeContributionBreakdown breakdown={result.contributionBreakdown} taxationYear={taxationYear} />}
       <Box mt={4}>
         <Disclosure title="Ανάλυση ποσών ανά έτος">
           <Metric label={employee ? "Μικτές αποδοχές" : "Έσοδα από τιμολόγια χωρίς ΦΠΑ"} value={employee ? result.annualGross : result.annualRevenue} />
@@ -115,7 +118,7 @@ const Insights = ({ comparison, input }) => {
   const company = input.perspective === COMPARISON_PERSPECTIVES.COMPANY;
   const alternative = employeeKnown ? benchmarks.freelancerAtEmployeeCost : benchmarks.employeeAtFreelancerCost;
   const known = employeeKnown ? employee : freelancer;
-  const monthlyChange = (alternative.annualNet - known.annualNet) / 12;
+  const monthlyChange = alternative ? (alternative.annualNet - known.annualNet) / 12 : null;
   return (
     <Box borderWidth="1px" borderColor="gray.200" borderRadius="xl" bg="white" p={{ base: 4, md: 5 }}>
       <Heading as="h3" fontSize="lg">Ποια προσφορά εξισώνει τα καθαρά;</Heading>
@@ -134,7 +137,7 @@ const Insights = ({ comparison, input }) => {
             <Text color="blue.800" fontWeight="800" mt={2}>{formatMoney(benchmarks.requiredEmployeeGross)} μικτές αποδοχές / έτος</Text>
           </Box>
         )}
-        {!company && (
+        {!company && alternative && (
           <Box bg="gray.50" borderRadius="lg" p={4}>
             <Text fontWeight="700" fontSize="sm">Περιθώριο διαπραγμάτευσης με το ίδιο εταιρικό κόστος</Text>
             <Text fontSize="sm" color="gray.600" mt={2}>Η γνωστή πρόταση κοστίζει στην εταιρεία {formatMoney(known.companyCost)} / έτος. Αν το ίδιο budget δοθεί ως {employeeKnown ? "αμοιβή freelancer" : "μισθωτή εργασία"}, μένουν {formatMoney(alternative.monthlyNet)} καθαρά / ημερολογιακό μήνα.</Text>
@@ -150,6 +153,13 @@ const Insights = ({ comparison, input }) => {
 export const ComparisonResults = ({ comparison, input }) => {
   const rules = getTaxRules(input.taxationYear);
   const company = input.perspective === COMPARISON_PERSPECTIVES.COMPANY;
+  if (isEngineer(input) && !supportsEngineer(input.taxationYear)) {
+    return <Box role="alert" borderWidth="1px" borderRadius="xl" bg="orange.50" p={5}><Text>{engineerUnsupportedMessage(input.taxationYear)}</Text></Box>;
+  }
+  if (!comparison && isEngineer(input) && company && input.companyBudget > 0 &&
+      input.companyBudget <= getEngineerMinimumEmployerCost(input)) {
+    return <Box role="status" borderWidth="1px" borderRadius="xl" bg="orange.50" p={5}><Text>Το ετήσιο budget δεν καλύπτει τις σταθερές εργοδοτικές εισφορές μηχανικού. Αύξησε το budget για σύγκριση με θετικές αποδοχές.</Text></Box>;
+  }
   if (!comparison) return (
     <Stack spacing={4}>
       <Box borderWidth="1px" borderStyle="dashed" borderColor="purple.200" borderRadius="xl" bg="purple.50" p={{ base: 5, md: 8 }}>
@@ -174,7 +184,7 @@ export const ComparisonResults = ({ comparison, input }) => {
         {comparison.basis === "actual-offers" && <Text fontSize="xs" color="gray.600" mt={2}>Η πρόταση freelancer κοστίζει στην εταιρεία {formatMoney(Math.abs(comparison.difference.companyCost))} {comparison.difference.companyCost >= 0 ? "περισσότερο" : "λιγότερο"} / έτος.</Text>}
       </Box>
       <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={4}>
-        <ResultCard type={OFFER_TYPES.EMPLOYEE} result={comparison.employee} company={company} />
+        <ResultCard type={OFFER_TYPES.EMPLOYEE} result={comparison.employee} company={company} taxationYear={input.taxationYear} />
         <ResultCard type={OFFER_TYPES.FREELANCER} result={comparison.freelancer} company={company} />
       </SimpleGrid>
       <Assumptions input={input} />

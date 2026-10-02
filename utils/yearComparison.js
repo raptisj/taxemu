@@ -1,6 +1,7 @@
+import { employeeInsuranceDefaults, isEngineer, supportsEngineer, engineerUnsupportedMessage } from "./employeeContributions";
 import { supportedTaxYears } from "../rules";
 import { calculateBusinessResults } from "./business";
-import { calculateEmployeeForGrossMonth } from "./employeeCalculation";
+import { calculateEmployeeForGrossMonth, solveEngineerGrossForNet } from "./employeeCalculation";
 
 const isSupportedYear = (year) => supportedTaxYears.includes(Number(year));
 
@@ -33,6 +34,12 @@ export const removeComparisonParams = (query = {}) => {
 const sharedFields = {
   employee: [
     "activeInput",
+    "insuranceProfile",
+    "supplementaryCategory",
+    "lumpSumCategory",
+    "supplementaryFund",
+    "finalMonthOrYear",
+    "grossMonthOrYear",
     "grossIncomeMonthly",
     "grossIncomeYearly",
     "finalIncomeMonthly",
@@ -60,7 +67,7 @@ const sharedFields = {
 };
 
 export const getComparisonInput = (entity, details) => Object.fromEntries(
-  sharedFields[entity].map((field) => [field, details[field]]),
+  sharedFields[entity].map((field) => [field, details[field] ?? (entity === "employee" ? employeeInsuranceDefaults[field] : undefined)]),
 );
 
 export const serializeComparisonInput = (entity, details) => JSON.stringify({
@@ -81,11 +88,15 @@ export const parseComparisonInput = (entity, value) => {
       Array.isArray(payload.input)
     ) return null;
 
-    return Object.fromEntries(
+    if (entity === "employee" && payload.input.insuranceProfile && !["general", "engineer"].includes(payload.input.insuranceProfile)) return null;
+    if (entity === "employee" && payload.input.insuranceProfile === "engineer" &&
+      (["supplementaryCategory", "lumpSumCategory"].some((field) => payload.input[field] !== undefined && ![1, 2, 3].includes(payload.input[field])) ||
+      (payload.input.supplementaryFund !== undefined && !["efka", "teka"].includes(payload.input.supplementaryFund)))) return null;
+    return { ...(entity === "employee" ? employeeInsuranceDefaults : {}), ...Object.fromEntries(
       sharedFields[entity]
         .filter((field) => Object.prototype.hasOwnProperty.call(payload.input, field))
         .map((field) => [field, payload.input[field]]),
-    );
+    ) };
   } catch {
     return null;
   }
@@ -103,10 +114,17 @@ export const getDifference = (from, to) => {
 
 const employeeResultForYear = (details, year) => {
   const input = { ...details, taxationYear: year };
+  if (isEngineer(input) && !supportsEngineer(year)) return { year, unsupported: engineerUnsupportedMessage(year), metrics: {} };
   let grossMonth = details.grossIncomeMonthly;
   let result;
 
-  if (details.activeInput === "final") {
+  if (details.activeInput === "final" && isEngineer(input)) {
+    const period = details.finalMonthOrYear ?? "month";
+    const target = period === "year" ? details.finalIncomeYearly : details.finalIncomeMonthly;
+    const solved = solveEngineerGrossForNet(input, target, period);
+    grossMonth = solved.grossIncomeMonthly;
+    result = solved.result;
+  } else if (details.activeInput === "final") {
     for (let candidate = details.finalIncomeMonthly * 2; candidate >= 0; candidate--) {
       const candidateResult = calculateEmployeeForGrossMonth(input, candidate);
       if (candidateResult.finalIncomeMonthly === details.finalIncomeMonthly) {
@@ -128,6 +146,8 @@ const employeeResultForYear = (details, year) => {
 
   return {
     year,
+    monthlyAmountsAreAverages: state.monthlyAmountsAreAverages,
+    contributionBreakdown: state.contributionBreakdown,
     metrics: {
       insurance: state.insurance,
       taxableIncome: state.taxableIncome,
@@ -169,6 +189,7 @@ export const calculateYearComparison = (entity, details, years) => {
     ? employeeResultForYear
     : businessResultForYear;
   const results = years.map((year) => calculator(details, Number(year)));
+  if (results.some((result) => result.unsupported)) return { results, differences: null };
   const differences = Object.fromEntries(
     Object.keys(results[0].metrics).map((key) => [
       key,

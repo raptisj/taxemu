@@ -89,3 +89,23 @@ test("sharing includes both actual offers and the selected perspective", async (
   expect(JSON.parse(url.searchParams.get("offer"))).toMatchObject({ version: 2, input: { perspective: "personal", hasSecondOffer: true, employeeOfferAmount: 28000, freelancerOfferAmount: 3500 } });
   expect(replace).toHaveBeenCalledWith(expect.objectContaining({ pathname: "/compare" }), undefined, { shallow: true });
 });
+
+test("engineer options and exact contributions work with the new personal perspective", async () => {
+  renderComparison();
+  enter(salary(), 28000);
+  fireEvent.click(screen.getByRole("button", { name: /Φορολογικές παραδοχές/ }));
+  fireEvent.change(screen.getByLabelText("Ασφαλιστικό προφίλ"), { target: { value: "engineer" } });
+  expect(screen.getByLabelText("Κατηγορία επικουρικής ασφάλισης")).toHaveValue("1");
+  expect(screen.getByText(/μέσα καθαρά ανά μισθό/)).toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button", { name: "Ανάλυση ασφαλιστικών εισφορών μηχανικού" }));
+  await waitFor(() => expect(screen.getByText(/3\.555,62\s€/)).toBeVisible());
+  expect(screen.getByText(/5\.540,62\s€/)).toBeVisible();
+});
+
+test("engineer company budgets below the fixed contributions show a clear message", () => {
+  const shared = { ...createDefaultOfferComparisonInput(), perspective: "company", insuranceProfile: "engineer", companyBudget: 100 };
+  useRouter.mockReturnValue({ isReady: true, pathname: "/compare", query: { offer: serializeOfferComparisonInput(shared) } });
+  renderComparison();
+  expect(screen.getByRole("status")).toHaveTextContent("σταθερές εργοδοτικές εισφορές μηχανικού");
+  expect(screen.queryByText("καθαρά / ημερολογιακό μήνα")).not.toBeInTheDocument();
+});

@@ -46,6 +46,8 @@ const formatMoney = (value, showSign = false) => {
 const ComparisonCard = ({ entity, result }) => (
   <Box borderWidth="1px" borderRadius="xl" bg="white" p={{ base: 4, md: 5 }}>
     <Badge colorScheme="purple" mb={3}>{result.year}</Badge>
+    {result.unsupported && <Text role="status" fontSize="sm" color="orange.800">{result.unsupported}</Text>}
+    {result.monthlyAmountsAreAverages && <Text fontSize="xs" color="gray.500">Τα μηνιαία ποσά είναι μέσοι όροι ανά μισθολογική ισοδυναμία.</Text>}
     <Stack spacing={0}>
       {Object.entries(result.metrics).map(([key, value]) => (
         <Flex
@@ -281,9 +283,9 @@ export const YearComparison = ({ entity }) => {
                 <ComparisonCard key={result.year} entity={entity} result={result} />
               ))}
             </SimpleGrid>
-            <Box mt={4}>
+            {comparison.differences && <Box mt={4}>
               <DifferenceCard entity={entity} differences={comparison.differences} years={years} />
-            </Box>
+            </Box>}
           </>
         )}
       </Box>

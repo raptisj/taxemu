@@ -1,3 +1,4 @@
+import { engineerEstimateNote, isEngineer } from "../../utils/employeeContributions";
 import { getTaxRules } from "../../rules";
 import {
   calculateYearComparison,
@@ -98,6 +99,15 @@ const buildAssumptions = (entity, input, rules) => {
       },
       { label: "Μισθοί ανά έτος", value: input.salaryMonthCount },
     ];
+    if (isEngineer(input)) {
+      assumptions.push(
+        { label: "Ασφαλιστικό προφίλ", value: "Μισθωτός μηχανικός (πρώην ΤΣΜΕΔΕ)" },
+        { label: "Κατηγορία επικουρικής", value: `${input.supplementaryCategory ?? 1}η` },
+        { label: "Κατηγορία εφάπαξ", value: `${input.lumpSumCategory ?? 1}η` },
+        { label: "Φορέας επικουρικής", value: input.supplementaryFund === "teka" ? "ΤΕΚΑ" : "e-ΕΦΚΑ" },
+        { label: "Ασφαλισμένοι μήνες", value: 12 },
+      );
+    }
     if (rules.ui.employee.showChildren !== false) {
       assumptions.push({ label: "Τέκνα", value: input.numberOfChildren });
     }
@@ -210,6 +220,9 @@ export const buildPersonalCalculationPdfData = ({
         ? buildEmployeeResults(tableResults, calculationInput)
         : buildBusinessResults(tableResults),
     comparison,
+    contributionBreakdown: entity === "employee" ? tableResults.contributionBreakdown ?? null : null,
+    monthlyAmountsAreAverages: Boolean(tableResults.monthlyAmountsAreAverages),
+    estimateNote: entity === "employee" && isEngineer(calculationInput) ? engineerEstimateNote : null,
     sources: collectSources(sourceYears),
     disclaimer: DISCLAIMER,
   };

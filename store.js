@@ -1,4 +1,5 @@
 import create from "zustand";
+import { employeeInsuranceDefaults } from "./utils/employeeContributions";
 import { getTaxRules, latestTaxYear } from "./rules";
 import {
   getBusinessCalculationInput,
@@ -19,6 +20,7 @@ const initialState = {
   ////////////////////////////////////
   //
   employee: {
+    ...employeeInsuranceDefaults,
     hasError: false,
     grossIncomeYearly: 0,
     finalIncomeYearly: 0,

@@ -7,6 +7,7 @@ import {
   Flex,
   Text,
 } from "@chakra-ui/react";
+import { formatContributionMoney } from "../../utils/employeeContributions";
 import { useStore } from "store";
 import { formatCellPercentage, formatCellValue } from "utils";
 import MobileTableHeader from "./MobileTableHeader";
@@ -17,6 +18,7 @@ const MobileEmployeeTable = ({ onSubmitAction }) => {
 
   const {
     finalIncome,
+    monthlyAmountsAreAverages,
     grossIncome,
     finalTax,
     insurance,
@@ -28,6 +30,10 @@ const MobileEmployeeTable = ({ onSubmitAction }) => {
     taxableIncome,
   } = userDetails.tableResults;
 
+  const formatValue = monthlyAmountsAreAverages
+    ? (value) => value === null || value === undefined ? "------" : formatContributionMoney(Math.round(value * 100) / 100)
+    : formatCellValue;
+
   return (
     <>
       <MobileTableHeader
@@ -37,7 +43,7 @@ const MobileEmployeeTable = ({ onSubmitAction }) => {
 
       <Tabs isFitted mt={2}>
         <TabList>
-          <Tab _focus={{ outline: 0 }}>Ανά μήνα</Tab>
+          <Tab _focus={{ outline: 0 }}>{monthlyAmountsAreAverages ? "Μέσος όρος / μισθό" : "Ανά μήνα"}</Tab>
           <Tab _focus={{ outline: 0 }}>Ανά έτος</Tab>
         </TabList>
 
@@ -48,28 +54,28 @@ const MobileEmployeeTable = ({ onSubmitAction }) => {
                 Καθαρό εισόδημα
               </Text>
               <Text fontWeight="600">
-                {formatCellValue(finalIncome.month)}
+                {formatValue(finalIncome.month)}
               </Text>
             </Flex>
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Μικτό εισόδημα</Text>
-              <Text>{formatCellValue(grossIncome.month)}</Text>
+              <Text>{formatValue(grossIncome.month)}</Text>
             </Flex>
 
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Ασφαλιστικές εισφορές</Text>
-              <Text>{formatCellValue(insurance.month)}</Text>
+              <Text>{formatValue(insurance.month)}</Text>
             </Flex>
 
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Φορολογητέο εισόδημα</Text>
-              <Text>{formatCellValue(taxableIncome.month)}</Text>
+              <Text>{formatValue(taxableIncome.month)}</Text>
             </Flex>
 
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Φόρος εισοδήματος</Text>
               <Text>
-                {formatCellValue(
+                {formatValue(
                   grossIncome.month > finalTax.month && finalTax.month > 0
                     ? finalTax.month
                     : null,
@@ -79,12 +85,12 @@ const MobileEmployeeTable = ({ onSubmitAction }) => {
 
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Μείωση φόρου</Text>
-              <Text>{formatCellValue(childrenDiscountAmount.month)}</Text>
+              <Text>{formatValue(childrenDiscountAmount.month)}</Text>
             </Flex>
 
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Εργοδοτικές εισφορές</Text>
-              <Text>{formatCellValue(employerObligations.month)}</Text>
+              <Text>{formatValue(employerObligations.month)}</Text>
             </Flex>
             <Flex
               padding={3}
@@ -95,7 +101,7 @@ const MobileEmployeeTable = ({ onSubmitAction }) => {
                 Συνολικό εργοδοτικό κόστος
               </Text>
               <Text color="purple.800" fontWeight="600">
-                {formatCellValue(totalEmployerCost.month)}
+                {formatValue(totalEmployerCost.month)}
               </Text>
             </Flex>
             <Flex
@@ -116,7 +122,7 @@ const MobileEmployeeTable = ({ onSubmitAction }) => {
                 fontWeight="600"
                 flexShrink={0}
               >
-                <Text>{formatCellValue(taxWedge.month)}</Text>
+                <Text>{formatValue(taxWedge.month)}</Text>
                 <Text fontSize="xs">
                   (
                   {formatCellPercentage(
@@ -133,26 +139,26 @@ const MobileEmployeeTable = ({ onSubmitAction }) => {
               <Text fontWeight="600" fontSize="sm">
                 Καθαρό εισόδημα
               </Text>
-              <Text fontWeight="600">{formatCellValue(finalIncome.year)}</Text>
+              <Text fontWeight="600">{formatValue(finalIncome.year)}</Text>
             </Flex>
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Μικτό εισόδημα</Text>
-              <Text>{formatCellValue(grossIncome.year)}</Text>
+              <Text>{formatValue(grossIncome.year)}</Text>
             </Flex>
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Ασφαλιστικές εισφορές</Text>
-              <Text>{formatCellValue(insurance.year)}</Text>
+              <Text>{formatValue(insurance.year)}</Text>
             </Flex>
 
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Φορολογητέο εισόδημα</Text>
-              <Text>{formatCellValue(taxableIncome.year)}</Text>
+              <Text>{formatValue(taxableIncome.year)}</Text>
             </Flex>
 
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Φόρος εισοδήματος</Text>
               <Text>
-                {formatCellValue(
+                {formatValue(
                   grossIncome.year > finalTax.year && finalTax.year > 0
                     ? finalTax.year
                     : null,
@@ -162,12 +168,12 @@ const MobileEmployeeTable = ({ onSubmitAction }) => {
 
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Μείωση φόρου</Text>
-              <Text>{formatCellValue(childrenDiscountAmount.year)}</Text>
+              <Text>{formatValue(childrenDiscountAmount.year)}</Text>
             </Flex>
 
             <Flex padding={3} justifyContent="space-between">
               <Text fontSize="sm">Εργοδοτικές εισφορές</Text>
-              <Text>{formatCellValue(employerObligations.year)}</Text>
+              <Text>{formatValue(employerObligations.year)}</Text>
             </Flex>
             <Flex
               padding={3}
@@ -178,7 +184,7 @@ const MobileEmployeeTable = ({ onSubmitAction }) => {
                 Συνολικό εργοδοτικό κόστος
               </Text>
               <Text color="purple.800" fontWeight="600">
-                {formatCellValue(totalEmployerCost.year)}
+                {formatValue(totalEmployerCost.year)}
               </Text>
             </Flex>
             <Flex
@@ -199,7 +205,7 @@ const MobileEmployeeTable = ({ onSubmitAction }) => {
                 fontWeight="600"
                 flexShrink={0}
               >
-                <Text>{formatCellValue(taxWedge.year)}</Text>
+                <Text>{formatValue(taxWedge.year)}</Text>
                 <Text fontSize="xs">
                   (
                   {formatCellPercentage(

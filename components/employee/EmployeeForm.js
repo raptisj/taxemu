@@ -22,6 +22,8 @@ import FormElements from "components/input";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { useEmployeeActions, useCalculateEmployee } from "hooks";
 import { getTaxRules, supportedTaxYears } from "../../rules";
+import EmployeeInsuranceFields from "./EmployeeInsuranceFields";
+import { isEngineer } from "../../utils/employeeContributions";
 import { inlineLinkStyles } from "../../styles/inlineLink";
 
 const EmployeeForm = ({ showCalculatorType = true }) => {
@@ -34,12 +36,12 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
 
   const {
     onSelectSalaryMonthCount,
+    onChangeInsuranceOptions,
     onChangeGrossIncome,
     onSelectGrossMonthOrYear,
     onChangeFinalIncome,
     onSelectFinalIncomeMonthOfYear,
     onSelectTaxationYear,
-    onSelectInsuranceCarrier,
     onChangeNumberOfChildren,
     onSelectAgeGroup,
   } = useEmployeeActions();
@@ -50,7 +52,6 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
     grossMonthOrYear,
     salaryMonthCount,
     discountOptions,
-    insuranceCarrier,
     taxationYear,
     numberOfChildren,
     finalIncomeYearly,
@@ -103,6 +104,8 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
         </Box>
       </Box>
 
+      <EmployeeInsuranceFields details={userDetails} onChange={onChangeInsuranceOptions} />
+
       <Divider pt={6} />
 
       <Box mt={6}>
@@ -118,6 +121,7 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
             <FormControl isInvalid={hasError}>
               <NumberInput
                 mt={2}
+                precision={isEngineer(userDetails) ? 2 : undefined}
                 onChange={(value) =>
                   onChangeGrossIncome(value, salaryMonthCount)
                 }
@@ -147,6 +151,8 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
           </GridItem>
         </Grid>
 
+        {isEngineer(userDetails) && <Text fontSize="xs" color="gray.500" mt={3}>Το μηνιαίο καθαρό ποσό είναι μέσος όρος ανά μισθολογική ισοδυναμία, όχι η καθαρή αμοιβή κανονικού μήνα.</Text>}
+
         <Text my={4} textAlign="center" color="blackAlpha.300">
           Ή
         </Text>
@@ -158,6 +164,7 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
             </Text>
             <NumberInput
               mt={2}
+              precision={isEngineer(userDetails) ? 2 : undefined}
               onChange={(value) => onChangeFinalIncome(value, salaryMonthCount)}
               value={
                 finalMonthOrYear === "month"
@@ -222,16 +229,6 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
                 onChange={onSelectTaxationYear}
                 defaultValue={taxationYear}
                 options={taxationYearOptions}
-              />
-            </Box>
-
-            <Box mt={4}>
-              <FormElements.Select
-                label="Ασφαλιστικός φορέας"
-                onChange={onSelectInsuranceCarrier}
-                defaultValue={insuranceCarrier}
-                options={[{ value: "efka", text: "ΕΦΚΑ" }]}
-                disabled
               />
             </Box>
 

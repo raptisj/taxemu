@@ -2,6 +2,7 @@ import { Box, Button } from "@chakra-ui/react";
 import Table from "components/table";
 import MobileDrawerForm from "components/layout/MobileDrawerForm";
 import EmployeeForm from "components/employee/EmployeeForm";
+import EmployeeContributionBreakdown from "components/employee/EmployeeContributionBreakdown";
 import { useCalculateEmployee } from "hooks";
 import { useStore } from "store";
 import { useRouter } from "next/router";
@@ -47,6 +48,8 @@ const MobileEmployeeView = () => {
               isGrossAction ? centralCalculation : reverseCentralCalculation
             }
           />
+
+          <EmployeeContributionBreakdown breakdown={userDetails.tableResults.contributionBreakdown} taxationYear={userDetails.tableResults.taxationYear} />
 
           <MobileEmployeeInsights />
 

@@ -8,6 +8,7 @@ import {
   Text,
   View,
 } from "@react-pdf/renderer";
+import { formatContributionMoney } from "../../utils/employeeContributions";
 import { uppercaseWithoutDiacritics } from "./formatPdfText";
 
 const purple = "#6C63D5";
@@ -172,12 +173,12 @@ const formatAssumption = (assumption) => {
   return String(assumption.value);
 };
 
-const CurrentResults = ({ rows }) => (
+const CurrentResults = ({ rows, monthlyAmountsAreAverages }) => (
   <View style={styles.section} wrap={false}>
     <Text style={styles.sectionTitle}>Αποτελέσματα</Text>
     <View style={[styles.row, styles.headerRow]}>
       <Text style={[styles.currentLabelCell, styles.headerText]}>Κατηγορία</Text>
-      <Text style={[styles.currentValueCell, styles.headerText]}>Ανά μήνα</Text>
+      <Text style={[styles.currentValueCell, styles.headerText]}>{monthlyAmountsAreAverages ? "Μέσος όρος / μισθό" : "Ανά μήνα"}</Text>
       <Text style={[styles.currentValueCell, styles.headerText]}>Ανά έτος</Text>
     </View>
     {rows.map((row) => (
@@ -228,8 +229,42 @@ const comparisonLabel = (entity, key) => {
   return key;
 };
 
+const ContributionBreakdown = ({ breakdown, note }) => (
+  <View style={styles.section}>
+    <Text style={styles.sectionTitle}>Ανάλυση ασφαλιστικών εισφορών μηχανικού</Text>
+    <Text style={styles.intro}>{note}</Text>
+    <View style={[styles.row, styles.headerRow]}>
+      <Text style={[styles.currentLabelCell, styles.headerText]}>Κλάδος</Text>
+      <Text style={[styles.currentValueCell, styles.headerText]}>Εργαζόμενος / έτος</Text>
+      <Text style={[styles.currentValueCell, styles.headerText]}>Εργοδότης / έτος</Text>
+    </View>
+    {breakdown.rows.map((row) => (
+      <View key={row.id} wrap={false}>
+        <View style={styles.row}>
+          <Text style={styles.currentLabelCell}>{row.label}{row.kind === "fixed" ? ` · ${row.category}η κατηγορία` : ""}</Text>
+          <Text style={styles.currentValueCell}>{formatContributionMoney(row.employee.year)}</Text>
+          <Text style={styles.currentValueCell}>{formatContributionMoney(row.employer.year)}</Text>
+        </View>
+        <Text style={styles.caption}>Κανονικός μήνας: εργαζόμενος {formatContributionMoney(row.employee.ordinaryMonth)} · εργοδότης {formatContributionMoney(row.employer.ordinaryMonth)}{row.kind === "percentage" ? ` · ${(row.employeeRate * 100).toLocaleString("el-GR")}% / ${(row.employerRate * 100).toLocaleString("el-GR")}%` : " · 12 χρεώσεις ετησίως"}</Text>
+      </View>
+    ))}
+    <View style={styles.row} wrap={false}>
+      <Text style={[styles.currentLabelCell, styles.important]}>Σύνολο</Text>
+      <Text style={[styles.currentValueCell, styles.important]}>{formatContributionMoney(breakdown.employee.year)}</Text>
+      <Text style={[styles.currentValueCell, styles.important]}>{formatContributionMoney(breakdown.employer.year)}</Text>
+    </View>
+    <Text style={styles.caption}>Τα μηνιαία μερίδια της επικουρικής διατηρούν το μισό λεπτό όπου προκύπτει. Τα ετήσια ποσά είναι εκτιμήσεις πριν από τον επιμερισμό και τη στρογγυλοποίηση κάθε μισθοδοσίας.</Text>
+  </View>
+);
+
 const Comparison = ({ entity, comparison }) => {
   const [base, target] = comparison.results;
+  if (!comparison.differences) return (
+    <View style={styles.section}>
+      <Text style={styles.sectionTitle}>Σύγκριση φορολογικών ετών</Text>
+      {comparison.results.filter((result) => result.unsupported).map((result) => <Text key={result.year} style={styles.intro}>{result.unsupported}</Text>)}
+    </View>
+  );
   const netDifference = comparison.differences.netIncome;
   const direction = netDifference.annual > 0 ? "αυξάνεται" : netDifference.annual < 0 ? "μειώνεται" : "δεν μεταβάλλεται";
 
@@ -322,7 +357,8 @@ export const PersonalCalculationPdfDocument = ({ data }) => (
         ))}
       </View>
 
-      <CurrentResults rows={data.results} />
+      <CurrentResults rows={data.results} monthlyAmountsAreAverages={data.monthlyAmountsAreAverages} />
+      {data.contributionBreakdown && <ContributionBreakdown breakdown={data.contributionBreakdown} note={data.estimateNote} />}
       {data.comparison ? <Comparison entity={data.entity} comparison={data.comparison} /> : null}
 
       <View style={styles.section}>
