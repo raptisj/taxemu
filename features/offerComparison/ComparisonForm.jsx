@@ -21,6 +21,7 @@ import {
 import EmployeeInsuranceFields from "../../components/employee/EmployeeInsuranceFields";
 import { getTaxRules, supportedTaxYears } from "../../rules";
 import { formatRatePercentage, getInsuranceMonthlyAmounts } from "../../utils";
+import { CALCULATOR_LABELS } from "../../constants/calculators";
 import {
   COMPARISON_PERSPECTIVES,
   OFFER_TYPES,
@@ -115,7 +116,7 @@ export const ComparisonForm = ({ input, setInput, settings = false }) => {
     const employee = type === OFFER_TYPES.EMPLOYEE;
     return (
       <MoneyOfferField
-        label={employee ? "Μικτή πρόταση μισθωτού" : "Πρόταση τιμολογίου freelancer (χωρίς ΦΠΑ)"}
+        label={employee ? "Μικτή πρόταση μισθωτού" : "Αμοιβή με τιμολόγιο (χωρίς ΦΠΑ)"}
         amount={employee ? input.employeeOfferAmount : input.freelancerOfferAmount}
         period={employee ? input.employeeOfferPeriod : input.freelancerOfferPeriod}
         onAmountChange={(value) => setField(employee ? "employeeOfferAmount" : "freelancerOfferAmount", value)}
@@ -160,8 +161,8 @@ export const ComparisonForm = ({ input, setInput, settings = false }) => {
               <FormControl>
                 <FormLabel htmlFor="comparison-offer-type" fontSize="sm" fontWeight="600">Η γνωστή πρόταση είναι</FormLabel>
                 <Select id="comparison-offer-type" value={input.offerType} onChange={(event) => changeOfferType(event.target.value)}>
-                  <option value={OFFER_TYPES.EMPLOYEE}>Μισθωτή εργασία</option>
-                  <option value={OFFER_TYPES.FREELANCER}>Freelancer</option>
+                  <option value={OFFER_TYPES.EMPLOYEE}>{CALCULATOR_LABELS.employee}</option>
+                  <option value={OFFER_TYPES.FREELANCER}>{CALCULATOR_LABELS.business}</option>
                 </Select>
               </FormControl>
               {offerField(input.offerType)}
@@ -190,7 +191,7 @@ export const ComparisonForm = ({ input, setInput, settings = false }) => {
         <AccordionItem border="none">
           <AccordionButton p={{ base: 4, md: 5 }}>
             <Box flex="1" textAlign="left">
-              <Heading as="h2" fontSize="lg">Παραδοχές freelancer</Heading>
+              <Heading as="h2" fontSize="lg">Παραδοχές ατομικής επιχείρησης</Heading>
               <Text color="gray.500" fontSize="sm" mt={1}>Άδεια, χρόνος τιμολόγησης και επαγγελματικά έξοδα.</Text>
             </Box>
             <AccordionIcon />
@@ -232,8 +233,8 @@ export const ComparisonForm = ({ input, setInput, settings = false }) => {
                 </FormControl>
               ) : <Box />}
               <FormControl>
-                <FormLabel fontSize="sm" fontWeight="600">Ασφαλιστική κατηγορία freelancer</FormLabel>
-                <Select aria-label="Ασφαλιστική κατηγορία freelancer" isDisabled={input.specialInsuranceScale} value={input.insuranceScaleSelection} onChange={(event) => setField("insuranceScaleSelection", Number(event.target.value))}>
+                <FormLabel fontSize="sm" fontWeight="600">Ασφαλιστική κατηγορία ελεύθερου επαγγελματία</FormLabel>
+                <Select aria-label="Ασφαλιστική κατηγορία ελεύθερου επαγγελματία" isDisabled={input.specialInsuranceScale} value={input.insuranceScaleSelection} onChange={(event) => setField("insuranceScaleSelection", Number(event.target.value))}>
                   {getInsuranceMonthlyAmounts({ rules: rules.business }).slice(1).map((amount, index) => <option key={index + 1} value={index + 1}>{index + 1}η · {amount.toLocaleString("el-GR")} € / μήνα</option>)}
                 </Select>
               </FormControl>
@@ -258,8 +259,8 @@ export const ComparisonForm = ({ input, setInput, settings = false }) => {
 
             <Stack spacing={1} mt={5}>
               <Checkbox colorScheme="purple" isChecked={input.returnBaseInland} onChange={(event) => setField("returnBaseInland", event.target.checked)}>Μεταφορά φορολογικής κατοικίας μισθωτού</Checkbox>
-              <Checkbox colorScheme="purple" isChecked={input.specialInsuranceScale} onChange={(event) => setField("specialInsuranceScale", event.target.checked)}>Ειδική ασφαλιστική κατηγορία νέου freelancer</Checkbox>
-              {rules.business.firstYearsDiscount.enabled && <Checkbox colorScheme="purple" isChecked={input.firstScaleDiscount} onChange={(event) => setField("firstScaleDiscount", event.target.checked)}>Έκπτωση φόρου πρώτων ετών freelancer</Checkbox>}
+              <Checkbox colorScheme="purple" isChecked={input.specialInsuranceScale} onChange={(event) => setField("specialInsuranceScale", event.target.checked)}>Ειδική ασφαλιστική κατηγορία νέου ελεύθερου επαγγελματία</Checkbox>
+              {rules.business.firstYearsDiscount.enabled && <Checkbox colorScheme="purple" isChecked={input.firstScaleDiscount} onChange={(event) => setField("firstScaleDiscount", event.target.checked)}>Έκπτωση φόρου πρώτων ετών ατομικής επιχείρησης</Checkbox>}
               <Checkbox colorScheme="purple" isChecked={input.prePaidNextYearTax} onChange={(event) => setField("prePaidNextYearTax", event.target.checked)}>Υπολόγισε προκαταβολή φόρου επόμενου έτους</Checkbox>
               {input.prePaidNextYearTax && <Checkbox pl={6} colorScheme="purple" isChecked={input.prePaidTaxDiscount} onChange={(event) => setField("prePaidTaxDiscount", event.target.checked)}>Έκπτωση πρώτων ετών στην προκαταβολή</Checkbox>}
               <Checkbox colorScheme="purple" isChecked={input.withholdingTax} onChange={(event) => setField("withholdingTax", event.target.checked)}>Παρακράτηση φόρου στα τιμολόγια</Checkbox>

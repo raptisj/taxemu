@@ -20,6 +20,7 @@ import { Wiki } from "../../features";
 import { useRouter } from "next/router";
 import { useCalculatorSwitch } from "../../hooks/useCalculatorSwitch";
 import CalculatorSwitchDialog from "./CalculatorSwitchDialog";
+import { CALCULATOR_LABELS } from "../../constants/calculators";
 import {
   FEEDBACK_FORM_URL,
   SHOW_OFFER_COMPARISON_LINKS,
@@ -28,13 +29,13 @@ import {
 const calculatorNavigationItems = [
   {
     href: "/employee",
-    label: "Μισθωτοί",
+    label: CALCULATOR_LABELS.employee,
     iconPath: "M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0ZM4 21v-2a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v2",
     matches: (pathname) => pathname === "/employee",
   },
   {
     href: "/business",
-    label: "Επαγγελματίες",
+    label: CALCULATOR_LABELS.business,
     iconPath: "M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M5 7h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2ZM3 12a20 20 0 0 0 18 0M12 12v3",
     matches: (pathname) => pathname === "/business",
   },

@@ -4,8 +4,8 @@ import { Layout } from "components/layout";
 import { Navigation } from "components/navigation";
 import { OfferComparison } from "features/offerComparison";
 
-const title = "Σύγκριση μισθωτού και freelancer - Taxemu";
-const description = "Σύγκρινε πρόταση μισθωτού με τιμολόγιο freelancer, καθαρό εισόδημα, εταιρικό κόστος, ασφάλιση, έξοδα και φόρους.";
+const title = "Σύγκριση μισθωτής εργασίας και ατομικής επιχείρησης - Taxemu";
+const description = "Σύγκρινε μισθωτή εργασία και ατομική επιχείρηση ως προς το καθαρό εισόδημα, το εταιρικό κόστος, την ασφάλιση, τα έξοδα και τους φόρους.";
 
 export default function ComparePage() {
   return (

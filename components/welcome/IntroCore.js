@@ -3,6 +3,10 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import Stepper from "components/stepper";
 import { Box, Text, Flex } from "@chakra-ui/react";
+import {
+  CALCULATOR_LABELS,
+  BUSINESS_CALCULATOR_DESCRIPTION,
+} from "../../constants/calculators";
 
 export const IntroCore = () => {
   const calculatorType = useStore((state) => state.userDetails.calculatorType);
@@ -14,7 +18,7 @@ export const IntroCore = () => {
   const router = useRouter();
 
   const isBusiness = calculatorType === "business";
-  const name = isBusiness ? "Ελεύθερος επαγγελματίας" : "Μισθωτός";
+  const name = CALCULATOR_LABELS[calculatorType];
 
   const { grossIncome, grossMonthOrYear } = userDetails.business;
   const isGrossMonthly = grossMonthOrYear === "month";
@@ -89,23 +93,27 @@ export const IntroCore = () => {
 
   return (
     <Box mt="100px">
-      <Text color="gray.400">Πρώτα απ’όλα...</Text>
+      <Text color="gray.400">Τι θέλεις να υπολογίσεις;</Text>
       <Flex mt={8} flexDirection="column">
         <Flex flexWrap="wrap" alignItems="center">
-          <Stepper.Content text="Είμαι" mr={2} mb={4} />
-
           <Stepper.MenuPopover
             name={calculatorType}
             label={name}
             onChange={handleCalculatorType}
             options={[
-              { value: "employee", text: "Μισθωτός" },
-              { value: "business", text: "Ελεύθερος επαγγελματίας" },
+              { value: "employee", text: CALCULATOR_LABELS.employee },
+              { value: "business", text: CALCULATOR_LABELS.business },
             ]}
             menuTitle="Επίλεξε κατηγορία"
             mb={4}
           />
         </Flex>
+
+        {isBusiness && (
+          <Text color="gray.500" fontSize="sm" mb={4}>
+            {BUSINESS_CALCULATOR_DESCRIPTION}
+          </Text>
+        )}
 
         {isBusiness ? (
           <Flex flexWrap="wrap" alignItems="center">

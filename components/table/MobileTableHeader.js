@@ -4,11 +4,7 @@ import CalculatorSwitchDialog from "../navigation/CalculatorSwitchDialog";
 import Stepper from "components/stepper";
 import KeyboardShortcutsButton from "../keyboard/KeyboardShortcutsButton";
 import { MobileResultsActionsMenu } from "./ResultsActions";
-
-const calculatorLabels = {
-  business: "ελεύθερου επαγγελματία",
-  employee: "μισθωτού",
-};
+import { CALCULATOR_LABELS, CALCULATOR_GENITIVE_LABELS } from "../../constants/calculators";
 
 const MobileTableHeader = ({ calculatorEntity, onSubmitAction }) => {
   const { requestCalculatorSwitch, dialogProps } =
@@ -30,11 +26,11 @@ const MobileTableHeader = ({ calculatorEntity, onSubmitAction }) => {
           </Heading>
           <Stepper.MenuDrawer
             name={calculatorEntity}
-            label={calculatorLabels[calculatorEntity]}
+            label={CALCULATOR_GENITIVE_LABELS[calculatorEntity]}
             onChange={requestCalculatorSwitch}
             options={[
-              { value: "employee", text: "Μισθωτός" },
-              { value: "business", text: "Ελεύθερος επαγγελματίας" },
+              { value: "employee", text: CALCULATOR_LABELS.employee },
+              { value: "business", text: CALCULATOR_LABELS.business },
             ]}
             aria-label="Επιλογή κατηγορίας υπολογισμού"
             ml={0}

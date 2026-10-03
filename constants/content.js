@@ -1,18 +1,20 @@
+import { CALCULATOR_GENITIVE_LABELS } from "./calculators";
+
 export const META_TITLE =
-  "Taxemu - Υπολογισμός καθαρού ή μικτού μισθού μισθωτού ή ατομικής επιχείρησης";
+  "Taxemu - Υπολογισμός εισοδήματος από μισθωτή εργασία ή ατομική επιχείρηση";
 export const META_DESCRIPTION =
-  "Το Taxemu είναι ενα open-source εργαλείο για να μπορείς να έχεις μια εικόνα των εξόδων και κρατήσεων της ατομικής σου επιχείρησης";
+  "Υπολόγισε καθαρό εισόδημα, φόρους και ασφαλιστικές εισφορές για μισθωτή εργασία ή ατομική επιχείρηση με το Taxemu.";
 
 export const WIKI = {
   employee: {
     header: {
-      title: "Υπολογισμός μισθωτού",
+      title: `Υπολογισμός ${CALCULATOR_GENITIVE_LABELS.employee}`,
       subtitle: "Πώς υπολογίζονται κρατήσεις και εισφορές",
     },
   },
   business: {
     header: {
-      title: "Υπολογισμός ελεύθερου επαγγελματία",
+      title: `Υπολογισμός ${CALCULATOR_GENITIVE_LABELS.business}`,
       subtitle: "Πώς υπολογίζονται κρατήσεις και εισφορές",
     },
   },
