@@ -3,10 +3,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import Stepper from "components/stepper";
 import { Box, Text, Flex } from "@chakra-ui/react";
-import {
-  CALCULATOR_LABELS,
-  BUSINESS_CALCULATOR_DESCRIPTION,
-} from "../../constants/calculators";
+import { CALCULATOR_LABELS } from "../../constants/calculators";
 
 export const MobileIntroCore = () => {
   const calculatorType = useStore((state) => state.userDetails.calculatorType);
@@ -103,12 +100,6 @@ export const MobileIntroCore = () => {
             mb={4}
           />
         </Flex>
-
-        {isBusiness && (
-          <Text color="gray.500" fontSize="sm" mb={4}>
-            {BUSINESS_CALCULATOR_DESCRIPTION}
-          </Text>
-        )}
 
         {isBusiness ? (
           <Flex flexDirection="column">
