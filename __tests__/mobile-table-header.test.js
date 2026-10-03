@@ -36,8 +36,8 @@ describe("MobileTableHeader", () => {
   });
 
   it.each([
-    ["employee", "μισθωτού"],
-    ["business", "ελεύθερου επαγγελματία"],
+    ["employee", "μισθωτής εργασίας"],
+    ["business", "ατομικής επιχείρησης"],
   ])("shows the active %s calculator in the heading", (calculator, label) => {
     renderHeader(calculator);
 
@@ -52,8 +52,8 @@ describe("MobileTableHeader", () => {
   });
 
   it.each([
-    ["employee", "business", "Ελεύθερος επαγγελματίας"],
-    ["business", "employee", "Μισθωτός"],
+    ["employee", "business", "Ατομική επιχείρηση"],
+    ["business", "employee", "Μισθωτή εργασία"],
   ])(
     "switches from %s to %s",
     async (currentCalculator, nextCalculator, nextLabel) => {

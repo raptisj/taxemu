@@ -21,6 +21,7 @@ import { inlineLinkStyles } from "../../styles/inlineLink";
 import { getTaxRules } from "../../rules";
 import { COMPARISON_PERSPECTIVES, OFFER_TYPES, getEffectiveBillableMonths, getEngineerMinimumEmployerCost } from "../../utils/offerComparison";
 import { formatRatePercentage } from "../../utils";
+import { CALCULATOR_LABELS } from "../../constants/calculators";
 
 const money = new Intl.NumberFormat("el-GR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
 const decimal = new Intl.NumberFormat("el-GR", { maximumFractionDigits: 2 });
@@ -56,7 +57,7 @@ const ResultCard = ({ type, result, company, taxationYear }) => {
   return (
     <Box borderWidth="1px" borderColor={employee ? "blue.200" : "purple.200"} borderRadius="xl" bg="white" p={{ base: 4, md: 5 }} minW={0}>
       <Badge colorScheme={employee ? "blue" : "purple"}>{sourceLabel[result.source]}</Badge>
-      <Heading as="h3" fontSize="lg" mt={2}>{employee ? "Μισθωτός" : "Freelancer"}</Heading>
+      <Heading as="h3" fontSize="lg" mt={2}>{employee ? CALCULATOR_LABELS.employee : CALCULATOR_LABELS.business}</Heading>
       <Text color={employee ? "blue.800" : "purple.800"} fontSize="3xl" fontWeight="800" mt={3}>{formatMoney(result.monthlyNet)}</Text>
       <Text color="gray.600" fontSize="sm">καθαρά / ημερολογιακό μήνα</Text>
       <Text fontWeight="600" mt={1}>{formatMoney(result.annualNet)} καθαρά / έτος</Text>
@@ -127,20 +128,20 @@ const Insights = ({ comparison, input }) => {
         {(company || input.hasSecondOffer || employeeKnown) && benchmarks.requiredFreelancerRevenue !== null && (
           <Box bg="purple.50" borderRadius="lg" p={4}>
             <Text fontSize="sm">Για να φτάσεις τα {formatMoney(employee.annualNet)} καθαρά της μισθωτής πρότασης:</Text>
-            <Text color="purple.800" fontWeight="800" mt={2}>{formatMoney(benchmarks.requiredFreelancerRevenue)} ετήσια έσοδα freelancer</Text>
+            <Text color="purple.800" fontWeight="800" mt={2}>{formatMoney(benchmarks.requiredFreelancerRevenue)} ετήσια έσοδα ατομικής επιχείρησης</Text>
             <Text color="gray.600" fontSize="xs" mt={1}>{formatMoney(benchmarks.requiredFreelancerInvoice)} / χρεώσιμο μήνα, χωρίς ΦΠΑ</Text>
           </Box>
         )}
         {(company || input.hasSecondOffer || !employeeKnown) && benchmarks.requiredEmployeeGross !== null && (
           <Box bg="blue.50" borderRadius="lg" p={4}>
-            <Text fontSize="sm">Για να φτάσεις τα {formatMoney(freelancer.annualNet)} καθαρά του freelancer:</Text>
+            <Text fontSize="sm">Για να φτάσεις τα {formatMoney(freelancer.annualNet)} καθαρά από την ατομική επιχείρηση:</Text>
             <Text color="blue.800" fontWeight="800" mt={2}>{formatMoney(benchmarks.requiredEmployeeGross)} μικτές αποδοχές / έτος</Text>
           </Box>
         )}
         {!company && alternative && (
           <Box bg="gray.50" borderRadius="lg" p={4}>
             <Text fontWeight="700" fontSize="sm">Περιθώριο διαπραγμάτευσης με το ίδιο εταιρικό κόστος</Text>
-            <Text fontSize="sm" color="gray.600" mt={2}>Η γνωστή πρόταση κοστίζει στην εταιρεία {formatMoney(known.companyCost)} / έτος. Αν το ίδιο budget δοθεί ως {employeeKnown ? "αμοιβή freelancer" : "μισθωτή εργασία"}, μένουν {formatMoney(alternative.monthlyNet)} καθαρά / ημερολογιακό μήνα.</Text>
+            <Text fontSize="sm" color="gray.600" mt={2}>Η γνωστή πρόταση κοστίζει στην εταιρεία {formatMoney(known.companyCost)} / έτος. Αν το ίδιο budget δοθεί ως {employeeKnown ? "αμοιβή με τιμολόγιο ατομικής επιχείρησης" : "αμοιβή μισθωτής εργασίας"}, μένουν {formatMoney(alternative.monthlyNet)} καθαρά / ημερολογιακό μήνα.</Text>
             <Text fontWeight="700" mt={2}>{Math.abs(monthlyChange) < 1 ? "Σχεδόν ίδιο καθαρό εισόδημα" : `${formatMoney(Math.abs(monthlyChange))} ${monthlyChange > 0 ? "περισσότερα" : "λιγότερα"} καθαρά / μήνα`} σε σχέση με τη γνωστή πρόταση.</Text>
             <Text color="gray.500" fontSize="xs" mt={2}>Εναλλακτικό σενάριο διαπραγμάτευσης · δεν αποτελεί δεύτερη πραγματική προσφορά.</Text>
           </Box>
@@ -164,7 +165,7 @@ export const ComparisonResults = ({ comparison, input }) => {
     <Stack spacing={4}>
       <Box borderWidth="1px" borderStyle="dashed" borderColor="purple.200" borderRadius="xl" bg="purple.50" p={{ base: 5, md: 8 }}>
         <Heading as="h2" fontSize="xl">{getEffectiveBillableMonths(input) <= 0 ? "Έλεγξε τον χρόνο τιμολόγησης" : company ? "Συμπλήρωσε το εταιρικό budget" : input.hasSecondOffer ? "Συμπλήρωσε και τις δύο προτάσεις" : "Συμπλήρωσε το ποσό της πρότασης"}</Heading>
-        <Text color="gray.600" mt={2}>{getEffectiveBillableMonths(input) <= 0 ? "Οι μήνες τιμολόγησης μετά την άδεια πρέπει να είναι πάνω από μηδέν. Άλλαξε τις παραδοχές freelancer." : "Θα δεις πόσα μένουν καθαρά ως μισθωτός και ως freelancer, ανά μήνα και ανά έτος."}</Text>
+        <Text color="gray.600" mt={2}>{getEffectiveBillableMonths(input) <= 0 ? "Οι μήνες τιμολόγησης μετά την άδεια πρέπει να είναι πάνω από μηδέν. Άλλαξε τις παραδοχές ατομικής επιχείρησης." : "Θα δεις πόσα μένουν καθαρά με μισθωτή εργασία και με ατομική επιχείρηση, ανά μήνα και ανά έτος."}</Text>
       </Box>
       <Assumptions input={input} />
     </Stack>
@@ -177,11 +178,11 @@ export const ComparisonResults = ({ comparison, input }) => {
       <Box borderWidth="1px" borderColor="purple.200" borderRadius="xl" bg="purple.50" p={{ base: 5, md: 6 }} aria-live="polite" aria-atomic="true">
         <Text color="purple.700" fontSize="sm" fontWeight="700">{basisLabel[comparison.basis]}</Text>
         <Heading as="h2" color="purple.800" fontSize={{ base: "xl", md: "2xl" }} mt={3}>
-          {equal ? "Σχεδόν ίδιο καθαρό εισόδημα" : `${difference > 0 ? "Ο freelancer" : "Ο μισθωτός"} έχει ${formatMoney(Math.abs(difference) / 12)} περισσότερα καθαρά / μήνα`}
+          {equal ? "Σχεδόν ίδιο καθαρό εισόδημα" : `Η ${difference > 0 ? CALCULATOR_LABELS.business.toLowerCase() : CALCULATOR_LABELS.employee.toLowerCase()} αποδίδει ${formatMoney(Math.abs(difference) / 12)} περισσότερα καθαρά / μήνα`}
         </Heading>
         <Text color="gray.600" fontSize="sm" mt={2}>{equal ? "Τα ετήσια καθαρά διαφέρουν λιγότερο από 1 €." : `${formatMoney(Math.abs(difference))} περισσότερα καθαρά / έτος, μετά φόρους, ασφάλιση και έξοδα.`}</Text>
         {comparison.basis === "same-annual-offer" && <Text fontSize="xs" color="gray.600" mt={2}>Η άλλη μορφή συνεργασίας είναι υπόθεση με το ίδιο ετήσιο ποσό, όχι δεύτερη πραγματική προσφορά. Το κόστος εταιρείας διαφέρει.</Text>}
-        {comparison.basis === "actual-offers" && <Text fontSize="xs" color="gray.600" mt={2}>Η πρόταση freelancer κοστίζει στην εταιρεία {formatMoney(Math.abs(comparison.difference.companyCost))} {comparison.difference.companyCost >= 0 ? "περισσότερο" : "λιγότερο"} / έτος.</Text>}
+        {comparison.basis === "actual-offers" && <Text fontSize="xs" color="gray.600" mt={2}>Η πρόταση με τιμολόγιο κοστίζει στην εταιρεία {formatMoney(Math.abs(comparison.difference.companyCost))} {comparison.difference.companyCost >= 0 ? "περισσότερο" : "λιγότερο"} / έτος.</Text>}
       </Box>
       <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={4}>
         <ResultCard type={OFFER_TYPES.EMPLOYEE} result={comparison.employee} company={company} taxationYear={input.taxationYear} />
@@ -197,7 +198,7 @@ export const ComparisonResults = ({ comparison, input }) => {
         <Stack color="gray.600" fontSize="sm" spacing={3}>
           <Text>Το καθαρό εισόδημα αφαιρεί φόρο εισοδήματος, ασφάλιση και επαγγελματικά έξοδα. Η προκαταβολή φόρου και η πίστωση της περσινής προκαταβολής παρουσιάζονται χωριστά, επειδή επηρεάζουν τη ρευστότητα.</Text>
           <Text>Ο ΦΠΑ δεν θεωρείται αμοιβή ή κόστος όταν ανακτάται από την εταιρεία. Η παρακράτηση συμψηφίζεται με τον φόρο και δεν αφαιρείται δεύτερη φορά.</Text>
-          <Text>Η μισθωτή πρόταση περιλαμβάνει {input.salaryMonthCount} μισθούς. Η μηνιαία αμοιβή freelancer πολλαπλασιάζεται με τους χρεώσιμους μήνες μετά την άδεια. Στην ετήσια αμοιβή θεωρούμε ότι η επίδραση της άδειας έχει ήδη συνυπολογιστεί.</Text>
+          <Text>Η μισθωτή πρόταση περιλαμβάνει {input.salaryMonthCount} μισθούς. Η μηνιαία αμοιβή με τιμολόγιο πολλαπλασιάζεται με τους χρεώσιμους μήνες μετά την άδεια. Στην ετήσια αμοιβή θεωρούμε ότι η επίδραση της άδειας έχει ήδη συνυπολογιστεί.</Text>
           <Text>Η σύγκριση αφορά μισθωτή εργασία και ατομική επιχείρηση με τις επιλεγμένες παραδοχές. Το έτος δραστηριότητας επηρεάζει το ελάχιστο τεκμαρτό φορολογητέο εισόδημα. Ειδικές εξαιρέσεις ή μειώσεις του τεκμαρτού δεν περιλαμβάνονται εδώ.</Text>
           <Text fontSize="xs">Έτος {input.taxationYear} · {input.numberOfChildren} τέκνα · {rules.ui.ageGroups?.find((group) => group.value === input.ageGroup)?.text || input.ageGroup} · ΦΠΑ {formatRatePercentage(input.vatRate)} · {input.returnBaseInland ? "με" : "χωρίς"} μεταφορά φορολογικής κατοικίας μισθωτού.</Text>
           <Flex wrap="wrap" columnGap={4} rowGap={2}>

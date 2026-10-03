@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import Stepper from "components/stepper";
 import { Box, Text, Flex } from "@chakra-ui/react";
+import { CALCULATOR_LABELS } from "../../constants/calculators";
 
 export const MobileIntroCore = () => {
   const calculatorType = useStore((state) => state.userDetails.calculatorType);
@@ -14,7 +15,7 @@ export const MobileIntroCore = () => {
   const router = useRouter();
 
   const isBusiness = calculatorType === "business";
-  const name = isBusiness ? "Ελεύθερος επαγγελματίας" : "Μισθωτός";
+  const name = CALCULATOR_LABELS[calculatorType];
 
   const { grossIncome, grossMonthOrYear } = userDetails.business;
   const isGrossMonthly = grossMonthOrYear === "month";
@@ -84,18 +85,16 @@ export const MobileIntroCore = () => {
 
   return (
     <Box mt="100px">
-      <Text color="gray.400">Πρώτα απ’όλα...</Text>
+      <Text color="gray.400">Τι θέλεις να υπολογίσεις;</Text>
       <Flex mt={8} flexDirection="column">
         <Flex flexWrap="wrap" alignItems="center">
-          <Stepper.Content text="Είμαι" mr={2} mb={4} />
-
           <Stepper.MenuDrawer
             onChange={handleCalculatorType}
             name={calculatorType}
             label={name}
             options={[
-              { value: "employee", text: "Μισθωτός" },
-              { value: "business", text: "Ελεύθερος επαγγελματίας" },
+              { value: "employee", text: CALCULATOR_LABELS.employee },
+              { value: "business", text: CALCULATOR_LABELS.business },
             ]}
             mr={2}
             mb={4}

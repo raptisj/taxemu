@@ -47,13 +47,13 @@ beforeEach(() => {
 afterEach(() => useStore.getState().removeUserDetails());
 
 it.each([
-  ["employee", "business", EmployeeForm, "Ελεύθερος επαγγελματίας"],
-  ["business", "employee", BusinessForm, "Μισθωτός"],
+  ["employee", "business", EmployeeForm, "Ατομική επιχείρηση"],
+  ["business", "employee", BusinessForm, "Μισθωτή εργασία"],
 ])("confirms and clears a desktop switch from %s to %s", async (current, next, Form, label) => {
   setup(`/${current}`);
   renderUI(<Form />);
   const previous = useStore.getState().userDetails;
-  const activeRadio = screen.getByRole("radio", { name: current === "employee" ? "Μισθωτός" : "Ελέυθερος επαγγελματίας" });
+  const activeRadio = screen.getByRole("radio", { name: current === "employee" ? "Μισθωτή εργασία" : "Ατομική επιχείρηση" });
   fireEvent.click(screen.getByRole("radio", { name: label }));
 
   expect(await screen.findByRole("alertdialog")).toHaveTextContent("θα διαγραφούν");
@@ -74,7 +74,7 @@ it("cancels a desktop switch without changing inputs, results, or comparison que
   useRouter.mockReturnValue({ pathname: "/employee", query, push, replace });
   renderUI(<EmployeeForm />);
   const previous = useStore.getState().userDetails;
-  fireEvent.click(screen.getByRole("radio", { name: "Ελεύθερος επαγγελματίας" }));
+  fireEvent.click(screen.getByRole("radio", { name: "Ατομική επιχείρηση" }));
   await screen.findByRole("alertdialog");
   await waitFor(() => expect(screen.getByRole("button", { name: "Ακύρωση" })).toHaveFocus());
   fireEvent.click(screen.getByRole("button", { name: "Ακύρωση" }));
@@ -87,8 +87,8 @@ it("cancels a desktop switch without changing inputs, results, or comparison que
 });
 
 it.each([
-  ["employee", "business", "Επαγγελματίες"],
-  ["business", "employee", "Μισθωτοί"],
+  ["employee", "business", "Ατομική επιχείρηση"],
+  ["business", "employee", "Μισθωτή εργασία"],
 ])("confirms a burger menu switch from %s to %s", async (current, next, label) => {
   setup(`/${current}`);
   renderUI(<Navigation />);
@@ -110,7 +110,7 @@ it("dismisses a burger switch with Escape without clearing or navigating", async
   renderUI(<Navigation />);
   const previous = useStore.getState().userDetails;
   await openMenu();
-  fireEvent.click(screen.getByRole("menuitem", { name: "Επαγγελματίες" }));
+  fireEvent.click(screen.getByRole("menuitem", { name: "Ατομική επιχείρηση" }));
   const dialog = await screen.findByRole("alertdialog");
   fireEvent.keyDown(dialog, { key: "Escape", code: "Escape", keyCode: 27 });
 
@@ -120,10 +120,10 @@ it("dismisses a burger switch with Escape without clearing or navigating", async
 });
 
 it.each([
-  ["/employee", "Μισθωτοί", "/employee"],
-  ["/compare", "Επαγγελματίες", "/business"],
-  ["/blog", "Μισθωτοί", "/employee"],
-  ["/welcome", "Επαγγελματίες", "/business"],
+  ["/employee", "Μισθωτή εργασία", "/employee"],
+  ["/compare", "Ατομική επιχείρηση", "/business"],
+  ["/blog", "Μισθωτή εργασία", "/employee"],
+  ["/welcome", "Ατομική επιχείρηση", "/business"],
   ["/employee", "Στατιστικά", "/statistics"],
 ])("preserves values when navigating from %s to %s", async (pathname, label, destination) => {
   setup(pathname);

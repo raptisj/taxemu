@@ -32,7 +32,7 @@ const CalculatorSwitchDialog = ({ isOpen, onCancel, onConfirm }) => {
               αποτελέσματα των προηγούμενων υπολογισμών θα διαγραφούν.
             </Text>
             <Text mt={3}>
-              Αν θέλεις να συγκρίνεις μισθωτή εργασία και ελεύθερο επάγγελμα,
+              Αν θέλεις να συγκρίνεις μισθωτή εργασία και ατομική επιχείρηση,
               επισκέψου τη{" "}
               <Link as={NextLink} href="/compare" onClick={onCancel} {...inlineLinkStyles}>
                 σελίδα σύγκρισης

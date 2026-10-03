@@ -26,6 +26,7 @@ import { getTaxRules, supportedTaxYears } from "../../rules";
 import { isBusinessGrossIncomeMissing } from "../../utils/formState";
 import { formatRatePercentage } from "../../utils";
 import { inlineLinkStyles } from "../../styles/inlineLink";
+import { CALCULATOR_LABELS } from "../../constants/calculators";
 
 const BusinessForm = ({ showCalculatorType = true }) => {
   const [minimumIncomeSectionOpen, setMinimumIncomeSectionOpen] =
@@ -102,8 +103,8 @@ const BusinessForm = ({ showCalculatorType = true }) => {
             onChange={requestCalculatorSwitch}
             value="business"
             options={[
-              { title: "Ελέυθερος επαγγελματίας", key: "business" },
-              { title: "Μισθωτός", key: "employee" },
+              { title: CALCULATOR_LABELS.business, key: "business" },
+              { title: CALCULATOR_LABELS.employee, key: "employee" },
             ]}
           />
         )}

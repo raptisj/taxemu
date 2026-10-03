@@ -26,6 +26,7 @@ import { getTaxRules, supportedTaxYears } from "../../rules";
 import EmployeeInsuranceFields from "./EmployeeInsuranceFields";
 import { isEngineer } from "../../utils/employeeContributions";
 import { inlineLinkStyles } from "../../styles/inlineLink";
+import { CALCULATOR_LABELS } from "../../constants/calculators";
 
 const EmployeeForm = ({ showCalculatorType = true }) => {
   const userDetails = useStore((state) => state.userDetails.employee);
@@ -77,8 +78,8 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
             onChange={requestCalculatorSwitch}
             value="employee"
             options={[
-              { title: "Ελεύθερος επαγγελματίας", key: "business" },
-              { title: "Μισθωτός", key: "employee" },
+              { title: CALCULATOR_LABELS.business, key: "business" },
+              { title: CALCULATOR_LABELS.employee, key: "employee" },
             ]}
           />
         )}

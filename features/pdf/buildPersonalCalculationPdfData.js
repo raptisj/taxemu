@@ -1,5 +1,6 @@
 import { engineerEstimateNote, isEngineer } from "../../utils/employeeContributions";
 import { getTaxRules } from "../../rules";
+import { CALCULATOR_GENITIVE_LABELS } from "../../constants/calculators";
 import {
   calculateYearComparison,
   parseComparisonYears,
@@ -208,10 +209,7 @@ export const buildPersonalCalculationPdfData = ({
   return {
     schemaVersion: 1,
     entity,
-    title:
-      entity === "employee"
-        ? "Αναφορά υπολογισμού μισθωτού"
-        : "Αναφορά υπολογισμού ελεύθερου επαγγελματία",
+    title: `Αναφορά υπολογισμού ${CALCULATOR_GENITIVE_LABELS[entity]}`,
     generatedAt: generatedAt.toISOString(),
     taxationYear,
     assumptions: buildAssumptions(entity, calculationInput, rules),
