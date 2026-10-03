@@ -3,6 +3,8 @@ import {
   IconButton,
   Menu,
   MenuButton,
+  MenuDivider,
+  MenuGroup,
   MenuItem,
   MenuList,
   Text,
@@ -19,6 +21,19 @@ import {
   FEEDBACK_FORM_URL,
   SHOW_OFFER_COMPARISON_LINKS,
 } from "../../constants";
+
+const calculatorNavigationItems = [
+  {
+    href: "/employee",
+    label: "Μισθωτοί",
+    matches: (pathname) => pathname === "/employee",
+  },
+  {
+    href: "/business",
+    label: "Επαγγελματίες",
+    matches: (pathname) => pathname === "/business",
+  },
+];
 
 const mobileNavigationItems = [
   {
@@ -86,6 +101,24 @@ export const Navigation = () => {
       canInstallPWA: false,
       deferredPrompt: null,
     });
+  };
+
+  const renderMobileNavigationItem = (item) => {
+    const isActive = item.matches(router.pathname);
+    return (
+      <MenuItem
+        as={Link}
+        href={item.href}
+        key={item.href}
+        target={item.external ? "_blank" : undefined}
+        rel={item.external ? "noreferrer" : undefined}
+        bg={isActive ? "purple.50" : "white"}
+        color={isActive ? "purple.700" : "gray.700"}
+        fontWeight={isActive ? "600" : "400"}
+      >
+        {item.label}
+      </MenuItem>
+    );
   };
 
   return (
@@ -213,28 +246,16 @@ export const Navigation = () => {
               variant="ghost"
             />
             <MenuList minW="180px" zIndex={10}>
-              {mobileNavigationItems.map((item) => {
-                const isActive = item.matches(router.pathname);
-                return (
-                  <MenuItem
-                    as={Link}
-                    href={item.href}
-                    key={item.href}
-                    target={item.external ? "_blank" : undefined}
-                    rel={item.external ? "noreferrer" : undefined}
-                    bg={isActive ? "purple.50" : "white"}
-                    color={isActive ? "purple.700" : "gray.700"}
-                    fontWeight={isActive ? "600" : "400"}
-                  >
-                    {item.label}
-                  </MenuItem>
-                );
-              })}
+              {mobileNavigationItems.map(renderMobileNavigationItem)}
               {canInstallPWA && (
                 <MenuItem icon={<DownloadIcon />} onClick={onClickInstallApp}>
                   Download
                 </MenuItem>
               )}
+              <MenuDivider />
+              <MenuGroup title="Υπολογιστής">
+                {calculatorNavigationItems.map(renderMobileNavigationItem)}
+              </MenuGroup>
             </MenuList>
           </Menu>
         </Flex>
