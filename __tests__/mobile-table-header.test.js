@@ -8,7 +8,7 @@ jest.mock("next/router", () => ({
   useRouter: jest.fn(),
 }));
 
-jest.mock("../components/keyboard/KeyboardShortcutsButton", () => () => null);
+jest.mock("../components/keyboard/KeyboardShortcutsButton", () => function MockKeyboardShortcutsButton() { return null; });
 jest.mock("../components/table/ResultsActions", () => ({
   MobileResultsActionsMenu: () => null,
 }));
@@ -58,6 +58,8 @@ describe("MobileTableHeader", () => {
     "switches from %s to %s",
     async (currentCalculator, nextCalculator, nextLabel) => {
       useStore.getState().update({ calculatorType: currentCalculator });
+      useStore.getState().updateEmployee({ grossIncomeMonthly: 2000 });
+      useStore.getState().updateBusiness({ extraBusinessExpenses: 400 });
       renderHeader(currentCalculator);
 
       fireEvent.click(
@@ -71,11 +73,18 @@ describe("MobileTableHeader", () => {
         }),
       );
 
+      expect(await screen.findByRole("alertdialog")).toBeInTheDocument();
+      expect(push).not.toHaveBeenCalled();
+      expect(useStore.getState().userDetails.employee.grossIncomeMonthly).toBe(2000);
+      fireEvent.click(screen.getByRole("button", { name: "Αλλαγή κατηγορίας" }));
+
       await waitFor(() => {
         expect(useStore.getState().userDetails.calculatorType).toBe(
           nextCalculator,
         );
         expect(push).toHaveBeenCalledWith(`/${nextCalculator}`);
+        expect(useStore.getState().userDetails.employee.grossIncomeMonthly).toBe(0);
+        expect(useStore.getState().userDetails.business.extraBusinessExpenses).toBe(0);
       });
     },
   );

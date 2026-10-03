@@ -59,4 +59,33 @@ describe("calculator store", () => {
     expect(business.minimumPresumedIncome.businessAge).toBe(1);
     expect(business.minimumPresumedIncome.hasAdjustments).toBe(false);
   });
+
+  it("switches calculators with fresh inputs and results while preserving unrelated state", () => {
+    const defaults = useStore.getState().userDetails;
+    const deferredPrompt = { prompt: jest.fn() };
+    useStore.getState().update({ canInstallPWA: true, deferredPrompt });
+    useStore.getState().updateEmployee({
+      grossIncomeMonthly: 2000,
+      hasError: true,
+      contributionBreakdown: { employee: { year: 3000 } },
+      tableResults: { finalIncome: { year: 22000 }, calculationInput: { grossIncomeMonthly: 2000 } },
+    });
+    useStore.getState().updateBusiness({
+      extraBusinessExpenses: 500,
+      query: "previous calculation",
+      minimumPresumedIncome: { businessAge: 8, annualPayrollCost: 12000 },
+    });
+    useStore.getState().updateBusinessQuickCalc({ grossIncomeMonthly: 3500 });
+
+    useStore.getState().switchCalculator("business");
+
+    const state = useStore.getState().userDetails;
+    expect(state.calculatorType).toBe("business");
+    expect(state.employee).toEqual(defaults.employee);
+    expect(state.business).toEqual(defaults.business);
+    expect(state.employee.tableResults).not.toBe(defaults.employee.tableResults);
+    expect(state.business.minimumPresumedIncome).not.toBe(defaults.business.minimumPresumedIncome);
+    expect(state.canInstallPWA).toBe(true);
+    expect(state.deferredPrompt).toBe(deferredPrompt);
+  });
 });

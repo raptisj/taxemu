@@ -15,7 +15,8 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useCalculatorSwitch } from "../../hooks/useCalculatorSwitch";
+import CalculatorSwitchDialog from "../navigation/CalculatorSwitchDialog";
 import { useStore } from "store";
 import { SidebarSubSection, SidebarSubSectionAccordion } from "../layout";
 import FormElements from "../input";
@@ -34,8 +35,8 @@ const BusinessForm = ({ showCalculatorType = true }) => {
   const businessAgeFieldRef = useRef(null);
   const userDetails = useStore((state) => state.userDetails.business);
   const updateBusiness = useStore((state) => state.updateBusiness);
-  const update = useStore((state) => state.update);
-  const { push, pathname } = useRouter();
+  const { requestCalculatorSwitch, dialogProps } =
+    useCalculatorSwitch("business");
   const { getInsuranceTotal, hasError } = useCalculateBusiness();
 
   const {
@@ -91,24 +92,15 @@ const BusinessForm = ({ showCalculatorType = true }) => {
     setShouldScrollToBusinessAge(true);
   };
 
-  const onChange = (value) => {
-    update({
-      calculatorType: value,
-    });
-
-    push(`/${value}`);
-  };
-
-  const calculatorTypeValue = pathname?.split("/")[1];
-
   return (
     <>
+      <CalculatorSwitchDialog {...dialogProps} />
       <Box>
         {showCalculatorType && (
           <FormElements.RadioGroup
             label="Κατηγορία"
-            onChange={onChange}
-            value={calculatorTypeValue}
+            onChange={requestCalculatorSwitch}
+            value="business"
             options={[
               { title: "Ελέυθερος επαγγελματίας", key: "business" },
               { title: "Μισθωτός", key: "employee" },

@@ -17,7 +17,8 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import { useStore } from "store";
-import { useRouter } from "next/router";
+import { useCalculatorSwitch } from "../../hooks/useCalculatorSwitch";
+import CalculatorSwitchDialog from "../navigation/CalculatorSwitchDialog";
 import FormElements from "components/input";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { useEmployeeActions, useCalculateEmployee } from "hooks";
@@ -29,8 +30,8 @@ import { inlineLinkStyles } from "../../styles/inlineLink";
 const EmployeeForm = ({ showCalculatorType = true }) => {
   const userDetails = useStore((state) => state.userDetails.employee);
   const updateEmployee = useStore((state) => state.updateEmployee);
-  const update = useStore((state) => state.update);
-  const { push, pathname } = useRouter();
+  const { requestCalculatorSwitch, dialogProps } =
+    useCalculatorSwitch("employee");
   const [showSection, setShowSection] = useState(false);
   const { hasError } = useCalculateEmployee();
 
@@ -61,16 +62,6 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
   } = userDetails;
   const rules = getTaxRules(taxationYear);
 
-  const calculatorTypeValue = pathname?.split("/")[1];
-
-  const onChange = (value) => {
-    update({
-      calculatorType: value,
-    });
-
-    push(`/${value}`);
-  };
-
   const taxationYearOptions = supportedTaxYears.map((year) => ({
     value: String(year),
     text: String(year),
@@ -78,12 +69,13 @@ const EmployeeForm = ({ showCalculatorType = true }) => {
 
   return (
     <>
+      <CalculatorSwitchDialog {...dialogProps} />
       <Box>
         {showCalculatorType && (
           <FormElements.RadioGroup
             label="Κατηγορία"
-            onChange={onChange}
-            value={calculatorTypeValue}
+            onChange={requestCalculatorSwitch}
+            value="employee"
             options={[
               { title: "Ελεύθερος επαγγελματίας", key: "business" },
               { title: "Μισθωτός", key: "employee" },
