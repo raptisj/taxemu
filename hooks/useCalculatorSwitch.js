@@ -8,7 +8,17 @@ export const useCalculatorSwitch = (calculatorEntity) => {
   const router = useRouter();
   const currentCalculator = calculatorEntity ?? router.pathname?.slice(1);
   const switchCalculator = useStore((state) => state.switchCalculator);
+  const hasCalculation = useStore((state) => Boolean(
+    state.userDetails.employee.tableResults.calculationInput ||
+    state.userDetails.business.tableResults.calculationInput,
+  ));
   const [pendingCalculator, setPendingCalculator] = useState(null);
+
+  const completeSwitch = (value) => {
+    switchCalculator(value);
+    setPendingCalculator(null);
+    router.push(`/${value}`);
+  };
 
   const requestCalculatorSwitch = (value, event) => {
     if (!isCalculator(currentCalculator) || !isCalculator(value)) return;
@@ -21,6 +31,10 @@ export const useCalculatorSwitch = (calculatorEntity) => {
       ) return;
       event.preventDefault();
     }
+    if (!hasCalculation) {
+      completeSwitch(value);
+      return;
+    }
     setPendingCalculator(value);
   };
 
@@ -28,9 +42,7 @@ export const useCalculatorSwitch = (calculatorEntity) => {
 
   const confirmSwitch = () => {
     if (!pendingCalculator) return;
-    switchCalculator(pendingCalculator);
-    setPendingCalculator(null);
-    router.push(`/${pendingCalculator}`);
+    completeSwitch(pendingCalculator);
   };
 
   return {
