@@ -18,6 +18,8 @@ import { DownloadIcon, HamburgerIcon } from "@chakra-ui/icons";
 import Link from "next/link";
 import { Wiki } from "../../features";
 import { useRouter } from "next/router";
+import { useCalculatorSwitch } from "../../hooks/useCalculatorSwitch";
+import CalculatorSwitchDialog from "./CalculatorSwitchDialog";
 import {
   FEEDBACK_FORM_URL,
   SHOW_OFFER_COMPARISON_LINKS,
@@ -78,6 +80,7 @@ const mobileNavigationItems = [
 
 export const Navigation = () => {
   const router = useRouter();
+  const { requestCalculatorSwitch, dialogProps } = useCalculatorSwitch();
 
   const update = useStore((state) => state.update);
   const canInstallPWA = useStore((state) => state.userDetails.canInstallPWA);
@@ -117,6 +120,7 @@ export const Navigation = () => {
       <MenuItem
         as={Link}
         href={item.href}
+        onClick={(event) => requestCalculatorSwitch(item.href.slice(1), event)}
         key={item.href}
         icon={
           <Icon
@@ -145,6 +149,7 @@ export const Navigation = () => {
 
   return (
     <>
+      <CalculatorSwitchDialog {...dialogProps} />
       <Flex
         justifyContent="space-between"
         alignItems="center"

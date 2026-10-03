@@ -1,6 +1,6 @@
 import { Text, Heading, Flex } from "@chakra-ui/react";
-import { useRouter } from "next/router";
-import { useStore } from "store";
+import { useCalculatorSwitch } from "../../hooks/useCalculatorSwitch";
+import CalculatorSwitchDialog from "../navigation/CalculatorSwitchDialog";
 import Stepper from "components/stepper";
 import KeyboardShortcutsButton from "../keyboard/KeyboardShortcutsButton";
 import { MobileResultsActionsMenu } from "./ResultsActions";
@@ -11,18 +11,12 @@ const calculatorLabels = {
 };
 
 const MobileTableHeader = ({ calculatorEntity, onSubmitAction }) => {
-  const router = useRouter();
-  const update = useStore((state) => state.update);
-
-  const handleCalculatorTypeChange = (value) => {
-    if (value === calculatorEntity) return;
-
-    update({ calculatorType: value });
-    router.push(`/${value}`);
-  };
+  const { requestCalculatorSwitch, dialogProps } =
+    useCalculatorSwitch(calculatorEntity);
 
   return (
     <>
+      <CalculatorSwitchDialog {...dialogProps} />
       <Flex justify="space-between" align="flex-start" gap={2}>
         <Flex
           align="baseline"
@@ -37,7 +31,7 @@ const MobileTableHeader = ({ calculatorEntity, onSubmitAction }) => {
           <Stepper.MenuDrawer
             name={calculatorEntity}
             label={calculatorLabels[calculatorEntity]}
-            onChange={handleCalculatorTypeChange}
+            onChange={requestCalculatorSwitch}
             options={[
               { value: "employee", text: "Μισθωτός" },
               { value: "business", text: "Ελεύθερος επαγγελματίας" },

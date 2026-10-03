@@ -338,5 +338,15 @@ export const useStore = create((set) => ({
       },
     })),
 
+  switchCalculator: (calculatorType) =>
+    set((state) => ({
+      userDetails: {
+        ...state.userDetails,
+        calculatorType,
+        employee: JSON.parse(JSON.stringify(initialState.employee)),
+        business: JSON.parse(JSON.stringify(initialState.business)),
+      },
+    })),
+
   removeUserDetails: () => set({ userDetails: initialState }),
 }));
