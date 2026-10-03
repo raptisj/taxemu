@@ -5,6 +5,7 @@ import EmployeeForm from "../components/employee/EmployeeForm";
 import BusinessForm from "../components/business/BusinessForm";
 import { Navigation } from "../components/navigation/Navigation";
 import { useStore } from "../store";
+import { getComparisonInput } from "../utils/yearComparison";
 
 jest.mock("next/router", () => ({ useRouter: jest.fn() }));
 jest.mock("next/image", () => function MockImage() { return null; });
@@ -26,11 +27,22 @@ jest.mock("next/link", () => {
 
 const push = jest.fn();
 const replace = jest.fn();
-const setup = (pathname) => {
+const setup = (pathname, { calculated = true } = {}) => {
   useRouter.mockReturnValue({ pathname, query: {}, isReady: true, push, replace });
   useStore.getState().update({ calculatorType: pathname.slice(1) });
   useStore.getState().updateEmployee({ grossIncomeMonthly: 2000 });
   useStore.getState().updateBusiness({ extraBusinessExpenses: 400 });
+  const entity = pathname.slice(1);
+  if (calculated && ["employee", "business"].includes(entity)) {
+    const state = useStore.getState();
+    const commit = entity === "employee"
+      ? state.commitEmployeeCalculation
+      : state.commitBusinessCalculation;
+    commit({
+      newState: {},
+      tableResults: { calculationInput: getComparisonInput(entity, state.userDetails[entity]) },
+    });
+  }
 };
 const renderUI = (component) => render(<ChakraProvider>{component}</ChakraProvider>);
 const openMenu = async () => {
@@ -45,6 +57,77 @@ beforeEach(() => {
   replace.mockReset();
 });
 afterEach(() => useStore.getState().removeUserDetails());
+
+it.each([
+  ["employee", "business", EmployeeForm, "Ατομική επιχείρηση"],
+  ["business", "employee", BusinessForm, "Μισθωτή εργασία"],
+])("switches desktop %s to %s immediately with uncalculated inputs", (current, next, Form, label) => {
+  setup(`/${current}`, { calculated: false });
+  useStore.getState().setHasError({ entity: current, value: true });
+  renderUI(<Form />);
+  fireEvent.click(screen.getByRole("radio", { name: label }));
+
+  expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument();
+  expect(push).toHaveBeenCalledTimes(1);
+  expect(push).toHaveBeenCalledWith(`/${next}`);
+  expect(useStore.getState().userDetails.calculatorType).toBe(next);
+  expect(useStore.getState().userDetails.employee.grossIncomeMonthly).toBe(0);
+  expect(useStore.getState().userDetails.business.extraBusinessExpenses).toBe(0);
+});
+
+it.each([
+  ["employee", "business", "Ατομική επιχείρηση"],
+  ["business", "employee", "Μισθωτή εργασία"],
+])("switches the burger menu from %s to %s immediately on a fresh calculator", async (current, next, label) => {
+  setup(`/${current}`, { calculated: false });
+  useStore.getState().removeUserDetails();
+  useStore.getState().update({ calculatorType: current });
+  renderUI(<Navigation />);
+  await openMenu();
+  fireEvent.click(screen.getByRole("menuitem", { name: label }));
+
+  expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument();
+  expect(push).toHaveBeenCalledTimes(1);
+  expect(push).toHaveBeenCalledWith(`/${next}`);
+  expect(useStore.getState().userDetails.calculatorType).toBe(next);
+});
+
+it("still confirms when inputs are emptied after a completed calculation", async () => {
+  setup("/employee");
+  useStore.getState().updateEmployee({ grossIncomeMonthly: 0, grossIncomeYearly: 0 });
+  renderUI(<EmployeeForm />);
+  fireEvent.click(screen.getByRole("radio", { name: "Ατομική επιχείρηση" }));
+
+  expect(await screen.findByRole("alertdialog")).toBeInTheDocument();
+  expect(push).not.toHaveBeenCalled();
+});
+
+it("protects a completed calculation in the other calculator too", async () => {
+  setup("/business");
+  useRouter.mockReturnValue({ pathname: "/employee", query: {}, push, replace });
+  useStore.getState().update({ calculatorType: "employee" });
+  renderUI(<EmployeeForm />);
+  fireEvent.click(screen.getByRole("radio", { name: "Ατομική επιχείρηση" }));
+
+  expect(await screen.findByRole("alertdialog")).toBeInTheDocument();
+  expect(push).not.toHaveBeenCalled();
+});
+
+it("switches without prompting again after the previous calculation was cleared", async () => {
+  setup("/employee");
+  const { unmount } = renderUI(<EmployeeForm />);
+  fireEvent.click(screen.getByRole("radio", { name: "Ατομική επιχείρηση" }));
+  await screen.findByRole("alertdialog");
+  confirm();
+  unmount();
+
+  useRouter.mockReturnValue({ pathname: "/business", query: {}, push, replace });
+  renderUI(<BusinessForm />);
+  fireEvent.click(screen.getByRole("radio", { name: "Μισθωτή εργασία" }));
+
+  expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument();
+  expect(push.mock.calls).toEqual([["/business"], ["/employee"]]);
+});
 
 it.each([
   ["employee", "business", EmployeeForm, "Ατομική επιχείρηση"],

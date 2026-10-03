@@ -3,6 +3,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { useRouter } from "next/router";
 import MobileTableHeader from "../components/table/MobileTableHeader";
 import { useStore } from "../store";
+import { getComparisonInput } from "../utils/yearComparison";
 
 jest.mock("next/router", () => ({
   useRouter: jest.fn(),
@@ -60,6 +61,14 @@ describe("MobileTableHeader", () => {
       useStore.getState().update({ calculatorType: currentCalculator });
       useStore.getState().updateEmployee({ grossIncomeMonthly: 2000 });
       useStore.getState().updateBusiness({ extraBusinessExpenses: 400 });
+      const state = useStore.getState();
+      const commit = currentCalculator === "employee"
+        ? state.commitEmployeeCalculation
+        : state.commitBusinessCalculation;
+      commit({
+        newState: {},
+        tableResults: { calculationInput: getComparisonInput(currentCalculator, state.userDetails[currentCalculator]) },
+      });
       renderHeader(currentCalculator);
 
       fireEvent.click(
@@ -88,4 +97,22 @@ describe("MobileTableHeader", () => {
       });
     },
   );
+
+  it.each([
+    ["employee", "business", "Ατομική επιχείρηση"],
+    ["business", "employee", "Μισθωτή εργασία"],
+  ])("switches from %s to %s immediately before any calculation", async (current, next, label) => {
+    useStore.getState().update({ calculatorType: current });
+    useStore.getState().updateEmployee({ grossIncomeMonthly: 2000 });
+    useStore.getState().updateBusiness({ extraBusinessExpenses: 400 });
+    renderHeader(current);
+    fireEvent.click(screen.getByRole("button", { name: "Επιλογή κατηγορίας υπολογισμού" }));
+    fireEvent.click(await screen.findByText(label, { selector: "[role='menuitemradio'] *" }));
+
+    expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument();
+    expect(push).toHaveBeenCalledWith(`/${next}`);
+    expect(useStore.getState().userDetails.calculatorType).toBe(next);
+    expect(useStore.getState().userDetails.employee.grossIncomeMonthly).toBe(0);
+    expect(useStore.getState().userDetails.business.extraBusinessExpenses).toBe(0);
+  });
 });
