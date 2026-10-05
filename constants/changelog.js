@@ -1,8 +1,15 @@
-export const CHANGELOG_LAST_INCLUDED_COMMIT = "b1b537e";
+export const CHANGELOG_LAST_INCLUDED_COMMIT = "5658bff";
 
 // Month headings are shown; each item's full date is only used for its "Νέο" badge.
 export const changelogEntries = Object.freeze(
   [
+    {
+      date: "2026-10",
+      items: Object.freeze([
+        { date: "2026-10-02", text: "Ο υπολογισμός μισθωτού υποστηρίζει πλέον μηχανικούς για το 2026, με επιλογή ασφαλιστικών κατηγοριών και ανάλυση εισφορών εργαζομένου και εργοδότη." },
+        { date: "2026-10-02", text: "Η σύγκριση προσφορών δείχνει πλέον καθαρό εισόδημα και κόστος εταιρείας για μία ή δύο πραγματικές προτάσεις ή για κοινό εταιρικό προϋπολογισμό." },
+      ].map(Object.freeze)),
+    },
     {
       date: "2026-09",
       items: Object.freeze([

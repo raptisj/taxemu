@@ -6,11 +6,11 @@ import {
 
 describe("changelog data", () => {
   it("is newest-first with concise, unique entries", () => {
-    expect(CHANGELOG_LAST_INCLUDED_COMMIT).toBe("b1b537e");
+    expect(CHANGELOG_LAST_INCLUDED_COMMIT).toBe("5658bff");
     expect(changelogEntries.length).toBeGreaterThan(0);
 
     const sectionDates = changelogEntries.map(({ date }) => date);
-    expect(sectionDates).toEqual(["2026-09"]);
+    expect(sectionDates).toEqual(["2026-10", "2026-09"]);
     sectionDates.forEach((date) => expect(date).toMatch(/^\d{4}-\d{2}$/));
     changelogEntries.forEach((section) =>
       section.items.forEach((item) =>

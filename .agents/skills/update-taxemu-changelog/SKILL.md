@@ -1,6 +1,6 @@
 ---
 name: update-taxemu-changelog
-description: Maintain Taxemu's user-facing changelog from local Git history. Use when adding recent noteworthy features or fixes to /changelog, advancing its included-commit marker, or checking whether committed work is missing; do not use for release notes outside Taxemu.
+description: Maintain Taxemu's user-facing changelog of major product improvements from local Git history. Use when adding important features or fixes to /changelog, advancing its included-commit marker, or checking whether committed work is missing; do not use for release notes outside Taxemu.
 ---
 
 # Update Taxemu Changelog
@@ -19,12 +19,16 @@ existing item when consolidating sections by month.
 2. Inspect commits after that marker in chronological order with local Git.
    Use commit subjects only for discovery; read the relevant diffs before
    deciding what changed for users.
-3. Add an item only if a person using Taxemu would notice or benefit from the
-   product change: a meaningful new capability, improved result or usability,
-   corrected calculation, updated tax data, or reliability fix with a clear
-   user impact. Exclude test fixes, typo and copy edits, refactors, build and
-   tooling work, dependency updates, and unrelated repository changes. A
-   commit being recent or labeled "fix" is not enough to include it.
+3. Apply a high bar: include a change only when it materially expands what a
+   user can calculate or compare, changes an important result or tax rule, or
+   removes a substantial obstacle to completing a core task. Ask whether the
+   change is worth announcing to a user who has not followed the development
+   history. Being visible or mildly convenient is insufficient. Omit routine
+   navigation and layout changes, confirmation dialogs, badges, labels, copy
+   and link updates, as well as test fixes, refactors, build and tooling work,
+   dependency updates, and unrelated changes. Do not combine minor changes
+   into an entry just to make them seem significant. It is fine to add no
+   entries for a reviewed range.
 4. Write each item as one short, plain Greek sentence about the benefit or
    changed behavior. Avoid implementation terms and vague claims such as
    "fixed a bug". Combine commits that deliver one change, give each item its
