@@ -17,7 +17,7 @@ export const AGE_GROUPS = Object.freeze({
   A30P: "A30P",
 });
 
-// Keep /compare accessible by direct URL until the feature is ready to launch.
-export const SHOW_OFFER_COMPARISON_LINKS = false;
+// Show /compare in the desktop navbar and mobile navigation menu.
+export const SHOW_OFFER_COMPARISON_LINKS = true;
 
 export const FEEDBACK_FORM_URL = "https://forms.gle/DT6tNoR2VES57XrY7";
