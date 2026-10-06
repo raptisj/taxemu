@@ -13,7 +13,7 @@ import { formatCellPercentage, formatCellValue } from "utils";
 import MobileTableHeader from "./MobileTableHeader";
 import TaxWedgeInfoPopover from "./TaxWedgeInfoPopover";
 
-const MobileEmployeeTable = ({ onSubmitAction }) => {
+const MobileEmployeeTable = ({ onSubmitAction, onClear }) => {
   const userDetails = useStore((state) => state.userDetails.employee);
 
   const {
@@ -39,6 +39,7 @@ const MobileEmployeeTable = ({ onSubmitAction }) => {
       <MobileTableHeader
         calculatorEntity="employee"
         onSubmitAction={onSubmitAction}
+        onClear={onClear}
       />
 
       <Tabs isFitted mt={2}>

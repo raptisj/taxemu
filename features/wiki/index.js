@@ -23,6 +23,8 @@ import { WikiContent } from "./WikiContent";
 import { useRouter } from "next/router";
 import { WIKI } from "../../constants/content";
 import bookIcon from "assets/book.svg";
+import { useCallback, useEffect } from "react";
+import { isWikiShortcut } from "../../utils/keyboardShortcuts";
 
 const Wiki = () => {
   const router = useRouter();
@@ -33,17 +35,32 @@ const Wiki = () => {
   const currentParams = new URLSearchParams(router.query);
   const isDrawerOpen = currentParams.get("drawer-wiki");
 
-  const handleOpen = () => {
+  const handleOpen = useCallback(() => {
+    if ((isLargerThan30 && isOpen) || (!isLargerThan30 && isDrawerOpen)) return;
     if (isLargerThan30) {
       onOpen();
     } else {
+      const currentParams = new URLSearchParams(router.query);
       currentParams.set("drawer-wiki", "open");
       router.push({
         pathname: router.pathname,
         query: currentParams.toString(),
       });
     }
-  };
+  }, [isOpen, isDrawerOpen, isLargerThan30, onOpen, router]);
+
+  useEffect(() => {
+    if (router.pathname !== "/employee" && router.pathname !== "/business") return;
+
+    const handleKeyDown = (event) => {
+      if (event.repeat || !isWikiShortcut(event)) return;
+      event.preventDefault();
+      handleOpen();
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [router.pathname, handleOpen]);
 
   const handleClose = () => {
     if (isLargerThan30) {

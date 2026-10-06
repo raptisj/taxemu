@@ -188,7 +188,7 @@ export const calculateFreelancerOffer = (input, annualRevenue) => {
   };
 };
 
-const solveMinimum = ({ target, calculate, select, cents = false }) => {
+const solveMinimum = ({ target, calculate, select, cents = false, enforceTarget = false }) => {
   const wanted = finiteNonNegative(target);
   if (!wanted) return 0;
 
@@ -207,7 +207,15 @@ const solveMinimum = ({ target, calculate, select, cents = false }) => {
     else low = middle;
   }
 
-  // Keep the minimum solution on or above the target after currency rounding.
+  if (enforceTarget) {
+    const scale = cents ? 100 : 1;
+    const units = Math.floor(high * scale);
+    const candidate = units / scale;
+    return select(calculate(candidate)) >= wanted
+      ? candidate
+      : (units + 1) / scale;
+  }
+
   return cents ? Math.ceil(high * 100) / 100 : roundMoney(high);
 };
 
@@ -223,6 +231,7 @@ export const solveEmployeeGrossForNet = (input, annualNet) =>
   solveMinimum({
     target: annualNet,
     cents: isEngineer(input),
+    enforceTarget: true,
     calculate: (annualGross) => calculateEmployeeOffer(input, annualGross),
     select: (result) => result.annualNet,
   });
@@ -230,6 +239,7 @@ export const solveEmployeeGrossForNet = (input, annualNet) =>
 export const solveFreelancerRevenueForNet = (input, annualNet) =>
   solveMinimum({
     target: annualNet,
+    enforceTarget: true,
     calculate: (annualRevenue) =>
       calculateFreelancerOffer(input, annualRevenue),
     select: (result) => result.annualNet,

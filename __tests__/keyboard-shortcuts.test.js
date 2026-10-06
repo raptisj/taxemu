@@ -1,6 +1,12 @@
+import React from "react";
+import { ChakraProvider } from "@chakra-ui/react";
+import { fireEvent, render } from "@testing-library/react";
+import KeyboardShortcutsButton from "../components/keyboard/KeyboardShortcutsButton";
 import {
   isCalculateShortcut,
+  isClearShortcut,
   isShortcutHelpKey,
+  isWikiShortcut,
 } from "../utils/keyboardShortcuts";
 
 describe("calculator keyboard shortcuts", () => {
@@ -30,5 +36,33 @@ describe("calculator keyboard shortcuts", () => {
     expect(
       isShortcutHelpKey({ key: "?", code: "Slash", ctrlKey: true }),
     ).toBe(false);
+  });
+
+  it("clears only with Ctrl/Command+Shift+Backspace", () => {
+    expect(isClearShortcut({ key: "Backspace", ctrlKey: true, shiftKey: true })).toBe(true);
+    expect(isClearShortcut({ key: "Backspace", metaKey: true, shiftKey: true })).toBe(true);
+    expect(isClearShortcut({ key: "Backspace", ctrlKey: true })).toBe(false);
+    expect(isClearShortcut({ key: "Backspace", metaKey: true, shiftKey: true, altKey: true })).toBe(false);
+  });
+
+  it("opens explanations with Ctrl/Command+Shift+E across keyboard layouts", () => {
+    expect(isWikiShortcut({ key: "E", ctrlKey: true, shiftKey: true })).toBe(true);
+    expect(isWikiShortcut({ key: "ε", code: "KeyE", metaKey: true, shiftKey: true })).toBe(true);
+    expect(isWikiShortcut({ key: "e", ctrlKey: true })).toBe(false);
+    expect(isWikiShortcut({ key: "e", ctrlKey: true, shiftKey: true, altKey: true })).toBe(false);
+  });
+
+  it("uses the calculator's clear action when the shortcut is pressed", () => {
+    const onClear = jest.fn();
+    const onCalculate = jest.fn();
+    render(
+      <ChakraProvider>
+        <KeyboardShortcutsButton onCalculate={onCalculate} onClear={onClear} />
+      </ChakraProvider>,
+    );
+
+    fireEvent.keyDown(window, { key: "Backspace", ctrlKey: true, shiftKey: true });
+    expect(onClear).toHaveBeenCalledTimes(1);
+    expect(onCalculate).not.toHaveBeenCalled();
   });
 });

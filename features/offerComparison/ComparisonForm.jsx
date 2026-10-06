@@ -29,13 +29,14 @@ import {
   getEffectiveBillableMonths,
 } from "../../utils/offerComparison";
 
-const NumberField = ({ label, value, onChange, helper, ...rest }) => {
-  const id = useId();
+const NumberField = ({ id, label, value, onChange, helper, ...rest }) => {
+  const generatedId = useId();
+  const fieldId = id ?? generatedId;
   return (
     <FormControl>
-      <FormLabel htmlFor={id} color="gray.700" fontSize="sm" fontWeight="600" mb={2}>{label}</FormLabel>
+      <FormLabel htmlFor={fieldId} color="gray.700" fontSize="sm" fontWeight="600" mb={2}>{label}</FormLabel>
       <NumberInput min={0} value={value === 0 ? "" : value} onChange={(_, nextValue) => onChange(Number.isFinite(nextValue) ? nextValue : 0)} {...rest}>
-        <NumberInputField id={id} bg="white" />
+        <NumberInputField id={fieldId} bg="white" />
       </NumberInput>
       {helper && <Text color="gray.500" fontSize="xs" mt={1.5}>{helper}</Text>}
     </FormControl>
@@ -182,6 +183,12 @@ export const ComparisonForm = ({ input, setInput, settings = false }) => {
           </FormControl>
         </Stack>
       </Section>
+      <Section title="Έξοδα και φορολογική ρευστότητα" description="Τα έξοδα αλλάζουν τα καθαρά. Η περσινή προκαταβολή αλλάζει μόνο το ποσό μετά την εκκαθάριση.">
+        <Stack spacing={4}>
+          <NumberField label="Ετήσια επαγγελματικά έξοδα" value={input.businessExpensesAnnual} onChange={(value) => setField("businessExpensesAnnual", value)} helper="Εκπίπτουν από τα φορολογητέα κέρδη της ατομικής επιχείρησης." />
+          <NumberField id="comparison-prior-advance" label="Περσινή προκαταβολή φόρου" value={input.previousYearTaxInAdvance} onChange={(value) => setField("previousYearTaxInAdvance", value)} helper="Βάλε το ποσό που θα πιστωθεί στην εκκαθάριση. Το 0 σημαίνει ότι δεν υπάρχει πίστωση." />
+        </Stack>
+      </Section>
     </Stack>
   );
 
@@ -192,7 +199,7 @@ export const ComparisonForm = ({ input, setInput, settings = false }) => {
           <AccordionButton p={{ base: 4, md: 5 }}>
             <Box flex="1" textAlign="left">
               <Heading as="h2" fontSize="lg">Παραδοχές ατομικής επιχείρησης</Heading>
-              <Text color="gray.500" fontSize="sm" mt={1}>Άδεια, χρόνος τιμολόγησης και επαγγελματικά έξοδα.</Text>
+              <Text color="gray.500" fontSize="sm" mt={1}>Άδεια και χρόνος τιμολόγησης.</Text>
             </Box>
             <AccordionIcon />
           </AccordionButton>
@@ -200,7 +207,6 @@ export const ComparisonForm = ({ input, setInput, settings = false }) => {
             <SimpleGrid columns={{ base: 1, sm: 2 }} spacing={4}>
               <NumberField label="Μήνες τιμολόγησης πριν την άδεια" value={input.billableMonths} onChange={(value) => setField("billableMonths", Math.min(12, value))} max={12} precision={2} />
               <NumberField label="Ημέρες άδειας" value={input.unpaidLeaveDays} onChange={(value) => setField("unpaidLeaveDays", Math.min(260, value))} max={260} />
-              <NumberField label="Ετήσια επαγγελματικά έξοδα" value={input.businessExpensesAnnual} onChange={(value) => setField("businessExpensesAnnual", value)} />
               <NumberField label="Έτος άσκησης δραστηριότητας" value={input.businessAge} onChange={(value) => setField("businessAge", Math.min(60, Math.max(1, Math.trunc(value))))} min={1} max={60} />
             </SimpleGrid>
             <Checkbox mt={4} colorScheme="purple" isChecked={input.leaveIsBillable} onChange={(event) => setField("leaveIsBillable", event.target.checked)}>
@@ -266,9 +272,6 @@ export const ComparisonForm = ({ input, setInput, settings = false }) => {
               <Checkbox colorScheme="purple" isChecked={input.withholdingTax} onChange={(event) => setField("withholdingTax", event.target.checked)}>Παρακράτηση φόρου στα τιμολόγια</Checkbox>
             </Stack>
 
-            <Box mt={4} maxW="320px">
-              <NumberField label="Περσινή προκαταβολή φόρου" value={input.previousYearTaxInAdvance} onChange={(value) => setField("previousYearTaxInAdvance", value)} />
-            </Box>
           </AccordionPanel>
         </AccordionItem>
       </Accordion>

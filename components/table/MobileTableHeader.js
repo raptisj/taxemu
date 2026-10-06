@@ -6,7 +6,7 @@ import KeyboardShortcutsButton from "../keyboard/KeyboardShortcutsButton";
 import { MobileResultsActionsMenu } from "./ResultsActions";
 import { CALCULATOR_LABELS, CALCULATOR_GENITIVE_LABELS } from "../../constants/calculators";
 
-const MobileTableHeader = ({ calculatorEntity, onSubmitAction }) => {
+const MobileTableHeader = ({ calculatorEntity, onSubmitAction, onClear }) => {
   const { requestCalculatorSwitch, dialogProps } =
     useCalculatorSwitch(calculatorEntity);
 
@@ -48,6 +48,7 @@ const MobileTableHeader = ({ calculatorEntity, onSubmitAction }) => {
         <Flex align="center" flexShrink={0} gap={1}>
           <KeyboardShortcutsButton
             onCalculate={onSubmitAction}
+            onClear={onClear}
             hideTrigger
           />
           <MobileResultsActionsMenu entity={calculatorEntity} />

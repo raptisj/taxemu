@@ -73,6 +73,27 @@ describe("offer comparison", () => {
     expect(result.benchmarks.freelancerAtEmployeeCost.annualNet).toBeCloseTo(23445.32, 2);
   });
 
+  test("2026 high-income salary uses the standard 13.37% insured rate", () => {
+    const result = calculateOfferComparison(input({ employeeOfferAmount: 700000 }));
+    expect(result.employee.employeeInsurance).toBe(14532);
+    expect(result.employee.annualNet).toBe(393562);
+    expect(result.employee.companyCost).toBe(723674);
+    expect(result.freelancer.annualNet).toBeCloseTo(398603.63, 2);
+    expect(result.difference.annualNet).toBeCloseTo(5041.63, 2);
+  });
+
+  test("the break-even invoice reaches the salary net at the displayed euro", () => {
+    const assumptions = input({ employeeOfferAmount: 70000 });
+    const result = calculateOfferComparison(assumptions);
+    const quote = result.benchmarks.requiredFreelancerRevenue;
+
+    expect(quote).toBe(66164);
+    expect(calculateFreelancerOffer(assumptions, quote).annualNet)
+      .toBeGreaterThanOrEqual(result.employee.annualNet);
+    expect(calculateFreelancerOffer(assumptions, quote - 1).annualNet)
+      .toBeLessThan(result.employee.annualNet);
+  });
+
   test("a monthly freelancer offer annualizes leave before assuming employee gross", () => {
     const result = calculateOfferComparison(input({
       offerType: OFFER_TYPES.FREELANCER,

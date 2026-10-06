@@ -60,7 +60,7 @@ export const OfferComparison = () => {
         <Box maxW="720px">
           <Text color="purple.600" fontSize="xs" fontWeight="800" letterSpacing=".12em">ΣΥΓΚΡΙΣΗ ΠΡΟΣΦΟΡΩΝ</Text>
           <Heading as="h1" fontSize={{ base: "2xl", md: "4xl" }} mt={2}>{CALCULATOR_LABELS.employee} ή {CALCULATOR_LABELS.business.toLowerCase()};</Heading>
-          <Text color="gray.600" mt={3}>Σύγκρινε το πραγματικό καθαρό εισόδημα και το κόστος εταιρείας με τις ίδιες φορολογικές παραδοχές.</Text>
+          <Text color="gray.600" mt={3}>Εκτίμησε τα καθαρά και το κόστος εταιρείας για μισθωτή εργασία και ατομική επιχείρηση.</Text>
         </Box>
         <Button leftIcon={copied ? <CheckIcon /> : <CopyIcon />} colorScheme="purple" variant="outline" onClick={share} flexShrink={0}>{copied ? "Αντιγράφηκε" : "Κοινοποίηση"}</Button>
       </Flex>

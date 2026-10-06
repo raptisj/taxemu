@@ -112,7 +112,7 @@ describe("dynamic calculation explanations", () => {
     });
 
     expect(explanation.hasCalculation).toBe(false);
-    expect(explanation.sections[1].description).toContain("13,33%");
+    expect(explanation.sections[1].description).toContain("13,37%");
     expect(explanation.sources.length).toBeGreaterThan(0);
   });
 

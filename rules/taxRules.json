@@ -653,6 +653,10 @@
     "year": 2025,
     "sources": [
       {
+        "name": "e-EFKA Circular 38/2024 — standard employee and employer contribution rates",
+        "url": "https://www.e-efka.gov.gr/el/egkyklioi-kai-genika-eggrapha/egkyklios-38-24122024"
+      },
+      {
         "name": "e-EFKA Circular 3/2025 — employee contribution ceiling",
         "url": "https://www.e-efka.gov.gr/sites/default/files/2025-02/EGK_3_2025.pdf"
       },
@@ -864,7 +868,7 @@
         "url": "https://www.e-efka.gov.gr/el/egkyklioi-kai-genika-eggrapha/egkyklios-42026"
       },
       {
-        "name": "e-EFKA Circular 38/2024 — healthcare and coverage code 1022, §§1–2 and PDF p. 11",
+        "name": "e-EFKA Circular 38/2024 — standard contribution rates and engineer coverage code 1022",
         "url": "https://www.e-efka.gov.gr/el/egkyklioi-kai-genika-eggrapha/egkyklios-38-24122024"
       },
       {
@@ -890,7 +894,7 @@
     ],
     "employee": {
       "insurance": {
-        "employeeRate": 0.1333,
+        "employeeRate": 0.1337,
         "employerRate": 0.2179,
         "monthlyContributionCap": 7761.94,
         "engineer": {

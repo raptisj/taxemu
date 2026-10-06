@@ -1,29 +1,13 @@
 import { Box, Grid, Flex, GridItem } from "@chakra-ui/react";
 import { Sidebar } from "../components/layout";
 import Table from "../components/table";
-import { useCalculateBusiness } from "hooks";
+import { useCalculateBusiness, useClearCalculator } from "hooks";
 import BusinessForm from "components/business/BusinessForm";
-import { useStore } from "store";
 import { YearComparison } from "features/yearComparison";
-import { useRouter } from "next/router";
-import { removeComparisonParams } from "utils/yearComparison";
 
 const BusinessView = () => {
   const { centralCalculation } = useCalculateBusiness();
-  const removeUserDetails = useStore((state) => state.removeUserDetails);
-  const router = useRouter();
-
-  const clearCalculator = () => {
-    removeUserDetails();
-    router.replace(
-      {
-        pathname: router.pathname,
-        query: removeComparisonParams(router.query),
-      },
-      undefined,
-      { shallow: true },
-    );
-  };
+  const clearCalculator = useClearCalculator();
 
   return (
     <Grid
@@ -54,7 +38,11 @@ const BusinessView = () => {
         position="relative"
       >
         <Flex position="sticky" top={8} flexDirection="column" height="100%">
-          <Table.Header entity="business" onSubmitAction={centralCalculation} />
+          <Table.Header
+            entity="business"
+            onSubmitAction={centralCalculation}
+            onClear={clearCalculator}
+          />
           <Table.Business />
           <YearComparison entity="business" />
         </Flex>

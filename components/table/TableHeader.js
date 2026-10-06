@@ -3,7 +3,7 @@ import { SubmitButtonContent } from "../form";
 import KeyboardShortcutsButton from "../keyboard/KeyboardShortcutsButton";
 import { ResultsActionsMenu } from "./ResultsActions";
 
-const TableHeader = ({ entity, onSubmitAction }) => {
+const TableHeader = ({ entity, onSubmitAction, onClear }) => {
   return (
     <Flex justifyContent="space-between" alignItems="center">
       <Flex alignItems="center" gap={1}>
@@ -16,7 +16,7 @@ const TableHeader = ({ entity, onSubmitAction }) => {
         >
           Αποτέλεσμα*
         </Heading>
-        <KeyboardShortcutsButton onCalculate={onSubmitAction} />
+        <KeyboardShortcutsButton onCalculate={onSubmitAction} onClear={onClear} />
       </Flex>
 
       <Flex gap={2} alignItems="center">

@@ -2,13 +2,14 @@ import { Box, Button } from "@chakra-ui/react";
 import Table from "components/table";
 import BusinessForm from "components/business/BusinessForm";
 import MobileDrawerForm from "components/layout/MobileDrawerForm";
-import { useCalculateBusiness } from "hooks";
+import { useCalculateBusiness, useClearCalculator } from "hooks";
 import { useRouter } from "next/router";
 import { YearComparison } from "features/yearComparison";
 
 const MobileBusinessView = () => {
   const router = useRouter();
   const { centralCalculation } = useCalculateBusiness();
+  const clearCalculator = useClearCalculator();
 
   const currentParams = new URLSearchParams(router.query);
   const isDrawerOpen = currentParams.get("drawer-form");
@@ -32,7 +33,10 @@ const MobileBusinessView = () => {
   return (
     <>
       <Box position="relative" height="calc(100vh - 150px)" mt={[6, 16]}>
-        <Table.MobileBusinessTable onSubmitAction={centralCalculation} />
+        <Table.MobileBusinessTable
+          onSubmitAction={centralCalculation}
+          onClear={clearCalculator}
+        />
         <YearComparison entity="business" />
 
         <Box

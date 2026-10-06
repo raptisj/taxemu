@@ -19,7 +19,7 @@ import { isEngineer, supportsEngineer, engineerUnsupportedMessage } from "../../
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { inlineLinkStyles } from "../../styles/inlineLink";
 import { getTaxRules } from "../../rules";
-import { COMPARISON_PERSPECTIVES, OFFER_TYPES, getEffectiveBillableMonths, getEngineerMinimumEmployerCost } from "../../utils/offerComparison";
+import { COMPARISON_PERSPECTIVES, OFFER_PERIODS, OFFER_TYPES, getEffectiveBillableMonths, getEngineerMinimumEmployerCost } from "../../utils/offerComparison";
 import { formatRatePercentage } from "../../utils";
 import { CALCULATOR_LABELS } from "../../constants/calculators";
 
@@ -52,7 +52,7 @@ const Metric = ({ label, value, negative = false }) => (
   </Flex>
 );
 
-const ResultCard = ({ type, result, company, taxationYear }) => {
+const ResultCard = ({ type, result, company, input }) => {
   const employee = type === OFFER_TYPES.EMPLOYEE;
   return (
     <Box borderWidth="1px" borderColor={employee ? "blue.200" : "purple.200"} borderRadius="xl" bg="white" p={{ base: 4, md: 5 }} minW={0}>
@@ -74,11 +74,19 @@ const ResultCard = ({ type, result, company, taxationYear }) => {
           <Box bg="orange.50" borderRadius="md" mt={3} p={3}>
             <Text color="orange.800" fontSize="xs" fontWeight="700">Διαθέσιμα μετά τους φορολογικούς συμψηφισμούς</Text>
             <Text color="orange.900" fontWeight="700" mt={1}>{formatMoney(result.cashAfterTaxSettlements)} / έτος</Text>
-            <Text color="orange.800" fontSize="xs" mt={1}>Μετά την προκαταβολή φόρου και την πίστωση της περσινής προκαταβολής. Χωριστά από το καθαρό εισόδημα.</Text>
+            <Text color="orange.800" fontSize="xs" mt={1}>
+              {formatMoney(result.annualNet)} καθαρό εισόδημα − {formatMoney(result.taxPrepayment)} νέα προκαταβολή + {formatMoney(result.previousYearTaxInAdvance)} περσινή προκαταβολή.
+            </Text>
+            {input.businessAge > 1 && input.prePaidNextYearTax && result.previousYearTaxInAdvance === 0 && (
+              <Text color="orange.900" fontSize="xs" mt={2}>
+                Υποθέτουμε μηδενική περσινή πίστωση. Αν έχεις ήδη επιχείρηση, <Link href="#comparison-prior-advance" textDecoration="underline" fontWeight="700">συμπλήρωσε την πραγματική προκαταβολή</Link>.
+              </Text>
+            )}
+            <Text color="orange.800" fontSize="xs" mt={2}>Η προκαταβολή επηρεάζει τη ρευστότητα, όχι το καθαρό εισόδημα.</Text>
           </Box>
         </>
       )}
-      {employee && <EmployeeContributionBreakdown breakdown={result.contributionBreakdown} taxationYear={taxationYear} />}
+      {employee && <EmployeeContributionBreakdown breakdown={result.contributionBreakdown} taxationYear={input.taxationYear} />}
       <Box mt={4}>
         <Disclosure title="Ανάλυση ποσών ανά έτος">
           <Metric label={employee ? "Μικτές αποδοχές" : "Έσοδα από τιμολόγια χωρίς ΦΠΑ"} value={employee ? result.annualGross : result.annualRevenue} />
@@ -91,7 +99,8 @@ const ResultCard = ({ type, result, company, taxationYear }) => {
               <Metric label="Προκαταβολή φόρου (ρευστότητα)" value={result.taxPrepayment} negative />
               <Metric label="Περσινή προκαταβολή που συμψηφίζεται" value={result.previousYearTaxInAdvance} />
               <Metric label="Παρακράτηση που συμψηφίζεται με τον φόρο" value={result.withholding} />
-              <Metric label="ΦΠΑ τιμολογίων (εκτός εισοδήματος)" value={result.vat} />
+              <Metric label="Ενδεικτικός ΦΠΑ τιμολογίων (εκτός καθαρών)" value={result.vat} />
+              <Text color="gray.500" fontSize="xs" mt={2}>Ο ΦΠΑ είναι ο επιλεγμένος συντελεστής επί των τιμολογίων, όχι εκτίμηση οφειλής μετά τον ΦΠΑ εξόδων ή ειδικούς κανόνες.</Text>
             </>
           )}
         </Disclosure>
@@ -100,39 +109,52 @@ const ResultCard = ({ type, result, company, taxationYear }) => {
   );
 };
 
-const Assumptions = ({ input }) => (
-  <Box borderWidth="1px" borderColor="gray.200" borderRadius="xl" bg="gray.50" p={4}>
-    <Heading as="h3" fontSize="sm">Παραδοχές που επηρεάζουν το αποτέλεσμα</Heading>
-    <Text fontSize="xs" color="gray.600" mt={2}>
-      {input.taxationYear} · {input.salaryMonthCount} μισθοί · {decimal.format(getEffectiveBillableMonths(input))} χρεώσιμοι μήνες μετά την άδεια · {input.unpaidLeaveDays} ημέρες {input.leaveIsBillable ? "τιμολογούμενης" : "μη τιμολογούμενης"} άδειας · {formatMoney(input.businessExpensesAnnual)} έξοδα / έτος
-    </Text>
-    <Text fontSize="xs" color="gray.600" mt={2}>
-      {input.businessAge}ο έτος δραστηριότητας · {input.specialInsuranceScale ? "ειδική ασφαλιστική κατηγορία" : `${input.insuranceScaleSelection}η ασφαλιστική κατηγορία`} · ΦΠΑ εκτός εισοδήματος και κόστους, εφόσον ανακτάται.
-    </Text>
-    <Text fontSize="xs" color="gray.500" mt={2}>Άλλαξε τις παραδοχές στις αναπτυσσόμενες ενότητες της φόρμας.</Text>
-  </Box>
-);
+const Assumptions = ({ input }) => {
+  const monthlyInvoiceOffer = input.perspective === COMPARISON_PERSPECTIVES.PERSONAL &&
+    (input.hasSecondOffer || input.offerType === OFFER_TYPES.FREELANCER) &&
+    input.freelancerOfferPeriod === OFFER_PERIODS.MONTH;
+  return (
+    <Box borderWidth="1px" borderColor="gray.200" borderRadius="xl" bg="gray.50" p={4}>
+      <Heading as="h3" fontSize="sm">Παραδοχές του σεναρίου</Heading>
+      <Text fontSize="xs" color="gray.600" mt={2}>
+        {input.taxationYear} · {input.salaryMonthCount} μισθοί · {decimal.format(getEffectiveBillableMonths(input))} χρεώσιμοι μήνες · {input.unpaidLeaveDays} ημέρες {input.leaveIsBillable ? "τιμολογούμενης" : "μη τιμολογούμενης"} άδειας · {formatMoney(input.businessExpensesAnnual)} έξοδα / έτος
+      </Text>
+      <Text fontSize="xs" color="gray.600" mt={2}>
+        {monthlyInvoiceOffer
+          ? input.leaveIsBillable
+            ? "Το μηνιαίο τιμολόγιο πολλαπλασιάζεται με τους χρεώσιμους μήνες. Η άδεια τιμολογείται κανονικά."
+            : "Το μηνιαίο τιμολόγιο πολλαπλασιάζεται με τους χρεώσιμους μήνες. Η μη τιμολογούμενη άδεια μειώνει τα ετήσια έσοδα."
+          : "Το ετήσιο ποσό της ατομικής θεωρείται ήδη μετά την άδεια. Οι χρεώσιμοι μήνες αλλάζουν μόνο το ποσό ανά τιμολόγιο, όχι τα ετήσια έσοδα."}
+      </Text>
+      <Text fontSize="xs" color="gray.600" mt={2}>
+        {input.businessAge}ο έτος δραστηριότητας · {input.specialInsuranceScale ? "ειδική ασφαλιστική κατηγορία" : `${input.insuranceScaleSelection}η ασφαλιστική κατηγορία`} · Υποθέτουμε ότι η εταιρεία ανακτά τον ΦΠΑ· ο ΦΠΑ δεν περιλαμβάνεται στα καθαρά.
+      </Text>
+    </Box>
+  );
+};
 
 const Insights = ({ comparison, input }) => {
   const { employee, freelancer, benchmarks } = comparison;
   const employeeKnown = input.offerType === OFFER_TYPES.EMPLOYEE;
   const company = input.perspective === COMPARISON_PERSPECTIVES.COMPANY;
+  const assumed = comparison.basis === "same-annual-offer";
   const alternative = employeeKnown ? benchmarks.freelancerAtEmployeeCost : benchmarks.employeeAtFreelancerCost;
   const known = employeeKnown ? employee : freelancer;
   const monthlyChange = alternative ? (alternative.annualNet - known.annualNet) / 12 : null;
+  if (assumed && !alternative) return null;
   return (
     <Box borderWidth="1px" borderColor="gray.200" borderRadius="xl" bg="white" p={{ base: 4, md: 5 }}>
-      <Heading as="h3" fontSize="lg">Ποια προσφορά εξισώνει τα καθαρά;</Heading>
-      <Text color="gray.500" fontSize="sm" mt={1}>Όριο ισοδυναμίας μετά φόρους, ασφάλιση και έξοδα, πριν τις προκαταβολές φόρου.</Text>
+      <Heading as="h3" fontSize="lg">{assumed ? "Τι αποδίδει το ίδιο εταιρικό budget;" : "Ποια προσφορά εξισώνει τα καθαρά;"}</Heading>
+      <Text color="gray.500" fontSize="sm" mt={1}>{assumed ? "Εναλλακτικό σενάριο διαπραγμάτευσης με το κόστος της γνωστής πρότασης." : "Όριο ισοδυναμίας μετά φόρους, ασφάλιση και έξοδα, πριν τις προκαταβολές φόρου."}</Text>
       <Stack spacing={3} mt={4}>
-        {(company || input.hasSecondOffer || employeeKnown) && benchmarks.requiredFreelancerRevenue !== null && (
+        {!assumed && (company || input.hasSecondOffer || employeeKnown) && benchmarks.requiredFreelancerRevenue !== null && (
           <Box bg="purple.50" borderRadius="lg" p={4}>
             <Text fontSize="sm">Για να φτάσεις τα {formatMoney(employee.annualNet)} καθαρά της μισθωτής πρότασης:</Text>
             <Text color="purple.800" fontWeight="800" mt={2}>{formatMoney(benchmarks.requiredFreelancerRevenue)} ετήσια έσοδα ατομικής επιχείρησης</Text>
             <Text color="gray.600" fontSize="xs" mt={1}>{formatMoney(benchmarks.requiredFreelancerInvoice)} / χρεώσιμο μήνα, χωρίς ΦΠΑ</Text>
           </Box>
         )}
-        {(company || input.hasSecondOffer || !employeeKnown) && benchmarks.requiredEmployeeGross !== null && (
+        {!assumed && (company || input.hasSecondOffer || !employeeKnown) && benchmarks.requiredEmployeeGross !== null && (
           <Box bg="blue.50" borderRadius="lg" p={4}>
             <Text fontSize="sm">Για να φτάσεις τα {formatMoney(freelancer.annualNet)} καθαρά από την ατομική επιχείρηση:</Text>
             <Text color="blue.800" fontWeight="800" mt={2}>{formatMoney(benchmarks.requiredEmployeeGross)} μικτές αποδοχές / έτος</Text>
@@ -140,8 +162,8 @@ const Insights = ({ comparison, input }) => {
         )}
         {!company && alternative && (
           <Box bg="gray.50" borderRadius="lg" p={4}>
-            <Text fontWeight="700" fontSize="sm">Περιθώριο διαπραγμάτευσης με το ίδιο εταιρικό κόστος</Text>
-            <Text fontSize="sm" color="gray.600" mt={2}>Η γνωστή πρόταση κοστίζει στην εταιρεία {formatMoney(known.companyCost)} / έτος. Αν το ίδιο budget δοθεί ως {employeeKnown ? "αμοιβή με τιμολόγιο ατομικής επιχείρησης" : "αμοιβή μισθωτής εργασίας"}, μένουν {formatMoney(alternative.monthlyNet)} καθαρά / ημερολογιακό μήνα.</Text>
+            {!assumed && <Text fontWeight="700" fontSize="sm">Περιθώριο διαπραγμάτευσης με το ίδιο εταιρικό κόστος</Text>}
+            <Text fontSize="sm" color="gray.600">Η γνωστή πρόταση κοστίζει στην εταιρεία {formatMoney(known.companyCost)} / έτος. Αν η εταιρεία δεχτεί να διαθέσει το ίδιο budget ως {employeeKnown ? "αμοιβή με τιμολόγιο ατομικής επιχείρησης" : "αμοιβή μισθωτής εργασίας"}, μένουν {formatMoney(alternative.monthlyNet)} καθαρά / ημερολογιακό μήνα.</Text>
             <Text fontWeight="700" mt={2}>{Math.abs(monthlyChange) < 1 ? "Σχεδόν ίδιο καθαρό εισόδημα" : `${formatMoney(Math.abs(monthlyChange))} ${monthlyChange > 0 ? "περισσότερα" : "λιγότερα"} καθαρά / μήνα`} σε σχέση με τη γνωστή πρόταση.</Text>
             <Text color="gray.500" fontSize="xs" mt={2}>Εναλλακτικό σενάριο διαπραγμάτευσης · δεν αποτελεί δεύτερη πραγματική προσφορά.</Text>
           </Box>
@@ -173,20 +195,49 @@ export const ComparisonResults = ({ comparison, input }) => {
 
   const difference = comparison.difference.annualNet;
   const equal = Math.abs(difference) < 1;
+  const assumed = comparison.basis === "same-annual-offer";
+  const employeeKnown = input.offerType === OFFER_TYPES.EMPLOYEE;
+  const breakEven = employeeKnown
+    ? comparison.benchmarks.requiredFreelancerRevenue
+    : comparison.benchmarks.requiredEmployeeGross;
+  const netDifferencePercent = comparison.employee.annualNet > 0
+    ? Math.abs(difference) / comparison.employee.annualNet * 100
+    : null;
+  const comparisonPrefix = assumed ? "Στο υποθετικό σενάριο, η " : company ? "Με ίδιο εταιρικό κόστος, η " : "Η ";
   return (
     <Stack spacing={4}>
       <Box borderWidth="1px" borderColor="purple.200" borderRadius="xl" bg="purple.50" p={{ base: 5, md: 6 }} aria-live="polite" aria-atomic="true">
         <Text color="purple.700" fontSize="sm" fontWeight="700">{basisLabel[comparison.basis]}</Text>
+        {assumed && <Text color="purple.800" fontSize="sm" fontWeight="700" mt={1}>1 πραγματική πρόταση · 1 υπόθεση</Text>}
         <Heading as="h2" color="purple.800" fontSize={{ base: "xl", md: "2xl" }} mt={3}>
-          {equal ? "Σχεδόν ίδιο καθαρό εισόδημα" : `Η ${difference > 0 ? CALCULATOR_LABELS.business.toLowerCase() : CALCULATOR_LABELS.employee.toLowerCase()} αποδίδει ${formatMoney(Math.abs(difference) / 12)} περισσότερα καθαρά / μήνα`}
+          {equal ? "Σχεδόν ίδιο καθαρό εισόδημα" : `${comparisonPrefix}${difference > 0 ? CALCULATOR_LABELS.business.toLowerCase() : CALCULATOR_LABELS.employee.toLowerCase()} αποδίδει ${formatMoney(Math.abs(difference) / 12)} περισσότερα καθαρά / μήνα`}
         </Heading>
-        <Text color="gray.600" fontSize="sm" mt={2}>{equal ? "Τα ετήσια καθαρά διαφέρουν λιγότερο από 1 €." : `${formatMoney(Math.abs(difference))} περισσότερα καθαρά / έτος, μετά φόρους, ασφάλιση και έξοδα.`}</Text>
-        {comparison.basis === "same-annual-offer" && <Text fontSize="xs" color="gray.600" mt={2}>Η άλλη μορφή συνεργασίας είναι υπόθεση με το ίδιο ετήσιο ποσό, όχι δεύτερη πραγματική προσφορά. Το κόστος εταιρείας διαφέρει.</Text>}
-        {comparison.basis === "actual-offers" && <Text fontSize="xs" color="gray.600" mt={2}>Η πρόταση με τιμολόγιο κοστίζει στην εταιρεία {formatMoney(Math.abs(comparison.difference.companyCost))} {comparison.difference.companyCost >= 0 ? "περισσότερο" : "λιγότερο"} / έτος.</Text>}
+        <Text color="gray.600" fontSize="sm" mt={2}>
+          {equal ? "Τα ετήσια καθαρά διαφέρουν λιγότερο από 1 €." : `${formatMoney(Math.abs(difference))} περισσότερα καθαρά / έτος, μετά φόρους, ασφάλιση και έξοδα${netDifferencePercent === null ? "." : ` · ${decimal.format(netDifferencePercent)}% των καθαρών της μισθωτής εργασίας.`}`}
+        </Text>
+        {assumed && <Text fontSize="sm" color="gray.700" mt={3}>Η άλλη μορφή συνεργασίας υπολογίζεται με το ίδιο ετήσιο ποσό. Δεν είναι δεύτερη προσφορά.</Text>}
+        {!company && (
+          <SimpleGrid columns={{ base: 1, md: assumed && breakEven !== null ? 2 : 1 }} spacing={3} mt={4}>
+            <Box bg="white" borderRadius="lg" p={3}>
+              <Text color="gray.600" fontSize="xs" fontWeight="700">Κόστος εταιρείας / έτος</Text>
+              <Text fontSize="sm" mt={1}>Μισθωτή {formatMoney(comparison.employee.companyCost)} · ατομική {formatMoney(comparison.freelancer.companyCost)}</Text>
+              <Text fontSize="sm" fontWeight="700" mt={1}>Διαφορά {formatMoney(Math.abs(comparison.difference.companyCost))}</Text>
+            </Box>
+            {assumed && breakEven !== null && (
+              <Box bg="white" borderRadius="lg" p={3}>
+                <Text color="gray.600" fontSize="xs" fontWeight="700">Για ίδια καθαρά εισοδήματα</Text>
+                <Text fontSize="sm" fontWeight="700" mt={1}>
+                  {formatMoney(breakEven)} {employeeKnown ? "ετήσιο τιμολόγιο χωρίς ΦΠΑ" : "μικτές ετήσιες αποδοχές"}
+                </Text>
+                <Text color="gray.600" fontSize="xs" mt={1}>Με τις ίδιες ασφαλιστικές και φορολογικές παραδοχές.</Text>
+              </Box>
+            )}
+          </SimpleGrid>
+        )}
       </Box>
-      <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={4}>
-        <ResultCard type={OFFER_TYPES.EMPLOYEE} result={comparison.employee} company={company} taxationYear={input.taxationYear} />
-        <ResultCard type={OFFER_TYPES.FREELANCER} result={comparison.freelancer} company={company} />
+      <SimpleGrid columns={{ base: 1, "2xl": 2 }} spacing={4} alignItems="start">
+        <ResultCard type={OFFER_TYPES.EMPLOYEE} result={comparison.employee} company={company} input={input} />
+        <ResultCard type={OFFER_TYPES.FREELANCER} result={comparison.freelancer} company={company} input={input} />
       </SimpleGrid>
       <Assumptions input={input} />
       <Insights comparison={comparison} input={input} />

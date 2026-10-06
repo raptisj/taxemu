@@ -3,7 +3,7 @@ import Table from "components/table";
 import MobileDrawerForm from "components/layout/MobileDrawerForm";
 import EmployeeForm from "components/employee/EmployeeForm";
 import EmployeeContributionBreakdown from "components/employee/EmployeeContributionBreakdown";
-import { useCalculateEmployee } from "hooks";
+import { useCalculateEmployee, useClearCalculator } from "hooks";
 import { useStore } from "store";
 import { useRouter } from "next/router";
 import { YearComparison } from "features/yearComparison";
@@ -14,6 +14,7 @@ const MobileEmployeeView = () => {
 
   const { centralCalculation, reverseCentralCalculation } =
     useCalculateEmployee();
+  const clearCalculator = useClearCalculator();
 
   const userDetails = useStore((state) => state.userDetails.employee);
 
@@ -47,6 +48,7 @@ const MobileEmployeeView = () => {
             onSubmitAction={
               isGrossAction ? centralCalculation : reverseCentralCalculation
             }
+            onClear={clearCalculator}
           />
 
           <EmployeeContributionBreakdown breakdown={userDetails.tableResults.contributionBreakdown} taxationYear={userDetails.tableResults.taxationYear} />

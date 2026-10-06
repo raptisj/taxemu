@@ -12,31 +12,16 @@ import {
 import { useStore } from "store";
 import { Sidebar } from "components/layout";
 import Table from "components/table";
-import { useCalculateEmployee } from "hooks";
+import { useCalculateEmployee, useClearCalculator } from "hooks";
 import EmployeeForm from "components/employee/EmployeeForm";
 import EmployeeContributionBreakdown from "components/employee/EmployeeContributionBreakdown";
 import { EmployeeInsights } from "features/employeeInsights";
 import { YearComparison } from "features/yearComparison";
-import { useRouter } from "next/router";
-import { removeComparisonParams } from "utils/yearComparison";
 
 const EmployeeView = () => {
   const { centralCalculation, reverseCentralCalculation } =
     useCalculateEmployee();
-  const removeUserDetails = useStore((state) => state.removeUserDetails);
-  const router = useRouter();
-
-  const clearCalculator = () => {
-    removeUserDetails();
-    router.replace(
-      {
-        pathname: router.pathname,
-        query: removeComparisonParams(router.query),
-      },
-      undefined,
-      { shallow: true },
-    );
-  };
+  const clearCalculator = useClearCalculator();
 
   const userDetails = useStore((state) => state.userDetails.employee);
 
@@ -94,6 +79,7 @@ const EmployeeView = () => {
                   onSubmitAction={
                     isGrossAction ? centralCalculation : reverseCentralCalculation
                   }
+                  onClear={clearCalculator}
                 />
                 <Table.Employee />
                 <EmployeeContributionBreakdown breakdown={userDetails.tableResults.contributionBreakdown} taxationYear={userDetails.tableResults.taxationYear} />

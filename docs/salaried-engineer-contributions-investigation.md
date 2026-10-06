@@ -13,7 +13,7 @@ First release: full-year private-sector salaried engineers with former ΤΣΜΕ�
 | Other compulsory payroll branches, grouped | 1.65% | 1.41% |
 | Percentage subtotal | 10.37% | 18.79% |
 
-Percentage contributions use the applicable €7,761.94 monthly ceiling. The engineer profile stores these components directly; deriving them from Taxemu's general employee rate would propagate its current 13.33% versus the supplied 13.37% discrepancy. Investigate the general-rate discrepancy as a separate correction against Circular 38/2024's coverage table.
+Percentage contributions use the applicable €7,761.94 monthly ceiling. The engineer profile stores these components directly because its insurance branches differ from the standard salaried profile. The standard employee rate was corrected to 13.37% using Circular 38/2024's coverage table.
 
 | Category | Supplementary total/month, shared equally | Lump sum/month, employee only |
 | --- | --- | --- |

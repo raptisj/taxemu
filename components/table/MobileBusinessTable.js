@@ -11,7 +11,7 @@ import { useStore } from "store";
 import { formatCellValue } from "utils";
 import MobileTableHeader from "./MobileTableHeader";
 
-const MobileBusinessTable = ({ onSubmitAction }) => {
+const MobileBusinessTable = ({ onSubmitAction, onClear }) => {
   const userDetails = useStore((state) => state.userDetails.business);
 
   const {
@@ -36,6 +36,7 @@ const MobileBusinessTable = ({ onSubmitAction }) => {
       <MobileTableHeader
         calculatorEntity="business"
         onSubmitAction={onSubmitAction}
+        onClear={onClear}
       />
 
       <Tabs isFitted mt={2}>

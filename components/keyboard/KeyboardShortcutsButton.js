@@ -18,6 +18,7 @@ import {
 } from "@chakra-ui/react";
 import {
   isCalculateShortcut,
+  isClearShortcut,
   isShortcutHelpKey,
 } from "../../utils/keyboardShortcuts";
 
@@ -55,7 +56,11 @@ const ShortcutRow = ({ keys, label }) => (
   </Flex>
 );
 
-const KeyboardShortcutsButton = ({ onCalculate, hideTrigger = false }) => {
+const KeyboardShortcutsButton = ({
+  onCalculate,
+  onClear,
+  hideTrigger = false,
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
@@ -64,6 +69,9 @@ const KeyboardShortcutsButton = ({ onCalculate, hideTrigger = false }) => {
       if (isCalculateShortcut(event)) {
         event.preventDefault();
         onCalculate();
+      } else if (isClearShortcut(event)) {
+        event.preventDefault();
+        onClear();
       } else if (isShortcutHelpKey(event)) {
         event.preventDefault();
         onOpen();
@@ -72,7 +80,7 @@ const KeyboardShortcutsButton = ({ onCalculate, hideTrigger = false }) => {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onCalculate, onOpen]);
+  }, [onCalculate, onClear, onOpen]);
 
   return (
     <>
@@ -99,6 +107,14 @@ const KeyboardShortcutsButton = ({ onCalculate, hideTrigger = false }) => {
               spacing={0}
             >
               <ShortcutRow keys={["Ctrl/⌘", "Enter"]} label="Υπολόγισε" />
+              <ShortcutRow
+                keys={["Ctrl/⌘", "Shift", "Backspace"]}
+                label="Εκκαθάριση"
+              />
+              <ShortcutRow
+                keys={["Ctrl/⌘", "Shift", "E"]}
+                label="Πώς υπολογίζεται"
+              />
               <ShortcutRow
                 keys={["?"]}
                 label="Άνοιγμα συντομεύσεων"

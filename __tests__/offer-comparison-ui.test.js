@@ -21,13 +21,40 @@ test("two perspectives lead with take-home and keep tax settings collapsed", () 
   expect(screen.getByRole("button", { name: /Για εμένα/ })).toHaveAttribute("aria-pressed", "true");
   expect(screen.getByRole("button", { name: /Για την εταιρεία/ })).toHaveAttribute("aria-pressed", "false");
   enter(salary(), 28000);
-  expect(screen.getByRole("heading", { name: /Η μισθωτή εργασία αποδίδει.*περισσότερα καθαρά \/ μήνα/ })).toBeInTheDocument();
+  expect(screen.getByRole("heading", { name: /η μισθωτή εργασία αποδίδει.*περισσότερα καθαρά \/ μήνα/i })).toBeInTheDocument();
   expect(screen.getAllByText("καθαρά / ημερολογιακό μήνα")).toHaveLength(2);
   expect(screen.getByText("Ίδιο ετήσιο ποσό προσφοράς")).toBeInTheDocument();
-  expect(screen.getByText("Περιθώριο διαπραγμάτευσης με το ίδιο εταιρικό κόστος")).toBeInTheDocument();
+  expect(screen.getByRole("heading", { name: "Τι αποδίδει το ίδιο εταιρικό budget;" })).toBeInTheDocument();
   expect(screen.getByText("Διαθέσιμα μετά τους φορολογικούς συμψηφισμούς")).toBeInTheDocument();
   expect(screen.getByRole("button", { name: /Φορολογικές παραδοχές/ })).toHaveAttribute("aria-expanded", "false");
   expect(screen.getByRole("button", { name: /Παραδοχές ατομικής επιχείρησης/ })).toHaveAttribute("aria-expanded", "false");
+});
+
+test("an assumed offer exposes the company-cost difference and prior-year credit", () => {
+  renderComparison();
+  enter(salary(), 700000);
+
+  expect(screen.getByText("1 πραγματική πρόταση · 1 υπόθεση")).toBeInTheDocument();
+  expect(screen.getByText(/Μισθωτή 723\.674\s*€ · ατομική 700\.000\s*€/)).toBeInTheDocument();
+  expect(screen.getByText(/Υποθέτουμε μηδενική περσινή πίστωση/)).toBeInTheDocument();
+  expect(screen.getByRole("link", { name: "συμπλήρωσε την πραγματική προκαταβολή" })).toHaveAttribute("href", "#comparison-prior-advance");
+
+  const headline = screen.getByRole("heading", { name: /η ατομική επιχείρηση αποδίδει.*περισσότερα καθαρά \/ μήνα/i }).textContent;
+  enter(screen.getByRole("spinbutton", { name: "Περσινή προκαταβολή φόρου" }), 1000);
+  expect(screen.getByRole("heading", { name: headline })).toBeInTheDocument();
+  expect(screen.queryByText(/Υποθέτουμε μηδενική περσινή πίστωση/)).not.toBeInTheDocument();
+  expect(screen.getByText(/236\.877\s*€ \/ έτος/)).toBeInTheDocument();
+  expect(screen.getByText(/1\.000\s*€ περσινή προκαταβολή/)).toBeInTheDocument();
+});
+
+test("leave is described according to how the invoice offer is entered", () => {
+  renderComparison();
+  enter(salary(), 28000);
+  expect(screen.getByText(/Οι χρεώσιμοι μήνες αλλάζουν μόνο το ποσό ανά τιμολόγιο, όχι τα ετήσια έσοδα/)).toBeInTheDocument();
+
+  fireEvent.change(screen.getByRole("combobox", { name: "Η γνωστή πρόταση είναι" }), { target: { value: "freelancer" } });
+  fireEvent.change(screen.getByRole("combobox", { name: /Περίοδος: Αμοιβή με τιμολόγιο/ }), { target: { value: "month" } });
+  expect(screen.getByText(/Η μη τιμολογούμενη άδεια μειώνει τα ετήσια έσοδα/)).toBeInTheDocument();
 });
 
 test("changing the single offer type preserves the entered amount and period", () => {
@@ -36,7 +63,7 @@ test("changing the single offer type preserves the entered amount and period", (
   fireEvent.change(screen.getByRole("combobox", { name: "Η γνωστή πρόταση είναι" }), { target: { value: "freelancer" } });
   expect(invoice()).toHaveValue("28000");
   expect(screen.getByRole("combobox", { name: /Περίοδος: Αμοιβή με τιμολόγιο/ })).toHaveValue("year");
-  expect(screen.getByRole("heading", { name: /Η μισθωτή εργασία αποδίδει.*περισσότερα καθαρά \/ μήνα/ })).toBeInTheDocument();
+  expect(screen.getByRole("heading", { name: /η μισθωτή εργασία αποδίδει.*περισσότερα καθαρά \/ μήνα/i })).toBeInTheDocument();
 });
 
 test("a second actual offer replaces the assumed alternative and can be removed", () => {
@@ -46,11 +73,11 @@ test("a second actual offer replaces the assumed alternative and can be removed"
   expect(screen.getByRole("heading", { name: "Συμπλήρωσε και τις δύο προτάσεις" })).toBeInTheDocument();
   enter(invoice(), 3500);
   expect(screen.getByText("Σύγκριση των δύο πραγματικών προτάσεων")).toBeInTheDocument();
-  expect(screen.getByRole("heading", { name: /Η ατομική επιχείρηση αποδίδει.*περισσότερα καθαρά \/ μήνα/ })).toBeInTheDocument();
+  expect(screen.getByRole("heading", { name: /η ατομική επιχείρηση αποδίδει.*περισσότερα καθαρά \/ μήνα/i })).toBeInTheDocument();
   fireEvent.click(secondOffer());
   expect(screen.queryByRole("spinbutton", { name: /Αμοιβή με τιμολόγιο/ })).not.toBeInTheDocument();
   expect(screen.getByText("Ίδιο ετήσιο ποσό προσφοράς")).toBeInTheDocument();
-  expect(screen.getByRole("heading", { name: /Η μισθωτή εργασία αποδίδει.*περισσότερα καθαρά \/ μήνα/ })).toBeInTheDocument();
+  expect(screen.getByRole("heading", { name: /η μισθωτή εργασία αποδίδει.*περισσότερα καθαρά \/ μήνα/i })).toBeInTheDocument();
 });
 
 test("company budget changes the basis without losing the personal offer", () => {
@@ -59,7 +86,7 @@ test("company budget changes the basis without losing the personal offer", () =>
   fireEvent.click(screen.getByRole("button", { name: /Για την εταιρεία/ }));
   enter(screen.getByRole("spinbutton", { name: "Συνολικό ετήσιο εταιρικό budget" }), 34104);
   expect(screen.getByText("Ίδιο συνολικό ετήσιο κόστος εταιρείας")).toBeInTheDocument();
-  expect(screen.getByRole("heading", { name: /Η ατομική επιχείρηση αποδίδει.*περισσότερα καθαρά \/ μήνα/ })).toBeInTheDocument();
+  expect(screen.getByRole("heading", { name: /η ατομική επιχείρηση αποδίδει.*περισσότερα καθαρά \/ μήνα/i })).toBeInTheDocument();
   fireEvent.click(screen.getByRole("button", { name: /Για εμένα/ }));
   expect(salary()).toHaveValue("28000");
   expect(screen.getByText("Ίδιο ετήσιο ποσό προσφοράς")).toBeInTheDocument();
